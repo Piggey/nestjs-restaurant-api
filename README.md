@@ -1,10 +1,16 @@
 ## Installation
 
 ```bash
+$ cd sumatywny-api
 $ npm install
 ```
 
 ## Running the app
+
+### Start database Docker images
+```bash
+$ sudo docker-compose up -d
+```
 
 ```bash
 # development
