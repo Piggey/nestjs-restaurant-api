@@ -12,6 +12,7 @@ $ npm install
 $ sudo docker-compose up -d
 ```
 
+### Start backend server
 ```bash
 # development
 $ npm run start
