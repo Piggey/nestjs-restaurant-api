@@ -1,6 +1,6 @@
 import { IsByteLength, IsEmail, IsNotEmpty, IsString } from 'class-validator';
 
-export class UserSignupDto {
+export class UserAuthDto {
   @IsEmail()
   email: string;
 
