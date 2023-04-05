@@ -18,7 +18,6 @@ async function bootstrap() {
   SwaggerModule.setup('docs', app, document);
   Logger.log(`Swagger API documentation: http://localhost:${PORT}/docs`);
 
-
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
   await app.listen(PORT);
   Logger.log(`Started server on http://localhost:${PORT}/`);
