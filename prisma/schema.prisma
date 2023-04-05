@@ -12,7 +12,7 @@ datasource db {
 
 model User {
   user_id        Int    @id @default(autoincrement())
-  email          String
+  email          String @unique
   password_hash  String
   loyalty_points Int    @default(0)
 
