@@ -11,6 +11,13 @@ $ npm install
 ```bash
 $ sudo docker-compose up -d
 ```
+OR
+```bash
+$ sudo npm run db:start
+
+# update schema
+$ npm run db:migrate
+```
 
 ### Start backend server
 ```bash
@@ -22,6 +29,9 @@ $ npm run start:dev
 
 # production mode
 $ npm run start:prod
+
+# start both docker database servers and backend server in watch mode
+$ sudo npm run start:all
 ```
 
 ## Test
