@@ -1,10 +1,12 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, HttpCode, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { UserAuthDto } from '../user/dto';
 import {
   ApiBadRequestResponse,
   ApiConflictResponse,
   ApiCreatedResponse,
+  ApiForbiddenResponse,
+  ApiOkResponse,
   ApiTags,
 } from '@nestjs/swagger';
 import { UserSignInResponse, UserSignUpResponse } from '../user/response';
@@ -31,6 +33,18 @@ export class AuthController {
   }
 
   @Post('signin')
+  @HttpCode(200)
+  @ApiOkResponse({
+    description: 'successfully signed a user in. returns a JWT token',
+    type: UserSignInResponse,
+  })
+  @ApiBadRequestResponse({
+    description:
+      "request's body was incorrect. more info in response's `message` attribute",
+  })
+  @ApiForbiddenResponse({
+    description: 'provided credentials were incorrect. returns an error',
+  })
   async signIn(@Body() usr: UserAuthDto): Promise<UserSignInResponse> {
     return this.authService.signIn(usr);
   }
