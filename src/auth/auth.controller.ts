@@ -7,7 +7,7 @@ import {
   ApiCreatedResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { UserSignUpResponse } from '../user/response';
+import { UserSignInResponse, UserSignUpResponse } from '../user/response';
 
 @Controller('auth')
 @ApiTags('auth')
@@ -26,12 +26,12 @@ export class AuthController {
   @ApiConflictResponse({
     description: 'provided email is not unique',
   })
-  async signUp(@Body() usr: UserAuthDto) {
+  async signUp(@Body() usr: UserAuthDto): Promise<UserSignUpResponse> {
     return this.authService.signUp(usr);
   }
 
   @Post('signin')
-  async signIn(@Body() usr: UserAuthDto) {
+  async signIn(@Body() usr: UserAuthDto): Promise<UserSignInResponse> {
     return this.authService.signIn(usr);
   }
 }
