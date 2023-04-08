@@ -22,19 +22,20 @@ enum Role {
 }
 
 model User {
-  user_id        Int    @id @default(autoincrement())
-  email          String @unique
-  password_hash  String
-  loyalty_points Int    @default(0)
+  userId        Int    @id @default(autoincrement())
+  createdAt DateTime @default(now())
 
+  email         String @unique
+  passwordHash  String
+  loyaltyPoints Int    @default(0)
   role Role @default(CLIENT)
 
-model Role {
-  role_id   Int    @id @default(autoincrement())
-  role_name String
+  managedRestaurants Restaurant[]
 }
 
 model Restaurant {
-  restaurant_id Int @id @default(autoincrement())
-  manager_id    Int
+  restaurantId Int @id @default(autoincrement())
+
+  managerId Int
+  manager User @relation(fields: [managerId], references: [userId])
 }
