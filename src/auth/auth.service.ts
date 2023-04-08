@@ -1,9 +1,11 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { UserSignUpResponse } from 'src/user/response';
+import { UserSignInResponse, UserSignUpResponse } from 'src/user/response';
 import { PrismaService } from '../prisma/prisma.service';
 import { UserAuthDto } from '../user/dto';
+import { User } from '@prisma/client';
+import { JwtPayload } from './jwt';
 
 @Injectable()
 export class AuthService {
@@ -18,8 +20,7 @@ export class AuthService {
       const user = await this.db.user.create({
         data: {
           email: usr.email,
-          password_hash: usr.passwordHash,
-          role_id: 1, // TODO: make an enum of all roles
+          passwordHash: usr.passwordHash,
         },
       });
       return { userCreated: !!user };
@@ -33,7 +34,37 @@ export class AuthService {
     }
   }
 
-  signIn(usr: UserAuthDto) {
-    throw new Error('Method not implemented.');
+  async signIn(usr: UserAuthDto): Promise<UserSignInResponse> {
+    // try to get user from the database
+    const dbUser: User = await this.db.user.findFirst({
+      where: {
+        email: usr.email,
+      },
+    });
+
+    // incorrect credentials
+    if (!dbUser || dbUser.passwordHash !== usr.passwordHash) {
+      throw new HttpException(
+        'invalid email or password',
+        HttpStatus.FORBIDDEN,
+      );
+    }
+
+    return {
+      access_token: this.generateJwtToken(dbUser),
+    };
+  }
+
+  private generateJwtToken(user: User): string {
+    const payload: JwtPayload = {
+      sub: user.userId,
+      email: user.email,
+      role: user.role,
+    };
+
+    return this.jwt.sign(payload, {
+      secret: this.config.getOrThrow('JWT_SECRET'),
+      expiresIn: this.config.getOrThrow('JWT_EXPIRE_DATE'),
+    });
   }
 }
