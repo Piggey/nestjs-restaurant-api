@@ -30,6 +30,26 @@ describe('AuthController (e2e, positive)', () => {
         });
       });
   });
+
+  it('should sign in a user, and return an access_token', async () => {
+    const user = mockNewUser();
+
+    // signup test user
+    await request(app.getHttpServer())
+      .post('/auth/signup')
+      .send(user)
+      .expect(201);
+
+    return request(app.getHttpServer())
+      .post('/auth/signin')
+      .send(user)
+      .expect(200)
+      .then((res) => {
+        expect(res.body).toEqual({
+          access_token: expect.any(String),
+        });
+      });
+  });
 });
 
 describe('AuthController (e2e, negative)', () => {
@@ -94,6 +114,93 @@ describe('AuthController (e2e, negative)', () => {
           error: 'Bad Request',
           message: expect.arrayContaining([
             'email must be an email',
+            "passwordHash's byte length must fall into (64, 64) range",
+            'passwordHash must be a string',
+          ]),
+        });
+      });
+  });
+
+  it('should throw error 403 when no user with this email is found', () => {
+    return request(app.getHttpServer())
+      .post('/auth/signin')
+      .send({
+        email: 'WhoWouldEverUseThisEmail@Seriously.WTF',
+        passwordHash:
+          'd04b98f48e8f8bcc15c6ae5ac050801cd6dcfd428fb5f9e65c4e16e7807340fa',
+      })
+      .expect(403)
+      .then((res) => {
+        expect(res.body).toEqual({
+          statusCode: 403,
+          message: 'invalid email or password',
+        });
+      });
+  });
+
+  it('should throw error 403 when passwordHash is incorrect', async () => {
+    const user = mockNewUser();
+
+    // signup test user
+    await request(app.getHttpServer())
+      .post('/auth/signup')
+      .send(user)
+      .expect(201);
+
+    user.passwordHash =
+      'd04b98f48e8f8bcc15c6ae5ac050801cd6dcfd428fb5f9e65c4e16e7807340fe';
+
+    return request(app.getHttpServer())
+      .post('/auth/signin')
+      .send(user)
+      .expect(403)
+      .then((res) => {
+        expect(res.body).toEqual({
+          statusCode: 403,
+          message: 'invalid email or password',
+        });
+      });
+  });
+
+  it('should throw error 400 when no password is passed in', () => {
+    return request(app.getHttpServer())
+      .post('/auth/signin')
+      .send({ email: 'legitemail@cool.pl' })
+      .expect(400)
+      .then((res) => {
+        expect(res.body).toEqual({
+          statusCode: 400,
+          error: 'Bad Request',
+          message: expect.arrayContaining(['passwordHash must be a string']),
+        });
+      });
+  });
+
+  it('should throw error 400 when password is not encrypted', () => {
+    return request(app.getHttpServer())
+      .post('/auth/signin')
+      .send({ email: 'legitemail@cool.pl', passwordHash: 'password123' })
+      .expect(400)
+      .then((res) => {
+        expect(res.body).toEqual({
+          statusCode: 400,
+          error: 'Bad Request',
+          message: expect.arrayContaining([
+            "passwordHash's byte length must fall into (64, 64) range",
+          ]),
+        });
+      });
+  });
+
+  it('should throw error 400 when no arguments are passed in', () => {
+    return request(app.getHttpServer())
+      .post('/auth/signin')
+      .expect(400)
+      .then((res) => {
+        expect(res.body).toEqual({
+          statusCode: 400,
+          error: 'Bad Request',
+          message: expect.arrayContaining([
             "passwordHash's byte length must fall into (64, 64) range",
             'passwordHash must be a string',
           ]),
