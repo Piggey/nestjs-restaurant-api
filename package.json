@@ -7,7 +7,7 @@
   "license": "UNLICENSED",
   "scripts": {
     "build": "nest build",
-    "db:start": "docker-compose up -d",
+    "db:start": "sudo docker-compose up -d",
     "db:migrate": "npx prisma migrate dev",
     "db:push": "npx prisma db push",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
