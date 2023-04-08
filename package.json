@@ -8,6 +8,7 @@
   "scripts": {
     "build": "nest build",
     "db:start": "sudo docker-compose up -d",
+    "db:stop": "sudo docker-compose down",
     "db:migrate": "npx prisma migrate dev",
     "db:push": "npx prisma db push",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
