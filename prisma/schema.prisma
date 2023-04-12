@@ -22,20 +22,82 @@ enum Role {
 }
 
 model User {
-  userId        Int    @id @default(autoincrement())
+  userId     String   @unique
   createdAt DateTime @default(now())
 
-  email         String @unique
-  passwordHash  String
-  loyaltyPoints Int    @default(0)
-  role Role @default(CLIENT)
+  userDetails   String
+  loyaltyPoints Int     @default(0)
+  role          Role    @default(CLIENT)
 
   managedRestaurants Restaurant[]
+  employeeInfo Employee[]
+}
+
+model Employee {
+  employeeId Int @id @default(autoincrement())
+  hiredAt DateTime @default(now())
+
+  firstName String
+  lastName String
+  pesel String @unique
+
+  addressId Int
+  address Address @relation(fields: [addressId], references: [addressId])
+
+  userId String
+  user User @relation(fields: [userId], references: [userId])
+
+  restaurantId Int
+  restaurant Restaurant @relation(fields: [restaurantId], references: [restaurantId])
+}
+
+model MenuItem {
+  itemId Int @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt()
+
+  name String
+  description String
+  ingredients String
+  available Boolean @default(true)
+
+  categoryId Int
+  category Category @relation(fields: [categoryId], references: [categoryId])
+}
+
+model Category {
+  categoryId Int @id @default(autoincrement())
+  createdAt DateTime @default(now())
+
+  categoryName String
+
+  menuItems MenuItem[]
 }
 
 model Restaurant {
   restaurantId Int @id @default(autoincrement())
+  createdAt DateTime @default(now())
 
-  managerId Int
+  managerId String
   manager User @relation(fields: [managerId], references: [userId])
+
+  addressId Int
+  address Address @relation(fields: [addressId], references: [addressId])
+
+  hiredEmployees Employee[]
+}
+
+model Address {
+  addressId Int @id @default(autoincrement())
+  street String
+  streetNo String
+  city String
+  postalCode String
+  country String
+
+  geoLat Float
+  geoLong Float
+
+  restaurants Restaurant[]
+  employees Employee[]
 }
