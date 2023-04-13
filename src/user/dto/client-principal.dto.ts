@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsByteLength, IsEnum, IsNotEmpty, IsString } from 'class-validator';
 
-export enum UserRoles {
+export enum ClientRoles {
   CLIENT = 'CLIENT',
   EMPLOYEE = 'EMPLOYEE',
   DELIVERY = 'DELIVERY',
@@ -13,6 +13,16 @@ export enum UserRoles {
   AUTHENTICATED = 'authenticated',
 }
 
+export const ClientRoleLevel: Record<ClientRoles, number> = {
+  anonymous: 0,
+  authenticated: 1,
+  CLIENT: 2,
+  EMPLOYEE: 3,
+  DELIVERY: 4,
+  MANAGER: 5,
+  BOSS: 6,
+};
+
 export class ClientPrincipalDto {
   @ApiProperty()
   @IsByteLength(32, 32)
@@ -21,14 +31,18 @@ export class ClientPrincipalDto {
   @ApiProperty({
     description:
       'list of known user roles. `anonymous` and `authenticated` will be ignored. only one value apart from those is allowed',
-    enum: UserRoles,
-    example: [UserRoles.ANONYMOUS, UserRoles.AUTHENTICATED, UserRoles.CLIENT],
+    enum: ClientRoles,
+    example: [
+      ClientRoles.ANONYMOUS,
+      ClientRoles.AUTHENTICATED,
+      ClientRoles.CLIENT,
+    ],
     type: [String],
   })
   @IsString({ each: true })
-  @IsEnum(UserRoles, { each: true })
+  @IsEnum(ClientRoles, { each: true })
   @IsNotEmpty()
-  userRoles: UserRoles[];
+  userRoles: ClientRoles[];
 
   @ApiProperty()
   @IsString()
