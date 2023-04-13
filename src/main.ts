@@ -3,10 +3,16 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
-const PORT = 3000;
+const API_PORT = 3000;
+const SWA_PORT = 4280;
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, { cors: true });
+  const app = await NestFactory.create(AppModule, {
+    cors: {
+      credentials: true,
+      origin: `http://localhost:${SWA_PORT}`,
+    },
+  });
 
   const docsConfig = new DocumentBuilder()
     .setTitle('Moduł sumatywny - Restauracje')
@@ -18,10 +24,10 @@ async function bootstrap() {
   SwaggerModule.setup('docs', app, document);
 
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
-  await app.listen(PORT);
+  await app.listen(API_PORT);
 
-  Logger.log(`Started server on http://localhost:${PORT}/`);
-  Logger.log(`Swagger API documentation: http://localhost:${PORT}/docs`);
+  Logger.log(`Started server on http://localhost:${API_PORT}/`);
+  Logger.log(`Swagger API documentation: http://localhost:${API_PORT}/docs`);
 }
 
 bootstrap();
