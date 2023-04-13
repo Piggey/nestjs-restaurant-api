@@ -57,6 +57,7 @@ model MenuItem {
   updatedAt DateTime @updatedAt()
 
   name String
+  photoUrl String
   description String
   ingredients String
   available Boolean @default(true)
