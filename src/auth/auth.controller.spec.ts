@@ -6,7 +6,7 @@ import { PrismaModule } from '../prisma/prisma.module';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import * as request from 'supertest';
-import { UserAuthDto } from '../user/dto';
+import { ClientPrincipalDto, UserRoles } from '../user/dto';
 
 describe('AuthController (e2e, positive)', () => {
   let app: INestApplication;
@@ -19,34 +19,123 @@ describe('AuthController (e2e, positive)', () => {
     await app.close();
   });
 
-  it('should sign up a new user', () => {
+  it('should sign a new user in, with adding new user to db', () => {
     return request(app.getHttpServer())
-      .post('/auth/signup')
-      .send(mockNewUser())
-      .expect(201)
+      .post('/auth/signin')
+      .set({
+        'x-ms-client-principal': encodeUser({
+          userId: mockUserId(),
+          userDetails: `testUser${randomNumberString()}`,
+          userRoles: [
+            UserRoles.ANONYMOUS,
+            UserRoles.AUTHENTICATED,
+            UserRoles.CLIENT,
+          ],
+        }),
+      })
+      .expect(200)
       .then((res) => {
         expect(res.body).toEqual({
-          userCreated: expect.any(Boolean),
+          userSignedIn: true,
+          userCreated: true,
+          userUpdated: true,
         });
       });
   });
 
-  it('should sign in a user, and return an access_token', async () => {
-    const user = mockNewUser();
+  it('should sign a user in, without adding new user to db', async () => {
+    const userId = mockUserId();
+    const userDetails = `testUser${randomNumberString()}`;
+    const userRoles = [
+      UserRoles.ANONYMOUS,
+      UserRoles.AUTHENTICATED,
+      UserRoles.CLIENT,
+    ];
 
-    // signup test user
     await request(app.getHttpServer())
-      .post('/auth/signup')
-      .send(user)
-      .expect(201);
-
-    return request(app.getHttpServer())
       .post('/auth/signin')
-      .send(user)
+      .set({
+        'x-ms-client-principal': encodeUser({
+          userId,
+          userDetails,
+          userRoles,
+        }),
+      })
       .expect(200)
       .then((res) => {
         expect(res.body).toEqual({
-          access_token: expect.any(String),
+          userSignedIn: true,
+          userCreated: true,
+          userUpdated: true,
+        });
+      });
+
+    return request(app.getHttpServer())
+      .post('/auth/signin')
+      .set({
+        'x-ms-client-principal': encodeUser({
+          userId,
+          userDetails,
+          userRoles,
+        }),
+      })
+      .expect(200)
+      .then((res) => {
+        expect(res.body).toEqual({
+          userSignedIn: true,
+          userCreated: false,
+          userUpdated: false,
+        });
+      });
+  });
+
+  it('should sign a user in and update db with new information', async () => {
+    const userId = mockUserId();
+    const userDetails = `testUser${randomNumberString()}`;
+
+    // sign in a user with role CLIENT
+    await request(app.getHttpServer())
+      .post('/auth/signin')
+      .set({
+        'x-ms-client-principal': encodeUser({
+          userId,
+          userDetails,
+          userRoles: [
+            UserRoles.ANONYMOUS,
+            UserRoles.AUTHENTICATED,
+            UserRoles.CLIENT,
+          ],
+        }),
+      })
+      .expect(200)
+      .then((res) => {
+        expect(res.body).toEqual({
+          userSignedIn: true,
+          userCreated: true,
+          userUpdated: true,
+        });
+      });
+
+    // update role to MANAGER
+    return request(app.getHttpServer())
+      .post('/auth/signin')
+      .set({
+        'x-ms-client-principal': encodeUser({
+          userId,
+          userDetails,
+          userRoles: [
+            UserRoles.ANONYMOUS,
+            UserRoles.AUTHENTICATED,
+            UserRoles.MANAGER,
+          ],
+        }),
+      })
+      .expect(200)
+      .then((res) => {
+        expect(res.body).toEqual({
+          userSignedIn: true,
+          userCreated: false,
+          userUpdated: true,
         });
       });
   });
@@ -63,147 +152,57 @@ describe('AuthController (e2e, negative)', () => {
     await app.close();
   });
 
-  it('should throw error 409 when email is not unique', async () => {
-    const user = mockNewUser();
-
-    await request(app.getHttpServer())
-      .post('/auth/signup')
-      .send(user)
-      .expect(201);
-
+  it('should throw error 400 when no x-ms-client-principal header is provided', () => {
     return request(app.getHttpServer())
-      .post('/auth/signup')
-      .send(user)
-      .expect(409)
+      .post('/auth/signin')
+      .expect(400)
       .then((res) => {
         expect(res.body).toEqual({
-          statusCode: 409,
-          message: 'provided email is not unique',
+          statusCode: 400,
+          message: 'x-ms-client-principal request header not found',
         });
       });
   });
 
-  it('should throw error 400 when arguments are incorrect', () => {
+  it('should throw error 400 when no custom role is specified', () => {
     return request(app.getHttpServer())
-      .post('/auth/signup')
-      .send({
-        email: 'not even an email',
-        passwordHash: 'secure!',
+      .post('/auth/signin')
+      .set({
+        'x-ms-client-principal': encodeUser({
+          userId: mockUserId(),
+          userDetails: `testUser${randomNumberString()}`,
+          userRoles: [UserRoles.ANONYMOUS, UserRoles.AUTHENTICATED],
+        }),
       })
       .expect(400)
       .then((res) => {
         expect(res.body).toEqual({
           statusCode: 400,
-          error: 'Bad Request',
-          message: expect.arrayContaining([
-            'email must be an email',
-            "passwordHash's byte length must fall into (64, 64) range",
-          ]),
+          message: 'no custom userRole specified',
         });
       });
   });
 
-  it('should throw error 400 when no arguments are passed in', () => {
-    return request(app.getHttpServer())
-      .post('/auth/signup')
-      .send({})
-      .expect(400)
-      .then((res) => {
-        expect(res.body).toEqual({
-          statusCode: 400,
-          error: 'Bad Request',
-          message: expect.arrayContaining([
-            'email must be an email',
-            "passwordHash's byte length must fall into (64, 64) range",
-            'passwordHash must be a string',
-          ]),
-        });
-      });
-  });
-
-  it('should throw error 403 when no user with this email is found', () => {
+  it('should throw error 400 when too many roles are specified', () => {
     return request(app.getHttpServer())
       .post('/auth/signin')
-      .send({
-        email: 'WhoWouldEverUseThisEmail@Seriously.WTF',
-        passwordHash:
-          'd04b98f48e8f8bcc15c6ae5ac050801cd6dcfd428fb5f9e65c4e16e7807340fa',
+      .set({
+        'x-ms-client-principal': encodeUser({
+          userId: mockUserId(),
+          userDetails: `testUser${randomNumberString()}`,
+          userRoles: [
+            UserRoles.ANONYMOUS,
+            UserRoles.AUTHENTICATED,
+            UserRoles.CLIENT,
+            UserRoles.DELIVERY,
+          ],
+        }),
       })
-      .expect(403)
-      .then((res) => {
-        expect(res.body).toEqual({
-          statusCode: 403,
-          message: 'invalid email or password',
-        });
-      });
-  });
-
-  it('should throw error 403 when passwordHash is incorrect', async () => {
-    const user = mockNewUser();
-
-    // signup test user
-    await request(app.getHttpServer())
-      .post('/auth/signup')
-      .send(user)
-      .expect(201);
-
-    user.passwordHash =
-      'd04b98f48e8f8bcc15c6ae5ac050801cd6dcfd428fb5f9e65c4e16e7807340fe';
-
-    return request(app.getHttpServer())
-      .post('/auth/signin')
-      .send(user)
-      .expect(403)
-      .then((res) => {
-        expect(res.body).toEqual({
-          statusCode: 403,
-          message: 'invalid email or password',
-        });
-      });
-  });
-
-  it('should throw error 400 when no password is passed in', () => {
-    return request(app.getHttpServer())
-      .post('/auth/signin')
-      .send({ email: 'legitemail@cool.pl' })
       .expect(400)
       .then((res) => {
         expect(res.body).toEqual({
           statusCode: 400,
-          error: 'Bad Request',
-          message: expect.arrayContaining(['passwordHash must be a string']),
-        });
-      });
-  });
-
-  it('should throw error 400 when password is not encrypted', () => {
-    return request(app.getHttpServer())
-      .post('/auth/signin')
-      .send({ email: 'legitemail@cool.pl', passwordHash: 'password123' })
-      .expect(400)
-      .then((res) => {
-        expect(res.body).toEqual({
-          statusCode: 400,
-          error: 'Bad Request',
-          message: expect.arrayContaining([
-            "passwordHash's byte length must fall into (64, 64) range",
-          ]),
-        });
-      });
-  });
-
-  it('should throw error 400 when no arguments are passed in', () => {
-    return request(app.getHttpServer())
-      .post('/auth/signin')
-      .expect(400)
-      .then((res) => {
-        expect(res.body).toEqual({
-          statusCode: 400,
-          error: 'Bad Request',
-          message: expect.arrayContaining([
-            "passwordHash's byte length must fall into (64, 64) range",
-            'passwordHash must be a string',
-          ]),
+          message: 'too many custom roles specified',
         });
       });
   });
@@ -221,12 +220,20 @@ const createApp = async (): Promise<INestApplication> => {
   return app.init();
 };
 
-const mockNewUser = (): UserAuthDto => {
-  return {
-    email: `testUser${randomNumberString()}@test.com`,
-    passwordHash:
-      'd04b98f48e8f8bcc15c6ae5ac050801cd6dcfd428fb5f9e65c4e16e7807340fa',
-  };
+const encodeUser = (user: ClientPrincipalDto): string => {
+  return Buffer.from(JSON.stringify(user)).toString('base64');
+};
+
+const mockUserId = (): string => {
+  const CHARS = 'abcdefghijklmnoprstuwvxyz0123456789';
+  const RESULT_LENGTH = 32;
+
+  let result = '';
+  for (let i = 0; i < RESULT_LENGTH; i++) {
+    result += CHARS.charAt(Math.floor(Math.random() * CHARS.length));
+  }
+
+  return result;
 };
 
 const randomNumberString = (): string => {
