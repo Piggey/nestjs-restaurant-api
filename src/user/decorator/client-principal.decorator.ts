@@ -39,6 +39,12 @@ export const ClientPrincipal = createParamDecorator(
 export const getClientPrincipalFromHeader = (
   req: Request,
 ): ClientPrincipalDto => {
+  if (!req.headers['x-ms-client-principal'])
+    throw new HttpException(
+      'x-ms-client-principal request header not provided',
+      HttpStatus.FORBIDDEN,
+    );
+
   const encoded = Buffer.from(req.headers['x-ms-client-principal'], 'base64');
   const decoded = encoded.toString();
   const client = JSON.parse(decoded);
