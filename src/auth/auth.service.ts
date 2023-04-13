@@ -1,70 +1,61 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { JwtService } from '@nestjs/jwt';
-import { UserSignInResponse, UserSignUpResponse } from 'src/user/response';
+import { Injectable } from '@nestjs/common';
+import { UserSignInResponse } from 'src/user/response';
 import { PrismaService } from '../prisma/prisma.service';
-import { UserAuthDto } from '../user/dto';
-import { User } from '@prisma/client';
-import { JwtPayload } from './jwt';
+import { ClientPrincipalDto } from '../user/dto';
+import { Role, User } from '@prisma/client';
 
 @Injectable()
 export class AuthService {
-  constructor(
-    private readonly db: PrismaService,
-    private readonly jwt: JwtService,
-    private readonly config: ConfigService,
-  ) {}
+  constructor(private readonly db: PrismaService) {}
 
-  async signUp(usr: UserAuthDto): Promise<UserSignUpResponse> {
-    try {
-      const user = await this.db.user.create({
-        data: {
-          email: usr.email,
-          passwordHash: usr.passwordHash,
-        },
-      });
-      return { userCreated: !!user };
-    } catch (err) {
-      if (err.code === 'P2002') {
-        throw new HttpException(
-          'provided email is not unique',
-          HttpStatus.CONFLICT,
-        );
-      }
-    }
-  }
-
-  async signIn(usr: UserAuthDto): Promise<UserSignInResponse> {
-    // try to get user from the database
+  async signIn(usr: ClientPrincipalDto): Promise<UserSignInResponse> {
     const dbUser: User = await this.db.user.findFirst({
       where: {
-        email: usr.email,
+        userId: usr.userId,
       },
     });
 
-    // incorrect credentials
-    if (!dbUser || dbUser.passwordHash !== usr.passwordHash) {
-      throw new HttpException(
-        'invalid email or password',
-        HttpStatus.FORBIDDEN,
-      );
+    if (!dbUser) {
+      await this.db.user.create({
+        data: {
+          userId: usr.userId,
+          userDetails: usr.userDetails,
+          role: usr.userRoles[0] as Role,
+        },
+      });
+
+      return {
+        userSignedIn: true,
+        userCreated: true,
+        userUpdated: true,
+      };
     }
 
+    // TODO: update with new info if is different
+    if (
+      dbUser.role !== (usr.userRoles[0] as Role) ||
+      dbUser.userDetails !== usr.userDetails
+    ) {
+      await this.db.user.update({
+        where: {
+          userId: usr.userId,
+        },
+        data: {
+          role: usr.userRoles[0] as Role,
+          userDetails: usr.userDetails,
+        },
+      });
+
+      return {
+        userSignedIn: true,
+        userCreated: false,
+        userUpdated: true,
+      };
+    }
     return {
-      access_token: this.generateJwtToken(dbUser),
+      userSignedIn: true,
+      userCreated: false,
+      userUpdated: false,
     };
-  }
-
-  private generateJwtToken(user: User): string {
-    const payload: JwtPayload = {
-      sub: user.userId,
-      email: user.email,
-      role: user.role,
-    };
-
-    return this.jwt.sign(payload, {
-      secret: this.config.getOrThrow('JWT_SECRET'),
-      expiresIn: this.config.getOrThrow('JWT_EXPIRE_DATE'),
-    });
   }
 }

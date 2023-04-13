@@ -2,5 +2,11 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class UserSignInResponse {
   @ApiProperty()
-  access_token: string;
+  userSignedIn: boolean;
+
+  @ApiProperty()
+  userCreated: boolean;
+
+  @ApiProperty()
+  userUpdated: boolean;
 }
