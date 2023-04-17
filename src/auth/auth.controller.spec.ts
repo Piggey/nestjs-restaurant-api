@@ -6,7 +6,7 @@ import { PrismaModule } from '../prisma/prisma.module';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import * as request from 'supertest';
-import { ClientPrincipalDto, UserRoles } from '../user/dto';
+import { ClientPrincipalDto, ClientRoles } from '../user/dto';
 
 describe('AuthController (e2e, positive)', () => {
   let app: INestApplication;
@@ -27,9 +27,9 @@ describe('AuthController (e2e, positive)', () => {
           userId: mockUserId(),
           userDetails: `testUser${randomNumberString()}`,
           userRoles: [
-            UserRoles.ANONYMOUS,
-            UserRoles.AUTHENTICATED,
-            UserRoles.CLIENT,
+            ClientRoles.ANONYMOUS,
+            ClientRoles.AUTHENTICATED,
+            ClientRoles.CLIENT,
           ],
         }),
       })
@@ -47,9 +47,9 @@ describe('AuthController (e2e, positive)', () => {
     const userId = mockUserId();
     const userDetails = `testUser${randomNumberString()}`;
     const userRoles = [
-      UserRoles.ANONYMOUS,
-      UserRoles.AUTHENTICATED,
-      UserRoles.CLIENT,
+      ClientRoles.ANONYMOUS,
+      ClientRoles.AUTHENTICATED,
+      ClientRoles.CLIENT,
     ];
 
     await request(app.getHttpServer())
@@ -101,9 +101,9 @@ describe('AuthController (e2e, positive)', () => {
           userId,
           userDetails,
           userRoles: [
-            UserRoles.ANONYMOUS,
-            UserRoles.AUTHENTICATED,
-            UserRoles.CLIENT,
+            ClientRoles.ANONYMOUS,
+            ClientRoles.AUTHENTICATED,
+            ClientRoles.CLIENT,
           ],
         }),
       })
@@ -124,9 +124,9 @@ describe('AuthController (e2e, positive)', () => {
           userId,
           userDetails,
           userRoles: [
-            UserRoles.ANONYMOUS,
-            UserRoles.AUTHENTICATED,
-            UserRoles.MANAGER,
+            ClientRoles.ANONYMOUS,
+            ClientRoles.AUTHENTICATED,
+            ClientRoles.MANAGER,
           ],
         }),
       })
@@ -159,7 +159,7 @@ describe('AuthController (e2e, negative)', () => {
       .then((res) => {
         expect(res.body).toEqual({
           statusCode: 400,
-          message: 'x-ms-client-principal request header not found',
+          message: 'x-ms-client-principal request header not provided',
         });
       });
   });
@@ -171,7 +171,7 @@ describe('AuthController (e2e, negative)', () => {
         'x-ms-client-principal': encodeUser({
           userId: mockUserId(),
           userDetails: `testUser${randomNumberString()}`,
-          userRoles: [UserRoles.ANONYMOUS, UserRoles.AUTHENTICATED],
+          userRoles: [ClientRoles.ANONYMOUS, ClientRoles.AUTHENTICATED],
         }),
       })
       .expect(400)
@@ -191,10 +191,10 @@ describe('AuthController (e2e, negative)', () => {
           userId: mockUserId(),
           userDetails: `testUser${randomNumberString()}`,
           userRoles: [
-            UserRoles.ANONYMOUS,
-            UserRoles.AUTHENTICATED,
-            UserRoles.CLIENT,
-            UserRoles.DELIVERY,
+            ClientRoles.ANONYMOUS,
+            ClientRoles.AUTHENTICATED,
+            ClientRoles.CLIENT,
+            ClientRoles.DELIVERY,
           ],
         }),
       })

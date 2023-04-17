@@ -1,6 +1,6 @@
-import { Controller, HttpCode, Post } from '@nestjs/common';
+import { Controller, Get, HttpCode, Post, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { ClientPrincipalDto } from '../user/dto';
+import { ClientPrincipalDto, ClientRoles } from '../user/dto';
 import {
   ApiBadRequestResponse,
   ApiHeader,
@@ -9,14 +9,14 @@ import {
 } from '@nestjs/swagger';
 import { UserSignInResponse } from '../user/response';
 import { ClientPrincipal } from '../user/decorator';
+import { Roles } from './decorator';
+import { RolesGuard } from './guard';
 
 @Controller('auth')
 @ApiTags('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post('signin')
-  @HttpCode(200)
   @ApiHeader({
     name: 'x-ms-client-principal',
     description: 'Client principal encoded as base64',
@@ -32,9 +32,18 @@ export class AuthController {
     description:
       "request's body was incorrect. more info in response's `message` attribute",
   })
+  @Post('signin')
+  @HttpCode(200)
   async signIn(
     @ClientPrincipal() usr: ClientPrincipalDto,
   ): Promise<UserSignInResponse> {
     return this.authService.signIn(usr);
+  }
+
+  @Get('test')
+  @UseGuards(RolesGuard)
+  @Roles(ClientRoles.MANAGER)
+  async test() {
+    return true;
   }
 }
