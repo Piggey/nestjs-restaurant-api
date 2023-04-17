@@ -4,11 +4,11 @@ import { CLIENT_PRINCIPAL_HEADER, ClientPrincipal } from './decorator';
 import {
   ApiBadRequestResponse,
   ApiHeader,
+  ApiNotFoundResponse,
   ApiOkResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { ClientDataResponse, EmployeeDataResponse } from './response';
-import { RequestErrorResponse } from '../app/response';
+import { AboutUserResponse } from './response';
 
 @ApiTags('users')
 @Controller('users')
@@ -23,15 +23,15 @@ export class UserController {
   })
   @ApiOkResponse({
     description:
-      'returns client data. also returns employee data if this user is also an employee',
-    type: EmployeeDataResponse,
+      'returns user data. also returns employee data if this user is also an employee',
+    type: AboutUserResponse,
   })
   @ApiBadRequestResponse({
     description: `${CLIENT_PRINCIPAL_HEADER} was not provided`,
-    type: RequestErrorResponse,
   })
+  @ApiNotFoundResponse()
   @Get('me')
-  me(@ClientPrincipal() client): ClientDataResponse | EmployeeDataResponse {
-    return this.userService.me(client);
+  async me(@ClientPrincipal() user): Promise<AboutUserResponse> {
+    return this.userService.me(user);
   }
 }

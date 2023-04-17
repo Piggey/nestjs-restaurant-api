@@ -1,13 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Role } from '@prisma/client';
 
-export class ClientDataResponse {
-  @ApiProperty({
-    description: "user's unique identifier",
-    example: 'd75b260a64504067bfc5b2905e3b8182',
-  })
-  userId: string;
-
+export class UserDataResponse {
   @ApiProperty({
     description: 'username or email address of the user',
     example: 'username',
@@ -25,7 +19,4 @@ export class ClientDataResponse {
     example: 36,
   })
   loyaltyPoints: number;
-
-  @ApiProperty()
-  createdAt: Date;
 }

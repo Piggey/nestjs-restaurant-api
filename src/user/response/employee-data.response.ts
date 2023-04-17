@@ -1,6 +1,13 @@
-import { ClientDataResponse } from './client-data.response';
 import { ApiProperty } from '@nestjs/swagger';
-import { AddressModel } from 'src/prisma/model';
+import { AddressModel } from '../../prisma/model';
+
+class RestaurantDataResponse {
+  @ApiProperty({ example: 'firstname lastname' })
+  managerName: string;
+
+  @ApiProperty()
+  address: AddressModel;
+}
 
 export class EmployeeDataResponse {
   @ApiProperty()
@@ -23,5 +30,5 @@ export class EmployeeDataResponse {
   firedAt: Date | null;
 
   @ApiProperty()
-  client: ClientDataResponse;
+  restaurant: RestaurantDataResponse;
 }
