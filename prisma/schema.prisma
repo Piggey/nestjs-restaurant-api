@@ -36,6 +36,7 @@ model User {
 model Employee {
   employeeId Int @id @default(autoincrement())
   hiredAt DateTime @default(now())
+  firedAt DateTime?
 
   firstName String
   lastName String
