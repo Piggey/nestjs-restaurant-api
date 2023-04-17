@@ -15,10 +15,4 @@ export class AddressModel {
 
   @ApiProperty({ example: 'Poland' })
   country: string;
-
-  @ApiProperty({ example: -34.397 })
-  geoLat: number;
-
-  @ApiProperty({ example: 150.644 })
-  geoLong: number;
 }
