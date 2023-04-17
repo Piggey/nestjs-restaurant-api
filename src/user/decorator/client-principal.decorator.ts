@@ -6,13 +6,15 @@ import {
 } from '@nestjs/common';
 import { ClientPrincipalDto } from '../dto';
 
+export const CLIENT_PRINCIPAL_HEADER = 'x-ms-client-principal';
+
 export const ClientPrincipal = createParamDecorator(
   (data: unknown, ctx: ExecutionContext): ClientPrincipalDto => {
     const req = ctx.switchToHttp().getRequest<Request>();
 
-    if (!req.headers['x-ms-client-principal']) {
+    if (!req.headers[CLIENT_PRINCIPAL_HEADER]) {
       throw new HttpException(
-        'x-ms-client-principal request header not provided',
+        `${CLIENT_PRINCIPAL_HEADER} request header not provided`,
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -39,13 +41,13 @@ export const ClientPrincipal = createParamDecorator(
 export const getClientPrincipalFromHeader = (
   req: Request,
 ): ClientPrincipalDto => {
-  if (!req.headers['x-ms-client-principal'])
+  if (!req.headers[CLIENT_PRINCIPAL_HEADER])
     throw new HttpException(
-      'x-ms-client-principal request header not provided',
+      `${CLIENT_PRINCIPAL_HEADER} request header not provided`,
       HttpStatus.FORBIDDEN,
     );
 
-  const encoded = Buffer.from(req.headers['x-ms-client-principal'], 'base64');
+  const encoded = Buffer.from(req.headers[CLIENT_PRINCIPAL_HEADER], 'base64');
   const decoded = encoded.toString();
   const client = JSON.parse(decoded);
   client.userRoles = client.userRoles.filter(

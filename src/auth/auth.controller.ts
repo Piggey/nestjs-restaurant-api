@@ -8,7 +8,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { UserSignInResponse } from '../user/response';
-import { ClientPrincipal } from '../user/decorator';
+import { CLIENT_PRINCIPAL_HEADER, ClientPrincipal } from '../user/decorator';
 import { Roles } from './decorator';
 import { RolesGuard } from './guard';
 
@@ -18,7 +18,7 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @ApiHeader({
-    name: 'x-ms-client-principal',
+    name: CLIENT_PRINCIPAL_HEADER,
     description: 'Client principal encoded as base64',
     example: 'eyJ1c2VySWQiOiAiMjIyMjIyMjIyMiJ9',
     required: true,
