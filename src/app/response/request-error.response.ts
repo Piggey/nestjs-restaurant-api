@@ -13,6 +13,6 @@ export class RequestErrorResponse {
   })
   message: string | string[];
 
-  @ApiProperty({ nullable: true })
-  error: string | null;
+  @ApiProperty({ required: false })
+  error?: string;
 }
