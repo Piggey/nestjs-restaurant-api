@@ -6,7 +6,7 @@ import { PrismaModule } from '../prisma/prisma.module';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import * as request from 'supertest';
-import { ClientPrincipalDto, ClientRoles } from '../user/dto';
+import { UserAuthDto, UserRoles } from '../user/dto';
 
 describe('AuthController (e2e, positive)', () => {
   let app: INestApplication;
@@ -27,9 +27,9 @@ describe('AuthController (e2e, positive)', () => {
           userId: mockUserId(),
           userDetails: `testUser${randomNumberString()}`,
           userRoles: [
-            ClientRoles.ANONYMOUS,
-            ClientRoles.AUTHENTICATED,
-            ClientRoles.CLIENT,
+            UserRoles.ANONYMOUS,
+            UserRoles.AUTHENTICATED,
+            UserRoles.CLIENT,
           ],
         }),
       })
@@ -47,9 +47,9 @@ describe('AuthController (e2e, positive)', () => {
     const userId = mockUserId();
     const userDetails = `testUser${randomNumberString()}`;
     const userRoles = [
-      ClientRoles.ANONYMOUS,
-      ClientRoles.AUTHENTICATED,
-      ClientRoles.CLIENT,
+      UserRoles.ANONYMOUS,
+      UserRoles.AUTHENTICATED,
+      UserRoles.CLIENT,
     ];
 
     await request(app.getHttpServer())
@@ -101,9 +101,9 @@ describe('AuthController (e2e, positive)', () => {
           userId,
           userDetails,
           userRoles: [
-            ClientRoles.ANONYMOUS,
-            ClientRoles.AUTHENTICATED,
-            ClientRoles.CLIENT,
+            UserRoles.ANONYMOUS,
+            UserRoles.AUTHENTICATED,
+            UserRoles.CLIENT,
           ],
         }),
       })
@@ -124,9 +124,9 @@ describe('AuthController (e2e, positive)', () => {
           userId,
           userDetails,
           userRoles: [
-            ClientRoles.ANONYMOUS,
-            ClientRoles.AUTHENTICATED,
-            ClientRoles.MANAGER,
+            UserRoles.ANONYMOUS,
+            UserRoles.AUTHENTICATED,
+            UserRoles.MANAGER,
           ],
         }),
       })
@@ -171,7 +171,7 @@ describe('AuthController (e2e, negative)', () => {
         'x-ms-client-principal': encodeUser({
           userId: mockUserId(),
           userDetails: `testUser${randomNumberString()}`,
-          userRoles: [ClientRoles.ANONYMOUS, ClientRoles.AUTHENTICATED],
+          userRoles: [UserRoles.ANONYMOUS, UserRoles.AUTHENTICATED],
         }),
       })
       .expect(400)
@@ -191,10 +191,10 @@ describe('AuthController (e2e, negative)', () => {
           userId: mockUserId(),
           userDetails: `testUser${randomNumberString()}`,
           userRoles: [
-            ClientRoles.ANONYMOUS,
-            ClientRoles.AUTHENTICATED,
-            ClientRoles.CLIENT,
-            ClientRoles.DELIVERY,
+            UserRoles.ANONYMOUS,
+            UserRoles.AUTHENTICATED,
+            UserRoles.CLIENT,
+            UserRoles.DELIVERY,
           ],
         }),
       })
@@ -220,7 +220,7 @@ const createApp = async (): Promise<INestApplication> => {
   return app.init();
 };
 
-const encodeUser = (user: ClientPrincipalDto): string => {
+const encodeUser = (user: UserAuthDto): string => {
   return Buffer.from(JSON.stringify(user)).toString('base64');
 };
 

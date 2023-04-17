@@ -4,12 +4,12 @@ import {
   HttpStatus,
   createParamDecorator,
 } from '@nestjs/common';
-import { ClientPrincipalDto } from '../dto';
+import { UserAuthDto } from '../dto';
 
 export const CLIENT_PRINCIPAL_HEADER = 'x-ms-client-principal';
 
 export const ClientPrincipal = createParamDecorator(
-  (data: unknown, ctx: ExecutionContext): ClientPrincipalDto => {
+  (data: unknown, ctx: ExecutionContext): UserAuthDto => {
     const req = ctx.switchToHttp().getRequest<Request>();
 
     if (!req.headers[CLIENT_PRINCIPAL_HEADER]) {
@@ -40,7 +40,7 @@ export const ClientPrincipal = createParamDecorator(
 
 export const getClientPrincipalFromHeader = (
   req: Request,
-): ClientPrincipalDto => {
+): UserAuthDto => {
   if (!req.headers[CLIENT_PRINCIPAL_HEADER])
     throw new HttpException(
       `${CLIENT_PRINCIPAL_HEADER} request header not provided`,

@@ -1,6 +1,6 @@
 import { Controller, Get, HttpCode, Post, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { ClientPrincipalDto, ClientRoles } from '../user/dto';
+import { UserAuthDto } from '../user/dto';
 import {
   ApiBadRequestResponse,
   ApiHeader,
@@ -9,8 +9,9 @@ import {
 } from '@nestjs/swagger';
 import { UserSignInResponse } from '../user/response';
 import { CLIENT_PRINCIPAL_HEADER, ClientPrincipal } from '../user/decorator';
-import { Roles } from './decorator';
+import { AllowRoles } from './decorator';
 import { RolesGuard } from './guard';
+import { UserRoles } from '../user/model';
 
 @Controller('auth')
 @ApiTags('auth')
@@ -35,14 +36,14 @@ export class AuthController {
   @Post('signin')
   @HttpCode(200)
   async signIn(
-    @ClientPrincipal() usr: ClientPrincipalDto,
+    @ClientPrincipal() usr: UserAuthDto,
   ): Promise<UserSignInResponse> {
     return this.authService.signIn(usr);
   }
 
   @Get('test')
   @UseGuards(RolesGuard)
-  @Roles(ClientRoles.MANAGER)
+  @AllowRoles(UserRoles.MANAGER)
   async test() {
     return true;
   }

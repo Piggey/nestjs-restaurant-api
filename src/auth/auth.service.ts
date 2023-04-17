@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { UserSignInResponse } from 'src/user/response';
 import { PrismaService } from '../prisma/prisma.service';
-import { ClientPrincipalDto } from '../user/dto';
+import { UserAuthDto } from '../user/dto';
 import { Role, User } from '@prisma/client';
 
 @Injectable()
 export class AuthService {
   constructor(private readonly db: PrismaService) {}
 
-  async signIn(usr: ClientPrincipalDto): Promise<UserSignInResponse> {
+  async signIn(usr: UserAuthDto): Promise<UserSignInResponse> {
     const dbUser: User = await this.db.user.findFirst({
       where: {
         userId: usr.userId,
