@@ -29,6 +29,9 @@ export class EmployeeDataResponse {
   })
   firedAt: Date | null;
 
-  @ApiProperty()
-  restaurant: RestaurantDataResponse;
+  @ApiProperty({
+    description: 'wont be returned in some cases',
+    required: false,
+  })
+  restaurant?: RestaurantDataResponse;
 }
