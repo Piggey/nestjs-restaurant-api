@@ -38,9 +38,7 @@ export const ClientPrincipal = createParamDecorator(
   },
 );
 
-export const getClientPrincipalFromHeader = (
-  req: Request,
-): UserAuthDto => {
+export const getClientPrincipalFromHeader = (req: Request): UserAuthDto => {
   if (!req.headers[CLIENT_PRINCIPAL_HEADER])
     throw new HttpException(
       `${CLIENT_PRINCIPAL_HEADER} request header not provided`,
