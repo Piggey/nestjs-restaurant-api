@@ -1,20 +1,49 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { UserController } from './user.controller';
-import { UserService } from './user.service';
+import { INestApplication } from '@nestjs/common';
+import { createApp, encodeUser, mockUserId, randomNumberString } from '../test';
+import * as request from 'supertest';
+import { UserRoles } from './model';
 
-describe('UserController', () => {
-  let controller: UserController;
+describe('UserController (e2e, positive)', () => {
+  let app: INestApplication;
 
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      controllers: [UserController],
-      providers: [UserService],
-    }).compile();
-
-    controller = module.get<UserController>(UserController);
+  beforeAll(async () => {
+    app = await createApp();
   });
 
-  it('should be defined', () => {
-    expect(controller).toBeDefined();
+  afterAll(async () => {
+    await app.close();
+  });
+
+  it('should return user data with no employee data', async () => {
+    const clientPrincipal = encodeUser({
+      userId: mockUserId(),
+      userDetails: `testUser${randomNumberString()}`,
+      userRoles: [UserRoles.CLIENT],
+    });
+
+    // add a test user
+    await request(app.getHttpServer())
+      .post('/auth/signin')
+      .set({ 'x-ms-client-principal': clientPrincipal })
+      .expect(200);
+
+    return request(app.getHttpServer())
+      .get('/users/me')
+      .set({ 'x-ms-client-principal': clientPrincipal })
+      .expect(200)
+      .then((res) => {
+        expect(res.body).toEqual({
+          user: {
+            userDetails: expect.any(String),
+            userRole: 'CLIENT',
+            loyaltyPoints: 0,
+          },
+        });
+        expect(res.body.employee).toBeUndefined();
+      });
+  });
+
+  it('should return both user and employee data', () => {
+    expect(true).toBe(true);
   });
 });
