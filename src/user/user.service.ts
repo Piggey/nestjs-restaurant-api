@@ -104,8 +104,8 @@ export class UserService {
         },
         where: {
           AND: [
-            { firedAt: { not: null }},
-            { restaurant: { manager: { userId: user.userId }}},
+            { firedAt: { not: null } },
+            { restaurant: { manager: { userId: user.userId } } },
           ],
         },
       });
