@@ -1,12 +1,7 @@
-import { INestApplication, ValidationPipe } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
-import { JwtModule } from '@nestjs/jwt';
-import { Test, TestingModule } from '@nestjs/testing';
-import { PrismaModule } from '../prisma/prisma.module';
-import { AuthController } from './auth.controller';
-import { AuthService } from './auth.service';
+import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
-import { UserAuthDto, UserRoles } from '../user/dto';
+import { UserRoles } from '../user/model';
+import { createApp, encodeUser, mockUserId, randomNumberString } from '../test';
 
 describe('AuthController (e2e, positive)', () => {
   let app: INestApplication;
@@ -207,35 +202,3 @@ describe('AuthController (e2e, negative)', () => {
       });
   });
 });
-
-const createApp = async (): Promise<INestApplication> => {
-  const module: TestingModule = await Test.createTestingModule({
-    imports: [JwtModule.register({}), ConfigModule.forRoot(), PrismaModule],
-    controllers: [AuthController],
-    providers: [AuthService],
-  }).compile();
-
-  const app = module.createNestApplication();
-  app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
-  return app.init();
-};
-
-const encodeUser = (user: UserAuthDto): string => {
-  return Buffer.from(JSON.stringify(user)).toString('base64');
-};
-
-const mockUserId = (): string => {
-  const CHARS = 'abcdefghijklmnoprstuwvxyz0123456789';
-  const RESULT_LENGTH = 32;
-
-  let result = '';
-  for (let i = 0; i < RESULT_LENGTH; i++) {
-    result += CHARS.charAt(Math.floor(Math.random() * CHARS.length));
-  }
-
-  return result;
-};
-
-const randomNumberString = (): string => {
-  return Math.trunc(Math.random() * 69420).toString();
-};
