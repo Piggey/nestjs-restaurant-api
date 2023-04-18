@@ -1,7 +1,13 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { UserAuthDto } from './dto';
-import { AboutUserResponse, UserDataResponse } from './response';
+import {
+  AboutUserResponse,
+  EmployeeDataResponse,
+  FetchEmployeesResponse,
+  UserDataResponse,
+} from './response';
 import { PrismaService } from '../prisma/prisma.service';
+import { UserRoles } from './model';
 
 @Injectable()
 export class UserService {
@@ -27,24 +33,23 @@ export class UserService {
 
     const employee = await this.db.employee.findFirst({
       where: { userId: dbUser.userId },
+      include: {
+        address: true,
+        restaurant: {
+          include: {
+            address: true,
+            manager: true,
+          },
+        },
+      },
     });
 
     if (!employee) return { user: userData };
 
-    // query database asynchronously
-    const [employeeAddress, restaurant] = await Promise.all([
-      this.db.address.findFirst({ where: { addressId: employee.addressId } }),
-      this.db.restaurant.findFirst({
-        where: { restaurantId: employee.restaurantId },
-      }),
-    ]);
-
-    const [restaurantAddress, restaurantManager] = await Promise.all([
-      this.db.address.findFirst({ where: { addressId: restaurant.addressId } }),
-      this.db.employee.findFirst({
-        where: { employeeId: restaurant.managerId },
-      }),
-    ]);
+    const employeeAddress = employee.address;
+    const restaurant = employee.restaurant;
+    const restaurantAddress = restaurant.address;
+    const restaurantManager = restaurant.manager;
 
     return {
       user: userData,
@@ -60,5 +65,60 @@ export class UserService {
         },
       },
     };
+  }
+
+  async fetchEmployees(user: UserAuthDto): Promise<FetchEmployeesResponse> {
+    if (user.userRoles.includes(UserRoles.BOSS)) {
+      const dbEmployees = await this.db.employee.findMany({
+        include: {
+          restaurant: { include: { address: true, manager: true } },
+          address: true,
+        },
+        where: {
+          firedAt: { not: null },
+        },
+      });
+
+      const employees: EmployeeDataResponse[] = dbEmployees.map((employee) => ({
+        firstName: employee.firstName,
+        lastName: employee.lastName,
+        hiredAt: employee.hiredAt,
+        firedAt: employee.firedAt,
+        address: employee.address,
+        restaurant: {
+          managerName: `${employee.restaurant.manager.firstName} ${employee.restaurant.manager.lastName}`,
+          address: employee.restaurant.address,
+        },
+      }));
+
+      return { employees };
+    }
+
+    if (user.userRoles.includes(UserRoles.MANAGER)) {
+      const dbEmployees = await this.db.employee.findMany({
+        include: {
+          restaurant: {
+            include: { manager: { include: { user: true } } },
+          },
+          address: true,
+        },
+        where: {
+          AND: [
+            { firedAt: { not: null }},
+            { restaurant: { manager: { userId: user.userId }}},
+          ],
+        },
+      });
+
+      const employees: EmployeeDataResponse[] = dbEmployees.map((employee) => ({
+        firstName: employee.firstName,
+        lastName: employee.lastName,
+        hiredAt: employee.hiredAt,
+        firedAt: employee.firedAt,
+        address: employee.address,
+      }));
+
+      return { employees };
+    }
   }
 }
