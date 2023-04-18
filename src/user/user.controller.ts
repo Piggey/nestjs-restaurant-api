@@ -9,6 +9,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { AboutUserResponse } from './response';
+import { RequestErrorResponse } from '../app/response';
 
 @ApiTags('users')
 @Controller('users')
@@ -28,8 +29,12 @@ export class UserController {
   })
   @ApiBadRequestResponse({
     description: `${CLIENT_PRINCIPAL_HEADER} was not provided`,
+    type: RequestErrorResponse,
   })
-  @ApiNotFoundResponse()
+  @ApiNotFoundResponse({
+    description: 'user with given `userId` not found in the database',
+    type: RequestErrorResponse,
+  })
   @Get('me')
   async me(@ClientPrincipal() user): Promise<AboutUserResponse> {
     return this.userService.me(user);

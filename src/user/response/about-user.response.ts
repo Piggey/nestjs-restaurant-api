@@ -7,6 +7,7 @@ export class AboutUserResponse {
 
   @ApiProperty({
     type: () => EmployeeDataResponse,
+    title: 'EmployeeDataResponse',
     description: 'only returned when user is also an employee',
     required: false,
   })
