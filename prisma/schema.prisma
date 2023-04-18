@@ -84,8 +84,8 @@ model Restaurant {
   geoLat Float
   geoLong Float
 
-  managerId Int
-  manager Employee @relation(name: "managedRestaurants", fields: [managerId], references: [employeeId])
+  managerId Int?
+  manager Employee? @relation(name: "managedRestaurants", fields: [managerId], references: [employeeId])
 
   addressId Int
   address Address @relation(fields: [addressId], references: [addressId])
