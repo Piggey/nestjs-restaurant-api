@@ -46,6 +46,15 @@ export class UserController {
   }
 
   @ApiHeader(clientHeaderInfo)
+  @ApiOkResponse({
+    description:
+      'returns all hired employees in his restaurant for a `MANAGER` level role, returns all hired employees for `BOSS` level role',
+    type: FetchEmployeesResponse,
+  })
+  @ApiBadRequestResponse({
+    description: 'something went wrong with provided user data',
+    type: RequestErrorResponse,
+  })
   @UseGuards(RolesGuard)
   @AllowRoles(UserRoles.MANAGER)
   @Get('employees')
