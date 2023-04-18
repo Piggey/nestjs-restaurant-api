@@ -24,5 +24,5 @@ export class EmployeeModel {
   firedAt: Date | null;
 
   @ApiProperty()
-  client: UserModel;
+  user: UserModel;
 }
