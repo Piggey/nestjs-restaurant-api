@@ -1,0 +1,73 @@
+{
+	"info": {
+		"_postman_id": "852daec4-59f3-421f-abb5-082b67116d50",
+		"name": "sumatywne",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "25187360"
+	},
+	"item": [
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "signin",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-ms-client-principal",
+								"value": "ewogICJpZGVudGl0eVByb3ZpZGVyIjogImdpdGh1YiIsCiAgInVzZXJJZCI6ICJkNzViMjYwYTY0NTA0MDY3YmZjNWIyOTA1ZTNiODE4MiIsCiAgInVzZXJEZXRhaWxzIjogInVzZXJuYW1lIiwKICAidXNlclJvbGVzIjogWyJhbm9ueW1vdXMiLCAiYXV0aGVudGljYXRlZCIsICJDTElFTlQiLCAiTUFOQUdFUiJdCn0=",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"yeah@banie.whoy\",\n    \"passwordHash\": \"d04b98f48e8f8bcc15c6ae5ac050801cd6dcfd428fb5f9e65c4e16e7807340fa\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/auth/signin",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"auth",
+								"signin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "test",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/auth/test",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"auth",
+								"test"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
