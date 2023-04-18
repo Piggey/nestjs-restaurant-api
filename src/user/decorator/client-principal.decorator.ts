@@ -47,7 +47,18 @@ export const getClientPrincipalFromHeader = (req: Request): UserAuthDto => {
 
   const encoded = Buffer.from(req.headers[CLIENT_PRINCIPAL_HEADER], 'base64');
   const decoded = encoded.toString();
-  const client = JSON.parse(decoded);
+
+  let client: UserAuthDto;
+  try {
+    client = JSON.parse(decoded);
+  } catch (error) {
+    if (error instanceof SyntaxError)
+      throw new HttpException(
+        `could not parse ${CLIENT_PRINCIPAL_HEADER}`,
+        HttpStatus.BAD_REQUEST,
+      );
+  }
+
   client.userRoles = client.userRoles.filter(
     (role) => role !== 'anonymous' && role !== 'authenticated',
   );
