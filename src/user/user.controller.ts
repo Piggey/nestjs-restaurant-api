@@ -10,8 +10,8 @@ import {
 } from '@nestjs/swagger';
 import { AboutUserResponse, FetchEmployeesResponse } from './response';
 import { RequestErrorResponse } from '../app/response';
-import { RolesGuard } from 'src/auth/guard';
-import { AllowRoles } from 'src/auth/decorator';
+import { RolesGuard } from '../auth/guard';
+import { AllowRoles } from '../auth/decorator';
 import { UserRoles } from './model';
 
 const clientHeaderInfo = {
