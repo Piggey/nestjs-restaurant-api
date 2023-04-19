@@ -1,13 +1,15 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { UserAuthDto } from './dto';
+import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
+import { CreateEmployeeDto, UserAuthDto } from './dto';
 import {
   AboutUserResponse,
+  CreateEmployeeResponse,
   EmployeeDataResponse,
   FetchEmployeesResponse,
   UserDataResponse,
 } from './response';
 import { PrismaService } from '../prisma/prisma.service';
 import { UserRoles } from './model';
+import { Address, Employee } from '@prisma/client';
 
 @Injectable()
 export class UserService {
@@ -121,6 +123,86 @@ export class UserService {
       }));
 
       return { employees };
+    }
+  }
+
+  async createEmployee(
+    user: UserAuthDto,
+    employee: CreateEmployeeDto,
+  ): Promise<CreateEmployeeResponse> {
+    // try to find user
+    const [dbUser, dbRestaurant] = await Promise.all([
+      this.db.user.findFirst({ where: { userId: employee.userId } }),
+      this.db.restaurant.findFirst({
+        include: { manager: true, address: true },
+        where: { restaurantId: employee.restaurantId },
+      }),
+    ]);
+
+    if (!dbUser)
+      throw new HttpException(
+        `user with userId = ${employee.userId} was not found`,
+        HttpStatus.NOT_FOUND,
+      );
+
+    if (!dbRestaurant)
+      throw new HttpException(
+        `restaurant with restaurantId = ${employee.restaurantId} was not found`,
+        HttpStatus.NOT_FOUND,
+      );
+
+    let newAddress: Address;
+    let newEmployee: Employee;
+    try {
+      newAddress = await this.db.address.create({
+        data: {
+          city: employee.city,
+          country: employee.country,
+          postalCode: employee.postalCode,
+          street: employee.street,
+          streetNo: employee.streetNo,
+        },
+      });
+
+      newEmployee = await this.db.employee.create({
+        data: {
+          firstName: employee.firstName,
+          lastName: employee.lastName,
+          pesel: employee.pesel,
+          user: { connect: { userId: dbUser.userId } },
+          address: { connect: { addressId: newAddress.addressId } },
+          restaurant: { connect: { restaurantId: dbRestaurant.restaurantId } },
+        },
+      });
+
+      return {
+        employeeCreated: true,
+        employee: {
+          firstName: newEmployee.firstName,
+          lastName: newEmployee.lastName,
+          hiredAt: newEmployee.hiredAt,
+          firedAt: newEmployee.firedAt,
+          address: {
+            country: newAddress.country,
+            postalCode: newAddress.postalCode,
+            city: newAddress.city,
+            street: newAddress.street,
+            streetNo: newAddress.streetNo,
+          },
+          restaurant: {
+            managerName:
+              `${dbRestaurant.manager.firstName} ${dbRestaurant.manager.lastName}` ||
+              null,
+            address: dbRestaurant.address,
+          },
+        },
+      };
+    } catch (error) {
+      Logger.error(error);
+      throw new HttpException(
+        'could not create new employee',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 }

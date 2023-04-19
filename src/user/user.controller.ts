@@ -1,18 +1,26 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CLIENT_PRINCIPAL_HEADER, ClientPrincipal } from './decorator';
 import {
   ApiBadRequestResponse,
+  ApiCreatedResponse,
+  ApiForbiddenResponse,
   ApiHeader,
+  ApiInternalServerErrorResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { AboutUserResponse, FetchEmployeesResponse } from './response';
+import {
+  AboutUserResponse,
+  CreateEmployeeResponse,
+  FetchEmployeesResponse,
+} from './response';
 import { RequestErrorResponse } from '../app/response';
 import { RolesGuard } from '../auth/guard';
 import { AllowRoles } from '../auth/decorator';
 import { UserRoles } from './model';
+import { CreateEmployeeDto, UserAuthDto } from './dto';
 
 const clientHeaderInfo = {
   name: CLIENT_PRINCIPAL_HEADER,
@@ -55,6 +63,10 @@ export class UserController {
     description: 'something went wrong with provided user data',
     type: RequestErrorResponse,
   })
+  @ApiForbiddenResponse({
+    description: '`userRole` level is not high enough',
+    type: RequestErrorResponse,
+  })
   @UseGuards(RolesGuard)
   @AllowRoles(UserRoles.MANAGER)
   @Get('employees')
@@ -62,5 +74,33 @@ export class UserController {
     @ClientPrincipal() user,
   ): Promise<FetchEmployeesResponse> {
     return this.userService.fetchEmployees(user);
+  }
+
+  @ApiHeader(clientHeaderInfo)
+  @ApiCreatedResponse({
+    description: 'created a new employee and him to a restaurant',
+    type: CreateEmployeeResponse,
+  })
+  @ApiForbiddenResponse({
+    description: '`userRole` level was not high enough',
+    type: RequestErrorResponse,
+  })
+  @ApiNotFoundResponse({
+    description: 'either `User` or `Restaurant` was not found in the database',
+    type: RequestErrorResponse,
+  })
+  @ApiInternalServerErrorResponse({
+    description:
+      'something went wrong while adding a new employee to the database',
+    type: RequestErrorResponse,
+  })
+  @UseGuards(RolesGuard)
+  @AllowRoles(UserRoles.MANAGER)
+  @Post('employees')
+  async createEmployee(
+    @ClientPrincipal() user: UserAuthDto,
+    @Body() employee: CreateEmployeeDto,
+  ): Promise<CreateEmployeeResponse> {
+    return this.userService.createEmployee(user, employee);
   }
 }
