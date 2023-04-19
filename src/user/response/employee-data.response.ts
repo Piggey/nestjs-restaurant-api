@@ -2,8 +2,8 @@ import { ApiProperty } from '@nestjs/swagger';
 import { AddressModel } from '../../prisma/model';
 
 class RestaurantDataResponse {
-  @ApiProperty({ example: 'firstname lastname' })
-  managerName: string;
+  @ApiProperty({ example: 'firstname lastname', nullable: true })
+  managerName: string | null;
 
   @ApiProperty()
   address: AddressModel;
