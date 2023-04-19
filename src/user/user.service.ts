@@ -201,7 +201,7 @@ export class UserService {
       Logger.error(error);
       throw new HttpException(
         'could not create new employee',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpStatus.FAILED_DEPENDENCY,
       );
     }
   }

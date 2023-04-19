@@ -6,9 +6,9 @@ import {
   ApiCreatedResponse,
   ApiForbiddenResponse,
   ApiHeader,
-  ApiInternalServerErrorResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
+  ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
 import {
@@ -89,7 +89,8 @@ export class UserController {
     description: 'either `User` or `Restaurant` was not found in the database',
     type: RequestErrorResponse,
   })
-  @ApiInternalServerErrorResponse({
+  @ApiResponse({
+    status: 424,
     description:
       'something went wrong while adding a new employee to the database',
     type: RequestErrorResponse,
