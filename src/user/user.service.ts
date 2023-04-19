@@ -75,7 +75,7 @@ export class UserService {
           address: true,
         },
         where: {
-          firedAt: { not: null },
+          firedAt: null,
         },
       });
 
@@ -86,7 +86,9 @@ export class UserService {
         firedAt: employee.firedAt,
         address: employee.address,
         restaurant: {
-          managerName: `${employee.restaurant.manager.firstName} ${employee.restaurant.manager.lastName}`,
+          managerName:
+            `${employee.restaurant.manager.firstName} ${employee.restaurant.manager.lastName}` ||
+            null,
           address: employee.restaurant.address,
         },
       }));
@@ -104,7 +106,7 @@ export class UserService {
         },
         where: {
           AND: [
-            { firedAt: { not: null } },
+            { firedAt: null },
             { restaurant: { manager: { userId: user.userId } } },
           ],
         },
