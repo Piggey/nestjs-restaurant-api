@@ -1,6 +1,6 @@
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
-import { UserRoles } from '../user-old/model';
+import { UserRoles } from './model';
 import { createApp, encodeUser, mockUserId, randomNumberString } from '../test';
 
 describe('AuthController (e2e, positive)', () => {

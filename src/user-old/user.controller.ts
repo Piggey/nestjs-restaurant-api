@@ -20,8 +20,8 @@ import {
 import { RequestErrorResponse } from '../app/response';
 import { RolesGuard } from '../auth/guard';
 import { AllowRoles } from '../auth/decorator';
-import { UserRoles } from './model';
-import { CreateEmployeeDto, UserAuthDto } from './dto';
+import { UserRoles } from '../auth/model';
+import { CreateEmployeeDto, ClientPrincipalDto } from './dto';
 import { Address } from '../model/address/entities/address.entity';
 
 const clientHeaderInfo = {
@@ -109,7 +109,7 @@ export class UserController {
   @AllowRoles(UserRoles.MANAGER)
   @Post('employees')
   async createEmployee(
-    @ClientPrincipal() user: UserAuthDto,
+    @ClientPrincipal() user: ClientPrincipalDto,
     @Body() employee: CreateEmployeeDto,
   ): Promise<CreateEmployeeResponse> {
     return this.userService.createEmployee(user, employee);

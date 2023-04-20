@@ -4,34 +4,20 @@ import {
   HttpStatus,
   createParamDecorator,
 } from '@nestjs/common';
-import { UserAuthDto } from '../dto';
+import { ClientPrincipalDto } from '../dto/client-principal.dto';
 
 export const CLIENT_PRINCIPAL_HEADER = 'x-ms-client-principal';
 
 export const ClientPrincipal = createParamDecorator(
-  (data: unknown, ctx: ExecutionContext): UserAuthDto => {
+  (data: unknown, ctx: ExecutionContext): ClientPrincipalDto => {
     const req = ctx.switchToHttp().getRequest<Request>();
-    const client = getClientPrincipalFromHeader(req);
-
-    if (client.userRoles.length === 0) {
-      throw new HttpException(
-        'no custom userRole specified',
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-
-    if (client.userRoles.length > 1) {
-      throw new HttpException(
-        'too many custom roles specified',
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-
-    return client;
+    return getClientPrincipalFromHeader(req);
   },
 );
 
-export const getClientPrincipalFromHeader = (req: Request): UserAuthDto => {
+export const getClientPrincipalFromHeader = (
+  req: Request,
+): ClientPrincipalDto => {
   if (!req.headers[CLIENT_PRINCIPAL_HEADER])
     throw new HttpException(
       `${CLIENT_PRINCIPAL_HEADER} request header not provided`,
@@ -41,7 +27,7 @@ export const getClientPrincipalFromHeader = (req: Request): UserAuthDto => {
   const encoded = Buffer.from(req.headers[CLIENT_PRINCIPAL_HEADER], 'base64');
   const decoded = encoded.toString();
 
-  let client: UserAuthDto;
+  let client: ClientPrincipalDto;
   try {
     client = JSON.parse(decoded);
   } catch (error) {
@@ -55,6 +41,18 @@ export const getClientPrincipalFromHeader = (req: Request): UserAuthDto => {
   client.userRoles = client.userRoles.filter(
     (role) => role !== 'anonymous' && role !== 'authenticated',
   );
+
+  if (client.userRoles.length === 0)
+    throw new HttpException(
+      'no custom userRole specified',
+      HttpStatus.BAD_REQUEST,
+    );
+
+  if (client.userRoles.length > 1)
+    throw new HttpException(
+      'too many custom roles specified',
+      HttpStatus.BAD_REQUEST,
+    );
 
   return client;
 };

@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { UserSignInResponse } from 'src/user-old/response';
 import { PrismaService } from '../prisma/prisma.service';
-import { UserAuthDto } from '../user-old/dto';
 import { Role, User } from '@prisma/client';
+import { ClientPrincipalDto } from './dto';
 
 @Injectable()
 export class AuthService {
   constructor(private readonly db: PrismaService) {}
 
-  async signIn(usr: UserAuthDto): Promise<UserSignInResponse> {
+  async signIn(usr: ClientPrincipalDto): Promise<UserSignInResponse> {
     const dbUser: User = await this.db.user.findFirst({
       where: {
         userId: usr.userId,
@@ -31,7 +31,6 @@ export class AuthService {
       };
     }
 
-    // TODO: update with new info if is different
     if (
       dbUser.role !== (usr.userRoles[0] as Role) ||
       dbUser.userDetails !== usr.userDetails
@@ -52,6 +51,7 @@ export class AuthService {
         userUpdated: true,
       };
     }
+
     return {
       userSignedIn: true,
       userCreated: false,

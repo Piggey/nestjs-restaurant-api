@@ -3,9 +3,9 @@ import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaModule } from '../prisma/prisma.module';
-import { UserAuthDto } from '../user-old/dto';
 import { AuthModule } from '../auth/auth.module';
 import { UserModule } from '../user-old/user.module';
+import { ClientPrincipalDto, USER_ID_MAX_LENGTH } from '../auth/dto';
 
 export const createApp = async (): Promise<INestApplication> => {
   const module: TestingModule = await Test.createTestingModule({
@@ -16,8 +16,6 @@ export const createApp = async (): Promise<INestApplication> => {
       AuthModule,
       UserModule,
     ],
-    // controllers: [AuthController, UserController],
-    // providers: [AuthService, UserService],
   }).compile();
 
   const app = module.createNestApplication();
@@ -25,16 +23,15 @@ export const createApp = async (): Promise<INestApplication> => {
   return app.init();
 };
 
-export const encodeUser = (user: UserAuthDto): string => {
+export const encodeUser = (user: ClientPrincipalDto): string => {
   return Buffer.from(JSON.stringify(user)).toString('base64');
 };
 
 export const mockUserId = (): string => {
   const CHARS = 'abcdefghijklmnoprstuwvxyz0123456789';
-  const RESULT_LENGTH = 32;
 
   let result = '';
-  for (let i = 0; i < RESULT_LENGTH; i++) {
+  for (let i = 0; i < USER_ID_MAX_LENGTH; i++) {
     result += CHARS.charAt(Math.floor(Math.random() * CHARS.length));
   }
 

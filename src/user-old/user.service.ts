@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
-import { CreateEmployeeDto, UserAuthDto } from './dto';
+import { CreateEmployeeDto, ClientPrincipalDto } from './dto';
 import {
   AboutUserResponse,
   CreateEmployeeResponse,
@@ -10,14 +10,14 @@ import {
   UserDataResponse,
 } from './response';
 import { PrismaService } from '../prisma/prisma.service';
-import { UserRoles } from './model';
+import { UserRoles } from '../auth/model';
 import { Address, Employee } from '@prisma/client';
 
 @Injectable()
 export class UserService {
   constructor(private readonly db: PrismaService) {}
 
-  async me(user: UserAuthDto): Promise<AboutUserResponse> {
+  async me(user: ClientPrincipalDto): Promise<AboutUserResponse> {
     const dbUser = await this.db.user.findFirst({
       where: { userId: user.userId },
     });
@@ -71,7 +71,7 @@ export class UserService {
     };
   }
 
-  async fetchEmployees(user: UserAuthDto): Promise<FetchEmployeesResponse> {
+  async fetchEmployees(user: ClientPrincipalDto): Promise<FetchEmployeesResponse> {
     if (user.userRoles.includes(UserRoles.BOSS)) {
       const dbEmployees = await this.db.employee.findMany({
         include: {
@@ -147,7 +147,7 @@ export class UserService {
   }
 
   async createEmployee(
-    user: UserAuthDto,
+    user: ClientPrincipalDto,
     employee: CreateEmployeeDto,
   ): Promise<CreateEmployeeResponse> {
     // try to find user
