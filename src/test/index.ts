@@ -3,9 +3,9 @@ import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaModule } from '../prisma/prisma.module';
-import { UserAuthDto } from '../user/dto';
+import { UserAuthDto } from '../user-old/dto';
 import { AuthModule } from '../auth/auth.module';
-import { UserModule } from '../user/user.module';
+import { UserModule } from '../user-old/user.module';
 
 export const createApp = async (): Promise<INestApplication> => {
   const module: TestingModule = await Test.createTestingModule({

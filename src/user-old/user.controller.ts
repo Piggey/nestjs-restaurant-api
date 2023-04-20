@@ -15,12 +15,14 @@ import {
   AboutUserResponse,
   CreateEmployeeResponse,
   FetchEmployeesResponse,
+  FetchManagersResponse,
 } from './response';
 import { RequestErrorResponse } from '../app/response';
 import { RolesGuard } from '../auth/guard';
 import { AllowRoles } from '../auth/decorator';
 import { UserRoles } from './model';
 import { CreateEmployeeDto, UserAuthDto } from './dto';
+import { Address } from '../model/address/entities/address.entity';
 
 const clientHeaderInfo = {
   name: CLIENT_PRINCIPAL_HEADER,
@@ -74,6 +76,14 @@ export class UserController {
     @ClientPrincipal() user,
   ): Promise<FetchEmployeesResponse> {
     return this.userService.fetchEmployees(user);
+  }
+
+  @ApiHeader(clientHeaderInfo)
+  @UseGuards(RolesGuard)
+  @AllowRoles(UserRoles.BOSS)
+  @Get('managers')
+  async fetchManagers(@Body() addr: Address) {
+    return this.userService.fetchManagers();
   }
 
   @ApiHeader(clientHeaderInfo)

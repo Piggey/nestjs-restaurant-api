@@ -1,17 +1,20 @@
 import { Controller, Get, HttpCode, Post, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { UserAuthDto } from '../user/dto';
+import { UserAuthDto } from '../user-old/dto';
 import {
   ApiBadRequestResponse,
   ApiHeader,
   ApiOkResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { UserSignInResponse } from '../user/response';
-import { CLIENT_PRINCIPAL_HEADER, ClientPrincipal } from '../user/decorator';
+import { UserSignInResponse } from '../user-old/response';
+import {
+  CLIENT_PRINCIPAL_HEADER,
+  ClientPrincipal,
+} from '../user-old/decorator';
 import { AllowRoles } from './decorator';
 import { RolesGuard } from './guard';
-import { UserRoles } from '../user/model';
+import { UserRoles } from '../user-old/model';
 
 @Controller('auth')
 @ApiTags('auth')

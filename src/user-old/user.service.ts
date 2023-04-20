@@ -5,6 +5,8 @@ import {
   CreateEmployeeResponse,
   EmployeeDataResponse,
   FetchEmployeesResponse,
+  FetchManagersResponse,
+  ManagerDataResponse,
   UserDataResponse,
 } from './response';
 import { PrismaService } from '../prisma/prisma.service';
@@ -124,6 +126,24 @@ export class UserService {
 
       return { employees };
     }
+  }
+
+  async fetchManagers() {
+    const dbManagers = await this.db.employee.findMany({
+      include: { managedRestaurants: true, user: true },
+      where: {
+        user: { role: 'MANAGER' },
+        firedAt: null,
+      },
+    });
+
+    if (!dbManagers)
+      throw new HttpException(
+        'could not find any managers',
+        HttpStatus.NOT_FOUND,
+      );
+
+    return { dbManagers };
   }
 
   async createEmployee(
