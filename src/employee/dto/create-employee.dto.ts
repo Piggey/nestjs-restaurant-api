@@ -1,6 +1,6 @@
 import {
-  IsByteLength,
   IsDateString,
+  IsEmail,
   IsNotEmpty,
   IsOptional,
   IsString,
@@ -82,8 +82,8 @@ export class CreateEmployeeDto {
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
-  @IsByteLength(11, 11)
-  pesel: string;
+  @IsEmail()
+  email: string;
   @ApiProperty({
     type: CreateEmployeeAddressRelationInputDto,
   })

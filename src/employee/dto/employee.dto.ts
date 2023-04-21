@@ -31,5 +31,5 @@ export class EmployeeDto {
   @ApiProperty({
     required: false,
   })
-  pesel: string;
+  email: string;
 }

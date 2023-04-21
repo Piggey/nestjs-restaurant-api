@@ -1,4 +1,4 @@
-import { IsByteLength, IsInt, IsOptional, IsString } from 'class-validator';
+import { IsEmail, IsInt, IsOptional, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class ConnectEmployeeDto {
@@ -17,6 +17,6 @@ export class ConnectEmployeeDto {
   })
   @IsOptional()
   @IsString()
-  @IsByteLength(11, 11)
-  pesel?: string;
+  @IsEmail()
+  email?: string;
 }

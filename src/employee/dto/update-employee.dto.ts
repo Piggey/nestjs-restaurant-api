@@ -1,6 +1,6 @@
 import {
-  IsByteLength,
   IsDateString,
+  IsEmail,
   IsOptional,
   IsString,
   ValidateNested,
@@ -63,8 +63,8 @@ export class UpdateEmployeeDto {
   })
   @IsOptional()
   @IsString()
-  @IsByteLength(11, 11)
-  pesel?: string;
+  @IsEmail()
+  email?: string;
   @ApiProperty({
     required: false,
     type: UpdateEmployeeRestaurantRelationInputDto,

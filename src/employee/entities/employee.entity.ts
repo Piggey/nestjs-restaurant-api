@@ -34,7 +34,7 @@ export class Employee {
   @ApiProperty({
     required: false,
   })
-  pesel: string;
+  email: string;
   @ApiProperty({
     required: false,
   })
