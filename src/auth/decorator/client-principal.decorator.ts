@@ -12,6 +12,7 @@ export const CLIENT_PRINCIPAL_HEADER = 'x-ms-client-principal';
 export const ClientPrincipal = createParamDecorator(
   (data: unknown, ctx: ExecutionContext): ClientPrincipalDto => {
     const req = ctx.switchToHttp().getRequest<Request>();
+    Logger.log(`${req.method} ${req.url}, parsing ${CLIENT_PRINCIPAL_HEADER}`);
     return getClientPrincipalFromHeader(req);
   },
 );
