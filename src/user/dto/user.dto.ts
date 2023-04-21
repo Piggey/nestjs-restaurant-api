@@ -1,4 +1,3 @@
-import { Role } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class UserDto {
@@ -13,18 +12,9 @@ export class UserDto {
   })
   createdAt: Date;
   @ApiProperty({
-    required: false,
-  })
-  userDetails: string;
-  @ApiProperty({
     type: 'integer',
     format: 'int32',
     required: false,
   })
   loyaltyPoints: number;
-  @ApiProperty({
-    enum: Role,
-    required: false,
-  })
-  role: Role;
 }

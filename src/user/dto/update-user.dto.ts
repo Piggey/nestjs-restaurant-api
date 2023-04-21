@@ -9,10 +9,4 @@ export class UpdateUserDto {
   @IsString()
   @IsByteLength(32, 32)
   userId?: string;
-  @ApiProperty({
-    required: false,
-  })
-  @IsOptional()
-  @IsString()
-  userDetails?: string;
 }

@@ -7,8 +7,4 @@ export class CreateUserDto {
   @IsString()
   @IsByteLength(32, 32)
   userId: string;
-  @ApiProperty()
-  @IsNotEmpty()
-  @IsString()
-  userDetails: string;
 }
