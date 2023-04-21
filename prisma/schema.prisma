@@ -14,11 +14,11 @@ datasource db {
 }
 
 generator nestjsDto {
-  provider = "prisma-generator-nestjs-dto"
-  output = "../src"
+  provider                        = "prisma-generator-nestjs-dto"
+  output                          = "../src"
   outputToNestJsResourceStructure = "true"
-  classValidation = "true"
-  prettier = "true"
+  classValidation                 = "true"
+  prettier                        = "true"
 }
 
 enum Role {
@@ -32,40 +32,38 @@ enum Role {
 model User {
   /// @DtoUpdateHidden
   /// @IsByteLength(32, 32)
-  userId     String   @unique
+  userId    String   @unique
   /// @DtoReadOnly
   /// @DtoUpdateHidden
   createdAt DateTime @default(now())
 
-  userDetails   String
-  loyaltyPoints Int     @default(0)
-  role          Role    @default(CLIENT)
-  employeeInfo Employee[]
+  loyaltyPoints Int        @default(0)
+  employeeInfo  Employee[]
 }
 
 model Employee {
   /// @DtoUpdateHidden
   /// @DtoReadOnly
-  employeeId Int @id @default(autoincrement())
+  employeeId Int       @id @default(autoincrement())
   /// @DtoReadOnly
   /// @DtoUpdateHidden
-  hiredAt DateTime @default(now())
-  firedAt DateTime?
+  hiredAt    DateTime  @default(now())
+  firedAt    DateTime?
 
   firstName String
-  lastName String
-  /// @IsByteLength(11, 11)
-  pesel String @unique
+  lastName  String
+  /// @IsEmail
+  email     String @unique
 
   /// @DtoRelationRequired
   /// @DtoRelationCanConnectOnCreate
   /// @DtoRelationCanCreateOnCreate
-  address Address @relation(fields: [addressId], references: [addressId])
+  address   Address @relation(fields: [addressId], references: [addressId])
   addressId Int
 
   /// @DtoRelationRequired
   /// @DtoRelationCanConnectOnCreate
-  user User @relation(fields: [userId], references: [userId])
+  user   User   @relation(fields: [userId], references: [userId])
   /// @IsByteLength(32, 32)
   userId String
 
@@ -73,7 +71,7 @@ model Employee {
   /// @DtoRelationCanConnectOnCreate
   /// @DtoRelationCanCreateOnUpdate
   /// @DtoRelationCanConnectOnUpdate
-  restaurant Restaurant @relation(name: "workedAtRestaurant", fields: [restaurantId], references: [restaurantId])
+  restaurant   Restaurant @relation(name: "workedAtRestaurant", fields: [restaurantId], references: [restaurantId])
   restaurantId Int
 
   /// DtoRelationCanConnectOnUpdate
@@ -83,35 +81,35 @@ model Employee {
 model Menu {
   /// @DtoUpdateHidden
   /// @DtoReadOnly
-  itemId Int @id @default(autoincrement())
+  itemId    Int      @id @default(autoincrement())
   /// @DtoReadOnly
   /// @DtoUpdateHidden
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt()
 
-  name String
-  photoUrl String
+  name        String
+  photoUrl    String
   description String
   /// @description a list of ingredients separated by `,`
   ingredients String
-  available Boolean @default(true)
+  available   Boolean @default(true)
 
   /// @DtoRelationRequired
   /// @DtoRelationCanConnectOnCreate
   /// @DtoRelationCanCreateOnCreate
   /// @DtoRelationCanConnectOnUpdate
   /// @DtoRelationCanCreateOnUpdate
-  category Category @relation(fields: [categoryId], references: [categoryId])
+  category   Category @relation(fields: [categoryId], references: [categoryId])
   categoryId Int
 }
 
 model Category {
   /// @DtoUpdateHidden
   /// @DtoReadOnly
-  categoryId Int @id @default(autoincrement())
+  categoryId Int      @id @default(autoincrement())
   /// @DtoUpdateHidden
   /// @DtoReadOnly
-  createdAt DateTime @default(now())
+  createdAt  DateTime @default(now())
 
   categoryName String
 
@@ -121,19 +119,19 @@ model Category {
 model Restaurant {
   /// @DtoUpdateHidden
   /// @DtoReadOnly
-  restaurantId Int @id @default(autoincrement())
+  restaurantId Int      @id @default(autoincrement())
   /// @DtoUpdateHidden
   /// @DtoReadOnly
-  createdAt DateTime @default(now())
+  createdAt    DateTime @default(now())
 
   /// @IsLatitude
-  geoLat Float
+  geoLat  Float
   /// @IsLongitude
   geoLong Float
 
   /// @DtoRelationCanConnectOnCreate
   /// @DtoRelationCanConnectOnUpdate
-  manager Employee? @relation(name: "managedRestaurants", fields: [managerId], references: [employeeId])
+  manager   Employee? @relation(name: "managedRestaurants", fields: [managerId], references: [employeeId])
   managerId Int?
 
   /// @DtoRelationRequired
@@ -141,7 +139,7 @@ model Restaurant {
   /// @DtoRelationCanConnectOnCreate
   /// @DtoRelationCanCreateOnUpdate
   /// @DtoRelationCanConnectOnUpdate
-  address Address @relation(fields: [addressId], references: [addressId])
+  address   Address @relation(fields: [addressId], references: [addressId])
   addressId Int
 
   hiredEmployees Employee[] @relation(name: "workedAtRestaurant")
@@ -150,13 +148,13 @@ model Restaurant {
 model Address {
   /// @DtoUpdateHidden
   /// @DtoReadOnly
-  addressId Int @id @default(autoincrement())
-  street String
-  streetNo String
-  city String
+  addressId  Int    @id @default(autoincrement())
+  street     String
+  streetNo   String
+  city       String
   postalCode String
-  country String
+  country    String
 
   restaurants Restaurant[]
-  employees Employee[]
+  employees   Employee[]
 }
