@@ -1,4 +1,15 @@
-import { Body, Controller, Get, Logger, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Logger,
+  Param,
+  ParseIntPipe,
+  Patch,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { EmployeeService } from './employee.service';
 import {
   ApiBadRequestResponse,
@@ -6,8 +17,10 @@ import {
   ApiCreatedResponse,
   ApiForbiddenResponse,
   ApiHeader,
+  ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
+  ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
 import { AllowMinRole, ClientPrincipal } from '../auth/decorator';
@@ -20,15 +33,21 @@ import { RolesGuard } from '../auth/guard';
 import { UserRoles } from '../auth/model';
 import { RequestErrorResponse } from '../app/response';
 import { CreateEmployeeDto } from './dto/create-employee.dto';
+import { UpdateEmployeeDto } from './dto/update-employee.dto';
+import { EmployeeCreatedResponse } from './responses/employee-created.response';
+import { EmployeeUpdatedResponse } from './responses/employee-updated.response';
+import { EmployeeDeletedResponse } from './responses/employee-deleted.response';
 
 @ApiTags('employee')
+@ApiCookieAuth()
+@ApiHeader(SWAGGER_CLIENT_PRINCIPAL_HEADER_INFO)
+@UseGuards(RolesGuard)
+@AllowMinRole(UserRoles.MANAGER)
 @Controller('employee')
 export class EmployeeController {
   constructor(private readonly employeeService: EmployeeService) {}
 
   @ApiOperation({ summary: 'return information about employees' })
-  @ApiCookieAuth()
-  @ApiHeader(SWAGGER_CLIENT_PRINCIPAL_HEADER_INFO)
   @ApiOkResponse({
     description:
       'returns all hired employees in his restaurant for a `MANAGER` level role, returns all hired employees for `BOSS` level role',
@@ -42,8 +61,6 @@ export class EmployeeController {
     description: '`userRole` level is not high enough',
     type: RequestErrorResponse,
   })
-  @UseGuards(RolesGuard)
-  @AllowMinRole(UserRoles.MANAGER)
   @Get('/')
   async fetchEmployees(
     @ClientPrincipal() user: ClientPrincipalDto,
@@ -53,18 +70,27 @@ export class EmployeeController {
   }
 
   @ApiOperation({ summary: 'add a new employee to our database' })
-  @ApiCookieAuth()
-  @ApiHeader(SWAGGER_CLIENT_PRINCIPAL_HEADER_INFO)
-  @ApiCreatedResponse()
-  @ApiBadRequestResponse()
-  @ApiForbiddenResponse()
+  @ApiCreatedResponse({
+    description: 'a new employee created',
+    type: EmployeeCreatedResponse,
+  })
+  @ApiBadRequestResponse({
+    description:
+      'new employees data was incorrect. email might be already in use',
+    type: RequestErrorResponse,
+  })
+  @ApiForbiddenResponse({
+    description:
+      '`UserRole` is not high enough to access this endpoint. min role is `MANAGER`',
+    type: RequestErrorResponse,
+  })
   @UseGuards(RolesGuard)
   @AllowMinRole(UserRoles.MANAGER)
   @Post('/')
   async createEmployee(
     @ClientPrincipal() user: ClientPrincipalDto,
     @Body() newEmployee: CreateEmployeeDto,
-  ) {
+  ): Promise<EmployeeCreatedResponse> {
     Logger.log(`POST /employee, userId = ${user.userId}`);
     return this.employeeService.createEmployee(newEmployee);
   }
@@ -91,5 +117,17 @@ export class EmployeeController {
     @Body() updatedEmployee: UpdateEmployeeDto,
   ): Promise<EmployeeUpdatedResponse> {
     return this.employeeService.updateEmployee(id, updatedEmployee);
+  }
+
+  @ApiOperation({ summary: 'delete (mark as fired) an employee' })
+  @ApiParam({ name: 'id', type: Number })
+  @ApiOkResponse()
+  @ApiNotFoundResponse()
+  @ApiForbiddenResponse()
+  @Delete(':id')
+  async deleteEmployee(
+    @Param('id', ParseIntPipe) id,
+  ): Promise<EmployeeDeletedResponse> {
+    return this.employeeService.deleteEmployee(id);
   }
 }
