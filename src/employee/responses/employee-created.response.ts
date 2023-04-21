@@ -6,5 +6,5 @@ export class EmployeeCreatedResponse {
   employeeCreated: boolean;
 
   @ApiProperty()
-  employee: Employee;
+  employeeData: Employee;
 }
