@@ -3,13 +3,14 @@ import { EmployeeService } from './employee.service';
 import {
   ApiBadRequestResponse,
   ApiCookieAuth,
+  ApiCreatedResponse,
   ApiForbiddenResponse,
   ApiHeader,
   ApiOkResponse,
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
-import { AllowRoles, ClientPrincipal } from '../auth/decorator';
+import { AllowMinRole, ClientPrincipal } from '../auth/decorator';
 import {
   ClientPrincipalDto,
   SWAGGER_CLIENT_PRINCIPAL_HEADER_INFO,
@@ -42,7 +43,7 @@ export class EmployeeController {
     type: RequestErrorResponse,
   })
   @UseGuards(RolesGuard)
-  @AllowRoles(UserRoles.MANAGER)
+  @AllowMinRole(UserRoles.MANAGER)
   @Get('/')
   async fetchEmployees(
     @ClientPrincipal() user: ClientPrincipalDto,
@@ -54,8 +55,11 @@ export class EmployeeController {
   @ApiOperation({ summary: 'add a new employee to our database' })
   @ApiCookieAuth()
   @ApiHeader(SWAGGER_CLIENT_PRINCIPAL_HEADER_INFO)
+  @ApiCreatedResponse()
+  @ApiBadRequestResponse()
+  @ApiForbiddenResponse()
   @UseGuards(RolesGuard)
-  @AllowRoles(UserRoles.MANAGER)
+  @AllowMinRole(UserRoles.MANAGER)
   @Post('/')
   async createEmployee(
     @ClientPrincipal() user: ClientPrincipalDto,

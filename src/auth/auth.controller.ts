@@ -9,7 +9,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import {
-  AllowRoles,
+  AllowMinRole,
   CLIENT_PRINCIPAL_HEADER,
   ClientPrincipal,
 } from './decorator';
@@ -50,7 +50,7 @@ export class AuthController {
   @ApiCookieAuth(CLIENT_PRINCIPAL_HEADER)
   @Get('test')
   @UseGuards(RolesGuard)
-  @AllowRoles(UserRoles.MANAGER)
+  @AllowMinRole(UserRoles.MANAGER)
   async test() {
     Logger.log('why would you even call that');
     return true;
