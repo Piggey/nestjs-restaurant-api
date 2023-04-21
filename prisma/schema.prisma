@@ -53,6 +53,7 @@ model Employee {
   /// @DtoReadOnly
   /// @DtoUpdateHidden
   hiredAt    DateTime  @default(now())
+  /// @DtoReadOnly
   firedAt    DateTime?
 
   firstName String

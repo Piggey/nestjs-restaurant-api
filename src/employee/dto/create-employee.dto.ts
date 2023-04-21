@@ -1,5 +1,4 @@
 import {
-  IsDateString,
   IsEmail,
   IsNotEmpty,
   IsOptional,
@@ -62,15 +61,6 @@ export class CreateEmployeeRestaurantRelationInputDto {
   CreateEmployeeRestaurantRelationInputDto,
 )
 export class CreateEmployeeDto {
-  @ApiProperty({
-    type: 'string',
-    format: 'date-time',
-    required: false,
-    nullable: true,
-  })
-  @IsOptional()
-  @IsDateString()
-  firedAt?: Date;
   @ApiProperty()
   @IsNotEmpty()
   @IsString()

@@ -1,10 +1,4 @@
-import {
-  IsDateString,
-  IsEmail,
-  IsOptional,
-  IsString,
-  ValidateNested,
-} from 'class-validator';
+import { IsEmail, IsOptional, IsString, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiExtraModels, ApiProperty } from '@nestjs/swagger';
 import { CreateRestaurantDto } from '../../restaurant/dto/create-restaurant.dto';
@@ -37,15 +31,6 @@ export class UpdateEmployeeRestaurantRelationInputDto {
   UpdateEmployeeRestaurantRelationInputDto,
 )
 export class UpdateEmployeeDto {
-  @ApiProperty({
-    type: 'string',
-    format: 'date-time',
-    required: false,
-    nullable: true,
-  })
-  @IsOptional()
-  @IsDateString()
-  firedAt?: Date | null;
   @ApiProperty({
     required: false,
   })
