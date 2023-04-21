@@ -5,6 +5,9 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { UserRoles } from '../auth/model';
 import { CreateEmployeeDto } from './dto/create-employee.dto';
 import { EmployeeCreatedResponse } from './responses/employee-created.response';
+import { UpdateEmployeeDto } from './dto/update-employee.dto';
+import { EmployeeUpdatedResponse } from './responses/employee-updated.response';
+import { EmployeeDeletedResponse } from './responses/employee-deleted.response';
 
 @Injectable()
 export class EmployeeService {
@@ -91,6 +94,30 @@ export class EmployeeService {
     return {
       employeeUpdated: true,
       employeeData: updated,
+    };
+  }
+
+  async deleteEmployee(id: number): Promise<EmployeeDeletedResponse> {
+    let firedEmployee;
+    try {
+      firedEmployee = await this.db.employee.update({
+        where: { employeeId: id },
+        data: { firedAt: new Date() },
+      });
+    } catch (error) {
+      if (error.code === 'P2025') {
+        const err = new HttpException(
+          `employee with id ${id} not found`,
+          HttpStatus.NOT_FOUND,
+        );
+        Logger.error(err);
+        throw err;
+      }
+    }
+
+    return {
+      employeeDeleted: true,
+      employeeData: firedEmployee,
     };
   }
 }

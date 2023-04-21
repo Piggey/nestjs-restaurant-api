@@ -2,6 +2,6 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Employee } from '../entities/employee.entity';
 
 export class FetchEmployeesResponse {
-  @ApiProperty()
+  @ApiProperty({ type: [Employee] })
   employees: Employee[];
 }

@@ -41,10 +41,15 @@ import { EmployeeDeletedResponse } from './responses/employee-deleted.response';
 @ApiTags('employee')
 @ApiCookieAuth()
 @ApiHeader(SWAGGER_CLIENT_PRINCIPAL_HEADER_INFO)
+@ApiForbiddenResponse({
+  description: 'insufficient `UserRoles` privileges. minimum = `MANAGER`',
+  type: RequestErrorResponse,
+})
 @UseGuards(RolesGuard)
 @AllowMinRole(UserRoles.MANAGER)
 @Controller('employee')
 export class EmployeeController {
+  private readonly logger = new Logger(EmployeeController.name);
   constructor(private readonly employeeService: EmployeeService) {}
 
   @ApiOperation({ summary: 'return information about employees' })
@@ -57,15 +62,11 @@ export class EmployeeController {
     description: 'something went wrong with provided user data',
     type: RequestErrorResponse,
   })
-  @ApiForbiddenResponse({
-    description: '`userRole` level is not high enough',
-    type: RequestErrorResponse,
-  })
   @Get('/')
   async fetchEmployees(
     @ClientPrincipal() user: ClientPrincipalDto,
   ): Promise<FetchEmployeesResponse> {
-    Logger.log(`GET /employee, userId = ${user.userId}`);
+    this.logger.log(`GET /employee, userId = ${user.userId}`);
     return this.employeeService.fetchEmployees(user);
   }
 
@@ -79,11 +80,6 @@ export class EmployeeController {
       'new employees data was incorrect. email might be already in use',
     type: RequestErrorResponse,
   })
-  @ApiForbiddenResponse({
-    description:
-      '`UserRole` is not high enough to access this endpoint. min role is `MANAGER`',
-    type: RequestErrorResponse,
-  })
   @UseGuards(RolesGuard)
   @AllowMinRole(UserRoles.MANAGER)
   @Post('/')
@@ -91,7 +87,7 @@ export class EmployeeController {
     @ClientPrincipal() user: ClientPrincipalDto,
     @Body() newEmployee: CreateEmployeeDto,
   ): Promise<EmployeeCreatedResponse> {
-    Logger.log(`POST /employee, userId = ${user.userId}`);
+    this.logger.log(`POST /employee, userId = ${user.userId}`);
     return this.employeeService.createEmployee(newEmployee);
   }
 
@@ -106,28 +102,30 @@ export class EmployeeController {
     description: 'new employee data was incorrect. email might be in used',
     type: RequestErrorResponse,
   })
-  @ApiForbiddenResponse({
-    description:
-      '`UserRole` is not high enough to access this endpoint. min role is `MANAGER`',
-    type: RequestErrorResponse,
-  })
   @Patch(':id')
   async updateEmployee(
     @Param('id', ParseIntPipe) id,
     @Body() updatedEmployee: UpdateEmployeeDto,
   ): Promise<EmployeeUpdatedResponse> {
+    this.logger.log(`PATCH /employee/${id}`);
     return this.employeeService.updateEmployee(id, updatedEmployee);
   }
 
   @ApiOperation({ summary: 'delete (mark as fired) an employee' })
   @ApiParam({ name: 'id', type: Number })
-  @ApiOkResponse()
-  @ApiNotFoundResponse()
-  @ApiForbiddenResponse()
+  @ApiOkResponse({
+    description: 'marked employee as fired',
+    type: EmployeeDeletedResponse,
+  })
+  @ApiNotFoundResponse({
+    description: 'could not find an employee with this id',
+    type: RequestErrorResponse,
+  })
   @Delete(':id')
   async deleteEmployee(
     @Param('id', ParseIntPipe) id,
   ): Promise<EmployeeDeletedResponse> {
+    this.logger.log(`DELETE /employee/${id}`);
     return this.employeeService.deleteEmployee(id);
   }
 }
