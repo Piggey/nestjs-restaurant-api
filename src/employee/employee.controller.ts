@@ -68,4 +68,28 @@ export class EmployeeController {
     Logger.log(`POST /employee, userId = ${user.userId}`);
     return this.employeeService.createEmployee(newEmployee);
   }
+
+  @ApiOperation({ summary: 'update information about employee' })
+  @ApiHeader(SWAGGER_CLIENT_PRINCIPAL_HEADER_INFO)
+  @ApiParam({ name: 'id', type: Number })
+  @ApiOkResponse({
+    description: 'employee updated successfully',
+    type: EmployeeUpdatedResponse,
+  })
+  @ApiBadRequestResponse({
+    description: 'new employee data was incorrect. email might be in used',
+    type: RequestErrorResponse,
+  })
+  @ApiForbiddenResponse({
+    description:
+      '`UserRole` is not high enough to access this endpoint. min role is `MANAGER`',
+    type: RequestErrorResponse,
+  })
+  @Patch(':id')
+  async updateEmployee(
+    @Param('id', ParseIntPipe) id,
+    @Body() updatedEmployee: UpdateEmployeeDto,
+  ): Promise<EmployeeUpdatedResponse> {
+    return this.employeeService.updateEmployee(id, updatedEmployee);
+  }
 }

@@ -65,7 +65,32 @@ export class EmployeeService {
 
     return {
       employeeCreated: true,
-      employee,
+      employeeData: employee,
+    };
+  }
+
+  async updateEmployee(
+    id: number,
+    updatedEmployee: UpdateEmployeeDto,
+  ): Promise<EmployeeUpdatedResponse> {
+    let updated;
+    try {
+      updated = await this.db.employee.update({
+        where: { employeeId: id },
+        data: updatedEmployee,
+      });
+    } catch (error) {
+      const err = new HttpException(
+        `could not update employee ${id}`,
+        HttpStatus.BAD_REQUEST,
+      );
+      Logger.error(err);
+      throw err;
+    }
+
+    return {
+      employeeUpdated: true,
+      employeeData: updated,
     };
   }
 }
