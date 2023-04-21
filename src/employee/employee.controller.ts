@@ -58,10 +58,6 @@ export class EmployeeController {
       'returns all hired employees in his restaurant for a `MANAGER` level role, returns all hired employees for `BOSS` level role',
     type: FetchEmployeesResponse,
   })
-  @ApiBadRequestResponse({
-    description: 'something went wrong with provided user data',
-    type: RequestErrorResponse,
-  })
   @Get('/')
   async fetchEmployees(
     @ClientPrincipal() user: ClientPrincipalDto,
