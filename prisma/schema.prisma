@@ -85,11 +85,9 @@ model Employee {
 }
 
 model Menu {
-  /// @DtoUpdateHidden
   /// @DtoReadOnly
   itemId    Int      @id @default(autoincrement())
   /// @DtoReadOnly
-  /// @DtoUpdateHidden
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt()
 
@@ -110,10 +108,8 @@ model Menu {
 }
 
 model Category {
-  /// @DtoUpdateHidden
   /// @DtoReadOnly
   categoryId Int      @id @default(autoincrement())
-  /// @DtoUpdateHidden
   /// @DtoReadOnly
   createdAt  DateTime @default(now())
 
@@ -123,10 +119,8 @@ model Category {
 }
 
 model Restaurant {
-  /// @DtoUpdateHidden
   /// @DtoReadOnly
   restaurantId Int      @id @default(autoincrement())
-  /// @DtoUpdateHidden
   /// @DtoReadOnly
   createdAt    DateTime @default(now())
 
@@ -152,7 +146,6 @@ model Restaurant {
 }
 
 model Address {
-  /// @DtoUpdateHidden
   /// @DtoReadOnly
   addressId  Int    @id @default(autoincrement())
   street     String
