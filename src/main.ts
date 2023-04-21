@@ -13,6 +13,8 @@ async function bootstrap() {
       origin: `http://localhost:${SWA_PORT}`,
     },
   });
+  app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
+  app.setGlobalPrefix('api');
 
   const docsConfig = new DocumentBuilder()
     .setTitle('Moduł sumatywny - Restauracje')
@@ -26,8 +28,6 @@ async function bootstrap() {
 
   const document = SwaggerModule.createDocument(app, docsConfig);
   SwaggerModule.setup('docs', app, document);
-
-  app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
   await app.listen(API_PORT);
 
   Logger.log(`Started server on http://localhost:${API_PORT}/`);
