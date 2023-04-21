@@ -18,6 +18,10 @@ async function bootstrap() {
     .setTitle('Moduł sumatywny - Restauracje')
     .setDescription('Opis API systemu zarządzania siecią restauracji.')
     .setVersion('0.1.0')
+    .setExternalDoc(
+      'JSON object to base64',
+      'https://codebeautify.org/json-to-base64-converter',
+    )
     .build();
 
   const document = SwaggerModule.createDocument(app, docsConfig);
