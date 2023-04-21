@@ -1,21 +1,14 @@
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { JwtModule } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaModule } from '../prisma/prisma.module';
 import { AuthModule } from '../auth/auth.module';
-import { UserModule } from '../user-old/user.module';
 import { ClientPrincipalDto, USER_ID_MAX_LENGTH } from '../auth/dto';
+import { UserModule } from '../user/user.module';
 
 export const createApp = async (): Promise<INestApplication> => {
   const module: TestingModule = await Test.createTestingModule({
-    imports: [
-      JwtModule.register({}),
-      ConfigModule.forRoot(),
-      PrismaModule,
-      AuthModule,
-      UserModule,
-    ],
+    imports: [ConfigModule.forRoot(), PrismaModule, AuthModule, UserModule],
   }).compile();
 
   const app = module.createNestApplication();

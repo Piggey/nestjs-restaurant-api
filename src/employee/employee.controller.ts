@@ -1,4 +1,4 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Logger, Post, UseGuards } from '@nestjs/common';
 import { EmployeeService } from './employee.service';
 import {
   ApiBadRequestResponse,
@@ -16,6 +16,7 @@ import { FetchEmployeesResponse } from './responses/fetch-employees.response';
 import { RolesGuard } from '../auth/guard';
 import { UserRoles } from '../auth/model';
 import { RequestErrorResponse } from '../app/response';
+import { CreateEmployeeDto } from './dto/create-employee.dto';
 
 @ApiTags('employee')
 @Controller('employee')
@@ -42,6 +43,19 @@ export class EmployeeController {
   async fetchEmployees(
     @ClientPrincipal() user: ClientPrincipalDto,
   ): Promise<FetchEmployeesResponse> {
+    Logger.log(`GET /employee, userId = ${user.userId}`);
     return this.employeeService.fetchEmployees(user);
+  }
+
+  @ApiHeader(SWAGGER_CLIENT_PRINCIPAL_HEADER_INFO)
+  @UseGuards(RolesGuard)
+  @AllowRoles(UserRoles.MANAGER)
+  @Post('/')
+  async createEmployee(
+    @ClientPrincipal() user: ClientPrincipalDto,
+    @Body() newEmployee: CreateEmployeeDto,
+  ) {
+    Logger.log(`POST /employee, userId = ${user.userId}`);
+    return this.employeeService.createEmployee(newEmployee);
   }
 }
