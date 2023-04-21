@@ -1,10 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { ClientPrincipalDto } from 'src/auth/dto';
 import { FetchEmployeesResponse } from './responses/fetch-employees.response';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UserRoles } from '../auth/model';
 import { CreateEmployeeDto } from './dto/create-employee.dto';
 import { EmployeeCreatedResponse } from './responses/employee-created.response';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 
 @Injectable()
 export class EmployeeService {
@@ -46,11 +47,22 @@ export class EmployeeService {
   async createEmployee(
     newEmployee: CreateEmployeeDto,
   ): Promise<EmployeeCreatedResponse> {
-    // get or create address
-    const employee = await this.db.employee.create({
-      data: newEmployee,
-    });
-    console.log(employee);
+    let employee;
+    try {
+      employee = await this.db.employee.create({
+        include: { address: true, user: true, restaurant: true },
+        data: newEmployee,
+      });
+    } catch (error) {
+      if (error.code === 'P2002') {
+        const err = new HttpException(
+          'unique constraint violation when trying to create a new employee',
+          HttpStatus.BAD_REQUEST,
+        );
+        Logger.error(err);
+        throw err;
+      }
+    }
 
     return {
       employeeCreated: true,
