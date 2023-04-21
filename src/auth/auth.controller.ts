@@ -2,11 +2,16 @@ import { Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import {
   ApiBadRequestResponse,
+  ApiCookieAuth,
   ApiCreatedResponse,
   ApiHeader,
   ApiTags,
 } from '@nestjs/swagger';
-import { AllowRoles, ClientPrincipal } from './decorator';
+import {
+  AllowRoles,
+  CLIENT_PRINCIPAL_HEADER,
+  ClientPrincipal,
+} from './decorator';
 import { RolesGuard } from './guard';
 import { UserRoles } from './model';
 import {
@@ -37,6 +42,7 @@ export class AuthController {
     return this.authService.signIn(usr);
   }
 
+  @ApiCookieAuth(CLIENT_PRINCIPAL_HEADER)
   @Get('test')
   @UseGuards(RolesGuard)
   @AllowRoles(UserRoles.MANAGER)
