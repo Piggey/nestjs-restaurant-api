@@ -2,9 +2,11 @@ import { Body, Controller, Get, Logger, Post, UseGuards } from '@nestjs/common';
 import { EmployeeService } from './employee.service';
 import {
   ApiBadRequestResponse,
+  ApiCookieAuth,
   ApiForbiddenResponse,
   ApiHeader,
   ApiOkResponse,
+  ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
 import { AllowRoles, ClientPrincipal } from '../auth/decorator';
@@ -23,6 +25,8 @@ import { CreateEmployeeDto } from './dto/create-employee.dto';
 export class EmployeeController {
   constructor(private readonly employeeService: EmployeeService) {}
 
+  @ApiOperation({ summary: 'return information about employees' })
+  @ApiCookieAuth()
   @ApiHeader(SWAGGER_CLIENT_PRINCIPAL_HEADER_INFO)
   @ApiOkResponse({
     description:
@@ -47,6 +51,8 @@ export class EmployeeController {
     return this.employeeService.fetchEmployees(user);
   }
 
+  @ApiOperation({ summary: 'add a new employee to our database' })
+  @ApiCookieAuth()
   @ApiHeader(SWAGGER_CLIENT_PRINCIPAL_HEADER_INFO)
   @UseGuards(RolesGuard)
   @AllowRoles(UserRoles.MANAGER)

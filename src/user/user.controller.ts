@@ -5,6 +5,7 @@ import {
   ApiHeader,
   ApiNotFoundResponse,
   ApiOkResponse,
+  ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
 import { AboutUserResponse } from './responses/about-user.response';
@@ -20,6 +21,7 @@ import { RequestErrorResponse } from '../app/response';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @ApiOperation({ summary: 'return all information about a user' })
   @ApiHeader(SWAGGER_CLIENT_PRINCIPAL_HEADER_INFO)
   @ApiOkResponse({
     description:
