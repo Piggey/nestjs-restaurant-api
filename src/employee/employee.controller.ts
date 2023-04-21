@@ -46,7 +46,6 @@ import { EmployeeDeletedResponse } from './responses/employee-deleted.response';
   type: RequestErrorResponse,
 })
 @UseGuards(RolesGuard)
-@AllowMinRole(UserRoles.MANAGER)
 @Controller('employee')
 export class EmployeeController {
   private readonly logger = new Logger(EmployeeController.name);
@@ -58,6 +57,7 @@ export class EmployeeController {
       'returns all hired employees in his restaurant for a `MANAGER` level role, returns all hired employees for `BOSS` level role',
     type: FetchEmployeesResponse,
   })
+  @AllowMinRole(UserRoles.MANAGER)
   @Get('/')
   async fetchEmployees(
     @ClientPrincipal() user: ClientPrincipalDto,
@@ -76,7 +76,6 @@ export class EmployeeController {
       'new employees data was incorrect. email might be already in use',
     type: RequestErrorResponse,
   })
-  @UseGuards(RolesGuard)
   @AllowMinRole(UserRoles.MANAGER)
   @Post('/')
   async createEmployee(
@@ -88,7 +87,6 @@ export class EmployeeController {
   }
 
   @ApiOperation({ summary: 'update information about employee' })
-  @ApiHeader(SWAGGER_CLIENT_PRINCIPAL_HEADER_INFO)
   @ApiParam({ name: 'id', type: Number })
   @ApiOkResponse({
     description: 'employee updated successfully',
@@ -98,6 +96,7 @@ export class EmployeeController {
     description: 'new employee data was incorrect. email might be in used',
     type: RequestErrorResponse,
   })
+  @AllowMinRole(UserRoles.MANAGER)
   @Patch(':id')
   async updateEmployee(
     @Param('id', ParseIntPipe) id,
@@ -117,6 +116,7 @@ export class EmployeeController {
     description: 'could not find an employee with this id',
     type: RequestErrorResponse,
   })
+  @AllowMinRole(UserRoles.MANAGER)
   @Delete(':id')
   async deleteEmployee(
     @Param('id', ParseIntPipe) id,
