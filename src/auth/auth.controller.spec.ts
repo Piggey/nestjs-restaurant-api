@@ -28,12 +28,16 @@ describe('AuthController (e2e, positive)', () => {
           ],
         }),
       })
-      .expect(200)
+      .expect(201)
       .then((res) => {
         expect(res.body).toEqual({
           userSignedIn: true,
           userCreated: true,
-          userUpdated: true,
+          userData: {
+            createdAt: expect.any(String),
+            loyaltyPoints: 0,
+            userId: expect.any(String),
+          },
         });
       });
   });
@@ -56,12 +60,16 @@ describe('AuthController (e2e, positive)', () => {
           userRoles,
         }),
       })
-      .expect(200)
+      .expect(201)
       .then((res) => {
         expect(res.body).toEqual({
           userSignedIn: true,
           userCreated: true,
-          userUpdated: true,
+          userData: {
+            createdAt: expect.any(String),
+            loyaltyPoints: 0,
+            userId,
+          },
         });
       });
 
@@ -74,12 +82,16 @@ describe('AuthController (e2e, positive)', () => {
           userRoles,
         }),
       })
-      .expect(200)
+      .expect(201)
       .then((res) => {
         expect(res.body).toEqual({
           userSignedIn: true,
           userCreated: false,
-          userUpdated: false,
+          userData: {
+            createdAt: expect.any(String),
+            loyaltyPoints: 0,
+            userId,
+          },
         });
       });
   });
@@ -102,12 +114,16 @@ describe('AuthController (e2e, positive)', () => {
           ],
         }),
       })
-      .expect(200)
+      .expect(201)
       .then((res) => {
         expect(res.body).toEqual({
           userSignedIn: true,
           userCreated: true,
-          userUpdated: true,
+          userData: {
+            createdAt: expect.any(String),
+            loyaltyPoints: 0,
+            userId: expect.any(String),
+          },
         });
       });
 
@@ -125,12 +141,16 @@ describe('AuthController (e2e, positive)', () => {
           ],
         }),
       })
-      .expect(200)
+      .expect(201)
       .then((res) => {
         expect(res.body).toEqual({
           userSignedIn: true,
           userCreated: false,
-          userUpdated: true,
+          userData: {
+            createdAt: expect.any(String),
+            loyaltyPoints: 0,
+            userId: expect.any(String),
+          },
         });
       });
   });

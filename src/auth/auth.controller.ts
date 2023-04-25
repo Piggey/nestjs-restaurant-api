@@ -20,7 +20,7 @@ import {
   SWAGGER_CLIENT_PRINCIPAL_HEADER_INFO,
 } from './dto';
 import { UserSignInResponse } from './responses';
-import { RequestErrorResponse } from 'src/app/response';
+import { RequestErrorResponse } from '../app/response';
 
 @Controller('auth')
 @ApiTags('auth')
