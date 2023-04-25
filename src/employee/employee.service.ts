@@ -34,11 +34,15 @@ export class EmployeeService {
       const employees = await this.db.employee.findMany({
         include: {
           address: true,
-          restaurant: { include: { manager: { include: { user: true } } } },
+          restaurant: {
+            include: {
+              manager: { include: { employee: { include: { user: true } } } },
+            },
+          },
         },
         where: {
           firedAt: null,
-          restaurant: { manager: { userId: user.userId } },
+          restaurant: { manager: { employee: { userId: user.userId } } },
         },
       });
 

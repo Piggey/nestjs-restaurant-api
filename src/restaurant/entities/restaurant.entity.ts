@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Employee } from '../../employee/entities/employee.entity';
+import { Manager } from '../../manager/entities/manager.entity';
 import { Address } from '../../address/entities/address.entity';
+import { Employee } from '../../employee/entities/employee.entity';
 
 export class Restaurant {
   @ApiProperty({
@@ -31,7 +32,7 @@ export class Restaurant {
     required: false,
     nullable: true,
   })
-  manager?: Employee | null;
+  manager?: Manager | null;
   @ApiProperty({
     type: 'integer',
     format: 'int32',

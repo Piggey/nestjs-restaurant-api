@@ -80,7 +80,21 @@ model Employee {
   restaurant   Restaurant @relation(name: "workedAtRestaurant", fields: [restaurantId], references: [restaurantId])
   restaurantId Int
 
-  /// DtoRelationCanConnectOnUpdate
+  managerInfo Manager[]
+}
+
+model Manager {
+  /// @DtoReadOnly
+  managerId Int @id @default(autoincrement())
+
+  /// @DtoRelationCanConnectOnCreate
+  /// @DtoRelationCanConnectOnUpdate
+  /// @DtoRelationCanCreateOnUpdate
+  employee Employee @relation(fields: [employeeId], references: [employeeId])
+  employeeId Int
+
+  /// @DtoRelationCanConnectOnUpdate
+  /// @DtoRelationCanConnectOnCreate
   managedRestaurants Restaurant[] @relation(name: "managedRestaurants")
 }
 
@@ -131,7 +145,7 @@ model Restaurant {
 
   /// @DtoRelationCanConnectOnCreate
   /// @DtoRelationCanConnectOnUpdate
-  manager   Employee? @relation(name: "managedRestaurants", fields: [managerId], references: [employeeId])
+  manager   Manager? @relation(name: "managedRestaurants", fields: [managerId], references: [managerId])
   managerId Int?
 
   /// @DtoRelationRequired

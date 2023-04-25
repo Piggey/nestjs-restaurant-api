@@ -8,18 +8,18 @@ import {
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiExtraModels, ApiProperty } from '@nestjs/swagger';
-import { ConnectEmployeeDto } from '../../employee/dto/connect-employee.dto';
+import { ConnectManagerDto } from '../../manager/dto/connect-manager.dto';
 import { CreateAddressDto } from '../../address/dto/create-address.dto';
 import { ConnectAddressDto } from '../../address/dto/connect-address.dto';
 
 export class UpdateRestaurantManagerRelationInputDto {
   @ApiProperty({
-    type: ConnectEmployeeDto,
+    type: ConnectManagerDto,
   })
   @IsNotEmpty()
   @ValidateNested()
-  @Type(() => ConnectEmployeeDto)
-  connect: ConnectEmployeeDto;
+  @Type(() => ConnectManagerDto)
+  connect: ConnectManagerDto;
 }
 export class UpdateRestaurantAddressRelationInputDto {
   @ApiProperty({
@@ -43,7 +43,7 @@ export class UpdateRestaurantAddressRelationInputDto {
 }
 
 @ApiExtraModels(
-  ConnectEmployeeDto,
+  ConnectManagerDto,
   UpdateRestaurantManagerRelationInputDto,
   CreateAddressDto,
   ConnectAddressDto,

@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Address } from '../../address/entities/address.entity';
 import { User } from '../../user/entities/user.entity';
 import { Restaurant } from '../../restaurant/entities/restaurant.entity';
+import { Manager } from '../../manager/entities/manager.entity';
 
 export class Employee {
   @ApiProperty({
@@ -67,5 +68,5 @@ export class Employee {
     isArray: true,
     required: false,
   })
-  managedRestaurants?: Restaurant[];
+  managerInfo?: Manager[];
 }
