@@ -1,12 +1,7 @@
-import { INestApplication, ValidationPipe } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
-import { JwtModule } from '@nestjs/jwt';
-import { Test, TestingModule } from '@nestjs/testing';
-import { PrismaModule } from '../prisma/prisma.module';
-import { AuthController } from './auth.controller';
-import { AuthService } from './auth.service';
+import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
-import { ClientPrincipalDto, ClientRoles } from '../user/dto';
+import { UserRoles } from './model';
+import { createApp, encodeUser, mockUserId, randomNumberString } from '../test';
 
 describe('AuthController (e2e, positive)', () => {
   let app: INestApplication;
@@ -27,18 +22,22 @@ describe('AuthController (e2e, positive)', () => {
           userId: mockUserId(),
           userDetails: `testUser${randomNumberString()}`,
           userRoles: [
-            ClientRoles.ANONYMOUS,
-            ClientRoles.AUTHENTICATED,
-            ClientRoles.CLIENT,
+            UserRoles.ANONYMOUS,
+            UserRoles.AUTHENTICATED,
+            UserRoles.CLIENT,
           ],
         }),
       })
-      .expect(200)
+      .expect(201)
       .then((res) => {
         expect(res.body).toEqual({
           userSignedIn: true,
           userCreated: true,
-          userUpdated: true,
+          userData: {
+            createdAt: expect.any(String),
+            loyaltyPoints: 0,
+            userId: expect.any(String),
+          },
         });
       });
   });
@@ -47,9 +46,9 @@ describe('AuthController (e2e, positive)', () => {
     const userId = mockUserId();
     const userDetails = `testUser${randomNumberString()}`;
     const userRoles = [
-      ClientRoles.ANONYMOUS,
-      ClientRoles.AUTHENTICATED,
-      ClientRoles.CLIENT,
+      UserRoles.ANONYMOUS,
+      UserRoles.AUTHENTICATED,
+      UserRoles.CLIENT,
     ];
 
     await request(app.getHttpServer())
@@ -61,12 +60,16 @@ describe('AuthController (e2e, positive)', () => {
           userRoles,
         }),
       })
-      .expect(200)
+      .expect(201)
       .then((res) => {
         expect(res.body).toEqual({
           userSignedIn: true,
           userCreated: true,
-          userUpdated: true,
+          userData: {
+            createdAt: expect.any(String),
+            loyaltyPoints: 0,
+            userId,
+          },
         });
       });
 
@@ -79,12 +82,16 @@ describe('AuthController (e2e, positive)', () => {
           userRoles,
         }),
       })
-      .expect(200)
+      .expect(201)
       .then((res) => {
         expect(res.body).toEqual({
           userSignedIn: true,
           userCreated: false,
-          userUpdated: false,
+          userData: {
+            createdAt: expect.any(String),
+            loyaltyPoints: 0,
+            userId,
+          },
         });
       });
   });
@@ -101,18 +108,22 @@ describe('AuthController (e2e, positive)', () => {
           userId,
           userDetails,
           userRoles: [
-            ClientRoles.ANONYMOUS,
-            ClientRoles.AUTHENTICATED,
-            ClientRoles.CLIENT,
+            UserRoles.ANONYMOUS,
+            UserRoles.AUTHENTICATED,
+            UserRoles.CLIENT,
           ],
         }),
       })
-      .expect(200)
+      .expect(201)
       .then((res) => {
         expect(res.body).toEqual({
           userSignedIn: true,
           userCreated: true,
-          userUpdated: true,
+          userData: {
+            createdAt: expect.any(String),
+            loyaltyPoints: 0,
+            userId: expect.any(String),
+          },
         });
       });
 
@@ -124,18 +135,22 @@ describe('AuthController (e2e, positive)', () => {
           userId,
           userDetails,
           userRoles: [
-            ClientRoles.ANONYMOUS,
-            ClientRoles.AUTHENTICATED,
-            ClientRoles.MANAGER,
+            UserRoles.ANONYMOUS,
+            UserRoles.AUTHENTICATED,
+            UserRoles.MANAGER,
           ],
         }),
       })
-      .expect(200)
+      .expect(201)
       .then((res) => {
         expect(res.body).toEqual({
           userSignedIn: true,
           userCreated: false,
-          userUpdated: true,
+          userData: {
+            createdAt: expect.any(String),
+            loyaltyPoints: 0,
+            userId: expect.any(String),
+          },
         });
       });
   });
@@ -171,7 +186,7 @@ describe('AuthController (e2e, negative)', () => {
         'x-ms-client-principal': encodeUser({
           userId: mockUserId(),
           userDetails: `testUser${randomNumberString()}`,
-          userRoles: [ClientRoles.ANONYMOUS, ClientRoles.AUTHENTICATED],
+          userRoles: [UserRoles.ANONYMOUS, UserRoles.AUTHENTICATED],
         }),
       })
       .expect(400)
@@ -191,10 +206,10 @@ describe('AuthController (e2e, negative)', () => {
           userId: mockUserId(),
           userDetails: `testUser${randomNumberString()}`,
           userRoles: [
-            ClientRoles.ANONYMOUS,
-            ClientRoles.AUTHENTICATED,
-            ClientRoles.CLIENT,
-            ClientRoles.DELIVERY,
+            UserRoles.ANONYMOUS,
+            UserRoles.AUTHENTICATED,
+            UserRoles.CLIENT,
+            UserRoles.DELIVERY,
           ],
         }),
       })
@@ -207,35 +222,3 @@ describe('AuthController (e2e, negative)', () => {
       });
   });
 });
-
-const createApp = async (): Promise<INestApplication> => {
-  const module: TestingModule = await Test.createTestingModule({
-    imports: [JwtModule.register({}), ConfigModule.forRoot(), PrismaModule],
-    controllers: [AuthController],
-    providers: [AuthService],
-  }).compile();
-
-  const app = module.createNestApplication();
-  app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
-  return app.init();
-};
-
-const encodeUser = (user: ClientPrincipalDto): string => {
-  return Buffer.from(JSON.stringify(user)).toString('base64');
-};
-
-const mockUserId = (): string => {
-  const CHARS = 'abcdefghijklmnoprstuwvxyz0123456789';
-  const RESULT_LENGTH = 32;
-
-  let result = '';
-  for (let i = 0; i < RESULT_LENGTH; i++) {
-    result += CHARS.charAt(Math.floor(Math.random() * CHARS.length));
-  }
-
-  return result;
-};
-
-const randomNumberString = (): string => {
-  return Math.trunc(Math.random() * 69420).toString();
-};

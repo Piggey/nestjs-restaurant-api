@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { User } from '../../user/entities/user.entity';
 
 export class UserSignInResponse {
   @ApiProperty()
@@ -8,5 +9,5 @@ export class UserSignInResponse {
   userCreated: boolean;
 
   @ApiProperty()
-  userUpdated: boolean;
+  userData: User;
 }

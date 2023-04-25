@@ -5,6 +5,9 @@ $ cd sumatywny-api
 $ npm install
 ```
 
+## [JSON object to base64 encoder](https://codebeautify.org/json-to-base64-converter)
+## [base64 to JSON object encoder](https://codebeautify.org/base64-to-json-converter)
+
 ## Running the app
 
 ### Start database Docker images

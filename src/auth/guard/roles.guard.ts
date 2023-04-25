@@ -1,8 +1,8 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Observable } from 'rxjs';
-import { getClientPrincipalFromHeader } from '../../user/decorator';
-import { ClientRoleLevel, ClientRoles } from '../../user/dto';
+import { UserRoleLevel, UserRoles } from '../model';
+import { getClientPrincipalFromHeader } from '../decorator';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
@@ -11,7 +11,7 @@ export class RolesGuard implements CanActivate {
   canActivate(
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
-    const roles = this.reflector.get<ClientRoles[]>(
+    const roles = this.reflector.get<UserRoles[]>(
       'roles',
       context.getHandler(),
     );
@@ -28,9 +28,9 @@ export class RolesGuard implements CanActivate {
   }
 
   private validateClientRoles(
-    clientRole: ClientRoles,
-    minRole: ClientRoles,
+    clientRole: UserRoles,
+    minRole: UserRoles,
   ): boolean {
-    return ClientRoleLevel[clientRole] >= ClientRoleLevel[minRole];
+    return UserRoleLevel[clientRole] >= UserRoleLevel[minRole];
   }
 }

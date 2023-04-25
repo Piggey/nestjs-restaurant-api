@@ -1,6 +1,6 @@
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
+import { AppModule } from './app/app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 const API_PORT = 3000;
@@ -13,17 +13,21 @@ async function bootstrap() {
       origin: `http://localhost:${SWA_PORT}`,
     },
   });
+  app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
+  app.setGlobalPrefix('api');
 
   const docsConfig = new DocumentBuilder()
     .setTitle('Moduł sumatywny - Restauracje')
     .setDescription('Opis API systemu zarządzania siecią restauracji.')
     .setVersion('0.1.0')
+    .setExternalDoc(
+      'JSON object to base64',
+      'https://codebeautify.org/json-to-base64-converter',
+    )
     .build();
 
   const document = SwaggerModule.createDocument(app, docsConfig);
   SwaggerModule.setup('docs', app, document);
-
-  app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
   await app.listen(API_PORT);
 
   Logger.log(`Started server on http://localhost:${API_PORT}/`);

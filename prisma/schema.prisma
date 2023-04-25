@@ -4,13 +4,26 @@
 // in order for schema changes to take effect use
 // npm run db:migrate
 
-generator client {
-  provider = "prisma-client-js"
-}
+// we're using nestjs-dto generator
+// which also created swagger docs
+// more options here: https://www.npmjs.com/package/@brakebein/prisma-generator-nestjs-dto
 
 datasource db {
   provider = "postgresql"
   url      = env("POSTGRES_URL")
+}
+
+// turns out we need both generators
+generator client {
+  provider = "prisma-client-js"
+}
+
+generator nestjsDto {
+  provider                        = "prisma-generator-nestjs-dto"
+  output                          = "../src"
+  outputToNestJsResourceStructure = "true"
+  classValidation                 = "true"
+  prettier                        = "true"
 }
 
 enum Role {
@@ -22,84 +35,139 @@ enum Role {
 }
 
 model User {
-  userId     String   @unique
+  /// @DtoUpdateHidden
+  /// @IsByteLength(32, 32)
+  userId    String   @unique
+  /// @DtoReadOnly
+  /// @DtoUpdateHidden
   createdAt DateTime @default(now())
 
-  userDetails   String
-  loyaltyPoints Int     @default(0)
-  role          Role    @default(CLIENT)
-
-  managedRestaurants Restaurant[]
-  employeeInfo Employee[]
+  loyaltyPoints Int        @default(0)
+  employeeInfo  Employee[]
 }
 
 model Employee {
-  employeeId Int @id @default(autoincrement())
-  hiredAt DateTime @default(now())
-  firedAt DateTime?
+  /// @DtoUpdateHidden
+  /// @DtoReadOnly
+  employeeId Int       @id @default(autoincrement())
+  /// @DtoReadOnly
+  /// @DtoUpdateHidden
+  hiredAt    DateTime  @default(now())
+  /// @DtoReadOnly
+  firedAt    DateTime?
 
   firstName String
-  lastName String
-  pesel String @unique
+  lastName  String
+  /// @IsEmail
+  email     String @unique
 
+  /// @DtoRelationRequired
+  /// @DtoRelationCanConnectOnCreate
+  /// @DtoRelationCanCreateOnCreate
+  address   Address @relation(fields: [addressId], references: [addressId])
   addressId Int
-  address Address @relation(fields: [addressId], references: [addressId])
 
+  /// @DtoRelationRequired
+  /// @DtoRelationCanConnectOnCreate
+  user   User   @relation(fields: [userId], references: [userId])
+  /// @IsByteLength(32, 32)
   userId String
-  user User @relation(fields: [userId], references: [userId])
 
+  /// @DtoRelationRequired
+  /// @DtoRelationCanConnectOnCreate
+  /// @DtoRelationCanCreateOnUpdate
+  /// @DtoRelationCanConnectOnUpdate
+  restaurant   Restaurant @relation(name: "workedAtRestaurant", fields: [restaurantId], references: [restaurantId])
   restaurantId Int
-  restaurant Restaurant @relation(fields: [restaurantId], references: [restaurantId])
+
+  managerInfo Manager[]
 }
 
-model MenuItem {
-  itemId Int @id @default(autoincrement())
+model Manager {
+  /// @DtoReadOnly
+  managerId Int @id @default(autoincrement())
+
+  /// @DtoRelationCanConnectOnCreate
+  /// @DtoRelationCanConnectOnUpdate
+  /// @DtoRelationCanCreateOnUpdate
+  employee Employee @relation(fields: [employeeId], references: [employeeId])
+  employeeId Int
+
+  /// @DtoRelationCanConnectOnUpdate
+  /// @DtoRelationCanConnectOnCreate
+  managedRestaurants Restaurant[] @relation(name: "managedRestaurants")
+}
+
+model Menu {
+  /// @DtoReadOnly
+  itemId    Int      @id @default(autoincrement())
+  /// @DtoReadOnly
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt()
 
-  name String
-  photoUrl String
+  name        String
+  photoUrl    String
   description String
+  /// @description a list of ingredients separated by `,`
   ingredients String
-  available Boolean @default(true)
+  available   Boolean @default(true)
 
+  /// @DtoRelationRequired
+  /// @DtoRelationCanConnectOnCreate
+  /// @DtoRelationCanCreateOnCreate
+  /// @DtoRelationCanConnectOnUpdate
+  /// @DtoRelationCanCreateOnUpdate
+  category   Category @relation(fields: [categoryId], references: [categoryId])
   categoryId Int
-  category Category @relation(fields: [categoryId], references: [categoryId])
 }
 
 model Category {
-  categoryId Int @id @default(autoincrement())
-  createdAt DateTime @default(now())
+  /// @DtoReadOnly
+  categoryId Int      @id @default(autoincrement())
+  /// @DtoReadOnly
+  createdAt  DateTime @default(now())
 
   categoryName String
 
-  menuItems MenuItem[]
+  menuItems Menu[]
 }
 
 model Restaurant {
-  restaurantId Int @id @default(autoincrement())
-  createdAt DateTime @default(now())
+  /// @DtoReadOnly
+  restaurantId Int      @id @default(autoincrement())
+  /// @DtoReadOnly
+  createdAt    DateTime @default(now())
 
-  managerId String
-  manager User @relation(fields: [managerId], references: [userId])
+  /// @IsLatitude
+  geoLat  Float
+  /// @IsLongitude
+  geoLong Float
 
+  /// @DtoRelationCanConnectOnCreate
+  /// @DtoRelationCanConnectOnUpdate
+  manager   Manager? @relation(name: "managedRestaurants", fields: [managerId], references: [managerId])
+  managerId Int?
+
+  /// @DtoRelationRequired
+  /// @DtoRelationCanCreateOnCreate
+  /// @DtoRelationCanConnectOnCreate
+  /// @DtoRelationCanCreateOnUpdate
+  /// @DtoRelationCanConnectOnUpdate
+  address   Address @relation(fields: [addressId], references: [addressId])
   addressId Int
-  address Address @relation(fields: [addressId], references: [addressId])
 
-  hiredEmployees Employee[]
+  hiredEmployees Employee[] @relation(name: "workedAtRestaurant")
 }
 
 model Address {
-  addressId Int @id @default(autoincrement())
-  street String
-  streetNo String
-  city String
+  /// @DtoReadOnly
+  addressId  Int    @id @default(autoincrement())
+  street     String
+  streetNo   String
+  city       String
   postalCode String
-  country String
-
-  geoLat Float
-  geoLong Float
+  country    String
 
   restaurants Restaurant[]
-  employees Employee[]
+  employees   Employee[]
 }

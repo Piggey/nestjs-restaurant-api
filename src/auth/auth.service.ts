@@ -1,61 +1,36 @@
 import { Injectable } from '@nestjs/common';
-import { UserSignInResponse } from 'src/user/response';
 import { PrismaService } from '../prisma/prisma.service';
-import { ClientPrincipalDto } from '../user/dto';
-import { Role, User } from '@prisma/client';
+import { ClientPrincipalDto } from './dto';
+import { UserSignInResponse } from './responses';
+import { User } from '../user/entities/user.entity';
 
 @Injectable()
 export class AuthService {
   constructor(private readonly db: PrismaService) {}
 
-  async signIn(usr: ClientPrincipalDto): Promise<UserSignInResponse> {
+  async signIn(user: ClientPrincipalDto): Promise<UserSignInResponse> {
     const dbUser: User = await this.db.user.findFirst({
       where: {
-        userId: usr.userId,
+        userId: user.userId,
       },
     });
 
     if (!dbUser) {
-      await this.db.user.create({
-        data: {
-          userId: usr.userId,
-          userDetails: usr.userDetails,
-          role: usr.userRoles[0] as Role,
-        },
+      const createdUser = await this.db.user.create({
+        data: { userId: user.userId },
       });
 
       return {
         userSignedIn: true,
         userCreated: true,
-        userUpdated: true,
+        userData: createdUser,
       };
     }
 
-    // TODO: update with new info if is different
-    if (
-      dbUser.role !== (usr.userRoles[0] as Role) ||
-      dbUser.userDetails !== usr.userDetails
-    ) {
-      await this.db.user.update({
-        where: {
-          userId: usr.userId,
-        },
-        data: {
-          role: usr.userRoles[0] as Role,
-          userDetails: usr.userDetails,
-        },
-      });
-
-      return {
-        userSignedIn: true,
-        userCreated: false,
-        userUpdated: true,
-      };
-    }
     return {
       userSignedIn: true,
       userCreated: false,
-      userUpdated: false,
+      userData: dbUser,
     };
   }
 }
