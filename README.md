@@ -19,7 +19,7 @@ OR
 $ npm run db:start
 
 # update schema
-$ npm run db:migrate
+$ npm run db:push
 ```
 
 ### Start backend server
