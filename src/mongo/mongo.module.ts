@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
-import { PrismaService } from './prisma.service';
+import { MongoService } from './mongo.service';
 import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [ConfigModule.forRoot()],
-  providers: [PrismaService],
-  exports: [PrismaService],
+  providers: [MongoService],
+  exports: [MongoService],
 })
-export class PrismaModule {}
+export class MongoModule {}

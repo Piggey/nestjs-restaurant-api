@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { FetchManagersResponse } from './responses/fetch-managers.response';
-import { PrismaService } from '../prisma/prisma.service';
+import { PostgresService } from '../postgres/postgres.service';
 import { ManagerCreatedResponse } from './responses/manager-created.response';
 import { CreateManagerDto } from './dto/create-manager.dto';
 import { ManagerUpdatedResponse } from './responses/manager-updated.response';
@@ -9,7 +9,7 @@ import { ManagerDeletedResponse } from './responses/manager-deleted.response';
 
 @Injectable()
 export class ManagerService {
-  constructor(private readonly db: PrismaService) {}
+  constructor(private readonly db: PostgresService) {}
 
   async fetchManagers(): Promise<FetchManagersResponse> {
     const managers = await this.db.manager.findMany({

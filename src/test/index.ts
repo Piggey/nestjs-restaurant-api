@@ -1,14 +1,14 @@
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
-import { PrismaModule } from '../prisma/prisma.module';
+import { PostgresModule } from '../postgres/postgres.module';
 import { AuthModule } from '../auth/auth.module';
 import { ClientPrincipalDto, USER_ID_MAX_LENGTH } from '../auth/dto';
 import { UserModule } from '../user/user.module';
 
 export const createApp = async (): Promise<INestApplication> => {
   const module: TestingModule = await Test.createTestingModule({
-    imports: [ConfigModule.forRoot(), PrismaModule, AuthModule, UserModule],
+    imports: [ConfigModule.forRoot(), PostgresModule, AuthModule, UserModule],
   }).compile();
 
   const app = module.createNestApplication();
