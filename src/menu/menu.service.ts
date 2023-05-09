@@ -10,4 +10,16 @@ import {
 export class MenuService {
   constructor(private readonly db: PostgresService) {}
 
+  async fetchMenu(): Promise<FetchMenuResponse> {
+    const menuItems = await this.db.menu.findMany({
+      include: { category: true },
+      where: { available: true },
+    });
+
+    return {
+      itemsAvailable: menuItems.length,
+      menuItems,
+    };
+  }
+
 }
