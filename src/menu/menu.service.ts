@@ -4,7 +4,9 @@ import {
   FetchMenuByCategoryResponse,
   FetchMenuItemResponse,
   FetchMenuResponse,
+  MenuItemCreatedResponse,
 } from './responses';
+import { CreateMenuDto } from './dto/create-menu.dto';
 
 @Injectable()
 export class MenuService {
@@ -72,6 +74,27 @@ export class MenuService {
         Logger.error(err);
         throw err;
       }
+    }
+
+    return {
+      menuItem,
+    };
+  }
+
+  async createMenuItem(
+    newItem: CreateMenuDto,
+  ): Promise<MenuItemCreatedResponse> {
+    let menuItem;
+    try {
+      menuItem = await this.db.menu.create({ data: newItem });
+    } catch (error) {
+      const err = new HttpException(
+        'something went wrong when creating a new menu item',
+        HttpStatus.FAILED_DEPENDENCY,
+      );
+      Logger.error(error.message);
+      Logger.error(err);
+      throw err;
     }
 
     return {
