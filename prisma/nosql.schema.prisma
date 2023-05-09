@@ -16,6 +16,7 @@ datasource db {
 // turns out we need both generators
 generator client {
   provider = "prisma-client-js"
+  output   = "../node_modules/@prisma-mongo/prisma/client"
 }
 
 generator nestjsDto {
