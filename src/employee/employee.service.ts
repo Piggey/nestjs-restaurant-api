@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { ClientPrincipalDto } from 'src/auth/dto';
 import { FetchEmployeesResponse } from './responses/fetch-employees.response';
-import { PrismaService } from '../prisma/prisma.service';
+import { PostgresService } from '../postgres/postgres.service';
 import { UserRoles } from '../auth/model';
 import { CreateEmployeeDto } from './dto/create-employee.dto';
 import { EmployeeCreatedResponse } from './responses/employee-created.response';
@@ -11,7 +11,7 @@ import { EmployeeDeletedResponse } from './responses/employee-deleted.response';
 
 @Injectable()
 export class EmployeeService {
-  constructor(private readonly db: PrismaService) {}
+  constructor(private readonly db: PostgresService) {}
 
   async fetchEmployees(
     user: ClientPrincipalDto,

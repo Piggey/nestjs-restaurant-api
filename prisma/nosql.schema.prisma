@@ -26,7 +26,7 @@ generator nestjsDto {
   prettier                        = "true"
 }
 
-model Test {
+model TestLol {
   id    String  @id @default(auto()) @map("_id") @db.ObjectId
   email String  @unique
   name  String?
