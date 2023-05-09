@@ -22,6 +22,36 @@ export class MenuService {
     };
   }
 
+  async fetchMenuByCategory(id: number): Promise<FetchMenuByCategoryResponse> {
+    let category;
+    try {
+      category = await this.db.category.findFirst({
+        where: { categoryId: id },
+      });
+    } catch (error) {
+      if (error.code === 'P2025') {
+        const err = new HttpException(
+          `category with id ${id} not found`,
+          HttpStatus.NOT_FOUND,
+        );
+        Logger.error(err);
+        throw err;
+      }
+    }
+
+    const menuItems = await this.db.menu.findMany({
+      where: {
+        category,
+        available: true,
+      },
+    });
+
+    return {
+      category,
+      itemsAvailable: menuItems.length,
+      menuItems,
+    };
+  }
 
   async fetchMenuItem(id: number): Promise<FetchMenuItemResponse> {
     let menuItem;

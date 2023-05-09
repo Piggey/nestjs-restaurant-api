@@ -48,4 +48,19 @@ export class MenuController {
   }
 
   @ApiOperation({ summary: 'fetch all menu items with given category' })
+  @ApiOkResponse({
+    description: 'return all menu items, number of items and category',
+    type: FetchMenuByCategoryResponse,
+  })
+  @ApiNotFoundResponse({
+    description: 'could not find a category with this id',
+    type: RequestErrorResponse,
+  })
+  @Get('/category/:id')
+  async fetchMenuByCategory(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<FetchMenuByCategoryResponse> {
+    this.logger.log(`GET /menu/category/${id}`);
+    return this.menuService.fetchMenuByCategory(id);
+  }
 }
