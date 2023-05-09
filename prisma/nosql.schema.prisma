@@ -1,0 +1,27 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// in order for schema changes to take effect use
+// npm run db:migrate
+
+// we're using nestjs-dto generator
+// which also created swagger docs
+// more options here: https://www.npmjs.com/package/@brakebein/prisma-generator-nestjs-dto
+
+datasource db {
+  provider = "mongodb"
+  url      = env("MONGODB_URL")
+}
+
+// turns out we need both generators
+generator client {
+  provider = "prisma-client-js"
+}
+
+generator nestjsDto {
+  provider                        = "prisma-generator-nestjs-dto"
+  output                          = "../src"
+  outputToNestJsResourceStructure = "true"
+  classValidation                 = "true"
+  prettier                        = "true"
+}
