@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { EmployeeService } from './employee.service';
 import { EmployeeController } from './employee.controller';
-import { PrismaModule } from 'src/postgres/prisma.module';
+import { PostgresModule } from '../postgres/postgres.module';
 
 @Module({
-  imports: [PrismaModule],
+  imports: [PostgresModule],
   controllers: [EmployeeController],
   providers: [EmployeeService],
 })
