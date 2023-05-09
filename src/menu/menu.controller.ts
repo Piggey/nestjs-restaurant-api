@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Logger,
   Param,
@@ -25,6 +26,7 @@ import {
   FetchMenuItemResponse,
   FetchMenuResponse,
   MenuItemCreatedResponse,
+  MenuItemRemovedResponse,
   MenuItemUpdatedResponse,
 } from './responses';
 import { RequestErrorResponse } from '../app/response';
@@ -137,5 +139,37 @@ export class MenuController {
   ): Promise<MenuItemUpdatedResponse> {
     this.logger.log(`PATCH /menu/${id}`);
     return this.menuService.updateMenuItem(id, updatedItem);
+  }
+
+  @ApiOperation({
+    summary: 'remove (mark as unavailable) menu item with given id',
+  })
+  @ApiCookieAuth()
+  @ApiHeader(SWAGGER_CLIENT_PRINCIPAL_HEADER_INFO)
+  @ApiOkResponse({
+    description: 'item removed',
+    type: MenuItemRemovedResponse,
+  })
+  @ApiForbiddenResponse({
+    description: 'insufficient `UserRoles` privileges. minimum = `BOSS`',
+    type: RequestErrorResponse,
+  })
+  @ApiResponse({
+    status: 424,
+    description: 'something went wrong when updating a new menu item',
+    type: RequestErrorResponse,
+  })
+  @ApiNotFoundResponse({
+    description: 'could not find a menu item with given id',
+    type: RequestErrorResponse,
+  })
+  @UseGuards(RolesGuard)
+  @AllowMinRole(UserRoles.BOSS)
+  @Delete(':id')
+  async removeMenuItem(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<MenuItemRemovedResponse> {
+    this.logger.log(`DELETE /menu/${id}`);
+    return this.menuService.removeMenuItem(id);
   }
 }

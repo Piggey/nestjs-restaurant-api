@@ -5,6 +5,7 @@ import {
   FetchMenuItemResponse,
   FetchMenuResponse,
   MenuItemCreatedResponse,
+  MenuItemRemovedResponse,
   MenuItemUpdatedResponse,
 } from './responses';
 import { CreateMenuDto } from './dto/create-menu.dto';
@@ -119,6 +120,39 @@ export class MenuService {
         `could not update menu item with id = ${id}`,
         HttpStatus.FAILED_DEPENDENCY,
       );
+      Logger.error(error.message);
+      Logger.error(err);
+      throw err;
+    }
+
+    return {
+      menuItem,
+    };
+  }
+
+  async removeMenuItem(id: number): Promise<MenuItemRemovedResponse> {
+    let menuItem;
+    try {
+      menuItem = await this.db.menu.update({
+        where: { itemId: id },
+        data: {
+          available: false,
+        },
+      });
+    } catch (error) {
+      let err;
+      if (error.code === 'P2025') {
+        err = new HttpException(
+          `menu item with id ${id} not found`,
+          HttpStatus.NOT_FOUND,
+        );
+      } else {
+        err = new HttpException(
+          `could not remove menu item ${id}`,
+          HttpStatus.FAILED_DEPENDENCY,
+        );
+      }
+
       Logger.error(error.message);
       Logger.error(err);
       throw err;
