@@ -5,8 +5,10 @@ import {
   FetchMenuItemResponse,
   FetchMenuResponse,
   MenuItemCreatedResponse,
+  MenuItemUpdatedResponse,
 } from './responses';
 import { CreateMenuDto } from './dto/create-menu.dto';
+import { UpdateMenuDto } from './dto/update-menu.dto';
 
 @Injectable()
 export class MenuService {
@@ -90,6 +92,31 @@ export class MenuService {
     } catch (error) {
       const err = new HttpException(
         'something went wrong when creating a new menu item',
+        HttpStatus.FAILED_DEPENDENCY,
+      );
+      Logger.error(error.message);
+      Logger.error(err);
+      throw err;
+    }
+
+    return {
+      menuItem,
+    };
+  }
+
+  async updateMenuItem(
+    id: number,
+    updatedItem: UpdateMenuDto,
+  ): Promise<MenuItemUpdatedResponse> {
+    let menuItem;
+    try {
+      menuItem = await this.db.menu.update({
+        where: { itemId: id },
+        data: updatedItem,
+      });
+    } catch (error) {
+      const err = new HttpException(
+        `could not update menu item with id = ${id}`,
         HttpStatus.FAILED_DEPENDENCY,
       );
       Logger.error(error.message);

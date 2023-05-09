@@ -5,6 +5,7 @@ import {
   Logger,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
   UseGuards,
 } from '@nestjs/common';
@@ -24,6 +25,7 @@ import {
   FetchMenuItemResponse,
   FetchMenuResponse,
   MenuItemCreatedResponse,
+  MenuItemUpdatedResponse,
 } from './responses';
 import { RequestErrorResponse } from '../app/response';
 import { CreateMenuDto } from './dto/create-menu.dto';
@@ -31,6 +33,7 @@ import { RolesGuard } from '../auth/guard';
 import { AllowMinRole } from '../auth/decorator';
 import { UserRoles } from '../auth/model';
 import { SWAGGER_CLIENT_PRINCIPAL_HEADER_INFO } from '../auth/dto';
+import { UpdateMenuDto } from './dto/update-menu.dto';
 
 @ApiTags('menu')
 @Controller('menu')
@@ -107,5 +110,32 @@ export class MenuController {
   ): Promise<MenuItemCreatedResponse> {
     this.logger.log(`POST /menu create new menu item ${newItem}`);
     return this.menuService.createMenuItem(newItem);
+  }
+
+  @ApiOperation({ summary: 'update menu item with given id' })
+  @ApiCookieAuth()
+  @ApiHeader(SWAGGER_CLIENT_PRINCIPAL_HEADER_INFO)
+  @ApiOkResponse({
+    description: 'item updated',
+    type: MenuItemUpdatedResponse,
+  })
+  @ApiForbiddenResponse({
+    description: 'insufficient `UserRoles` privileges. minimum = `BOSS`',
+    type: RequestErrorResponse,
+  })
+  @ApiResponse({
+    status: 424,
+    description: 'something went wrong when updating a new menu item',
+    type: RequestErrorResponse,
+  })
+  @UseGuards(RolesGuard)
+  @AllowMinRole(UserRoles.BOSS)
+  @Patch(':id')
+  async updateMenuItem(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updatedItem: UpdateMenuDto,
+  ): Promise<MenuItemUpdatedResponse> {
+    this.logger.log(`PATCH /menu/${id}`);
+    return this.menuService.updateMenuItem(id, updatedItem);
   }
 }
