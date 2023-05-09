@@ -22,4 +22,30 @@ export class MenuService {
     };
   }
 
+
+  async fetchMenuItem(id: number): Promise<FetchMenuItemResponse> {
+    let menuItem;
+    try {
+      menuItem = await this.db.menu.findFirst({
+        include: { category: true },
+        where: {
+          available: true,
+          itemId: id,
+        },
+      });
+    } catch (error) {
+      if (error.code === 'P2025') {
+        const err = new HttpException(
+          `menu item with id ${id} not found`,
+          HttpStatus.NOT_FOUND,
+        );
+        Logger.error(err);
+        throw err;
+      }
+    }
+
+    return {
+      menuItem,
+    };
+  }
 }
