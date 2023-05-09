@@ -9,9 +9,11 @@ import { ManagerModule } from '../manager/manager.module';
   imports: [
     AuthModule,
     PostgresModule,
+    MongoModule,
     UserModule,
     EmployeeModule,
     ManagerModule,
+    MenuModule,
   ],
 })
 export class AppModule {}
