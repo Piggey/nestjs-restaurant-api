@@ -1,7 +1,16 @@
-version: "3.9"
 services:
+  sumatywny-api:
+    build: .
+    container_name: sumatywny-api
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgres
+      - mongodb
+
   postgres:
     image: postgres:15
+    container_name: postgres-db
     restart: always
     environment:
       POSTGRES_PASSWORD: postgres_password
@@ -10,6 +19,7 @@ services:
     ports:
       - "5432:5432"
   mongodb:
+    container_name: mongo-db
     image: mongo:6
     restart: always
     ports:
