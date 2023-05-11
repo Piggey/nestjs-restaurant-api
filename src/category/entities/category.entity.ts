@@ -17,6 +17,10 @@ export class Category {
   @ApiProperty({
     required: false,
   })
+  available: boolean;
+  @ApiProperty({
+    required: false,
+  })
   categoryName: string;
   @ApiProperty({
     isArray: true,
