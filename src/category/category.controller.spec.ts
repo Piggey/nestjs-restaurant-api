@@ -112,6 +112,7 @@ describe('CategoryController (e2e, positive)', () => {
 
 describe('CategoryController (e2e, negative)', () => {
   let app: INestApplication;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   let postgres: PostgresService;
 
   beforeAll(async () => {
