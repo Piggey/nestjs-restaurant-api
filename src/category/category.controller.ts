@@ -29,4 +29,12 @@ export class CategoryController {
     return this.categoryService.fetchCategories();
   }
 
+  @Patch(':id')
+  async updateCategory(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() newCategory: UpdateCategoryDto,
+  ): Promise<CategoryUpdatedResponse> {
+    this.logger.log(`PATCH /category/${id}`);
+    return this.categoryService.updateCategory(id, newCategory);
+  }
 }

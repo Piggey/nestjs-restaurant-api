@@ -16,3 +16,36 @@ export class CategoryService {
     };
   }
 
+  async updateCategory(
+    id: number,
+    newCategory: UpdateCategoryDto,
+  ): Promise<CategoryUpdatedResponse> {
+    let category;
+    try {
+      category = await this.db.category.update({
+        where: { categoryId: id },
+        data: newCategory,
+      });
+    } catch (error) {
+      let err;
+      if (error.code === 'P2025') {
+        err = new HttpException(
+          `category with id ${id} not found`,
+          HttpStatus.NOT_FOUND,
+        );
+      } else {
+        err = new HttpException(
+          `something went wrong when updating category ${id}`,
+          HttpStatus.FAILED_DEPENDENCY,
+        );
+      }
+
+      Logger.error(err);
+      throw err;
+    }
+
+    return {
+      category,
+    };
+  }
+}
