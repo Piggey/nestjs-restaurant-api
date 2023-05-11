@@ -7,7 +7,7 @@ describe('AuthController (e2e, positive)', () => {
   let app: INestApplication;
 
   beforeAll(async () => {
-    app = await createApp();
+    app = (await createApp()).app;
   });
 
   afterAll(async () => {
@@ -160,7 +160,7 @@ describe('AuthController (e2e, negative)', () => {
   let app: INestApplication;
 
   beforeAll(async () => {
-    app = await createApp();
+    app = (await createApp()).app;
   });
 
   afterAll(async () => {
