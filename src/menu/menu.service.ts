@@ -61,7 +61,7 @@ export class MenuService {
   async fetchMenuItem(id: number): Promise<FetchMenuItemResponse> {
     let menuItem;
     try {
-      menuItem = await this.db.menu.findFirst({
+      menuItem = await this.db.menu.findFirstOrThrow({
         include: { category: true },
         where: {
           available: true,
@@ -69,14 +69,23 @@ export class MenuService {
         },
       });
     } catch (error) {
+      let err;
       if (error.code === 'P2025') {
-        const err = new HttpException(
+        err = new HttpException(
           `menu item with id ${id} not found`,
           HttpStatus.NOT_FOUND,
         );
-        Logger.error(err);
-        throw err;
+      } else {
+        err = new HttpException(
+          `something went wrong when accessing menu item ${id}`,
+          HttpStatus.FAILED_DEPENDENCY,
+        );
+
+        Logger.error(error);
       }
+
+      Logger.error(err);
+      throw err;
     }
 
     return {
@@ -116,11 +125,20 @@ export class MenuService {
         data: updatedItem,
       });
     } catch (error) {
-      const err = new HttpException(
-        `could not update menu item with id = ${id}`,
-        HttpStatus.FAILED_DEPENDENCY,
-      );
-      Logger.error(error.message);
+      let err;
+      if (error.code === 'P2025') {
+        err = new HttpException(
+          `menu item with id ${id} not found`,
+          HttpStatus.NOT_FOUND,
+        );
+      } else {
+        err = new HttpException(
+          `could not update menu item with id = ${id}`,
+          HttpStatus.FAILED_DEPENDENCY,
+        );
+        Logger.error(error.message);
+      }
+
       Logger.error(err);
       throw err;
     }
