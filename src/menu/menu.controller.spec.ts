@@ -106,27 +106,43 @@ describe('MenuController (e2e, positive)', () => {
       });
   });
 
-  it('GET /menu/id', () => {
+  it('GET /menu/id', async () => {
+    const item = await postgres.menu.create({
+      data: {
+        name: 'hamburgor',
+        description: 'yum yum',
+        ingredients: 'monka,yyyyy,mleko',
+        photoUrl:
+          'https://upload.wikimedia.org/wikipedia/commons/8/8f/NYC-Diner-Bacon-Cheeseburger.jpg',
+        category: {
+          create: {
+            categoryName: 'guwno',
+          },
+        },
+      },
+    });
+
     return request(app.getHttpServer())
-      .get('/menu/1')
+      .get(`/menu/${item.itemId}`)
       .expect(200)
       .then((res) => {
         expect(res.body).toEqual({
           menuItem: {
-            itemId: expect.any(Number),
+            itemId: item.itemId,
             createdAt: expect.any(String),
             updatedAt: expect.any(String),
-            name: expect.any(String),
-            photoUrl: expect.any(String),
-            description: expect.any(String),
-            ingredients: expect.any(String),
+            name: 'hamburgor',
+            description: 'yum yum',
+            ingredients: 'monka,yyyyy,mleko',
+            photoUrl:
+              'https://upload.wikimedia.org/wikipedia/commons/8/8f/NYC-Diner-Bacon-Cheeseburger.jpg',
             available: true,
             categoryId: expect.any(Number),
             category: {
               categoryId: expect.any(Number),
               createdAt: expect.any(String),
               available: true,
-              categoryName: expect.any(String),
+              categoryName: 'guwno',
             },
           },
         });
