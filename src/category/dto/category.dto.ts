@@ -16,5 +16,9 @@ export class CategoryDto {
   @ApiProperty({
     required: false,
   })
+  available: boolean;
+  @ApiProperty({
+    required: false,
+  })
   categoryName: string;
 }
