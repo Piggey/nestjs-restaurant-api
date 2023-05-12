@@ -27,8 +27,62 @@ generator nestjsDto {
   prettier                        = "true"
 }
 
-model TestLol {
-  id    String  @id @default(auto()) @map("_id") @db.ObjectId
-  email String  @unique
-  name  String?
+enum OrderStatus {
+  NOT_APPROVED
+  APPROVED 
+  IN_PROGRESS
+  DELIVERY
+  COMPLETED
+  CUSTOMER_CANCELLED
+  EMPLOYEE_CANCELLED
+}
+
+type ClientType {
+  userId String
+}
+
+type AddressType {
+  street      String
+  houseNumber Int
+  apartment   Int?
+  city        String
+  country     String
+}
+
+type MenuItemType {
+  itemId Int
+  name String
+  photoUrl String
+  description String
+  ingredients String
+  quantity Int
+  price Float
+}
+
+model Order {
+  /// @DtoReadOnly
+  id                    String     @id @default(auto()) @map("_id") @db.ObjectId
+  /// @DtoReadOnly
+  createdAt DateTime @default(now())
+  status OrderStatus @default(NOT_APPROVED)
+  client ClientType
+  address AddressType
+  orderedItems MenuItemType[]
+  /// @IsPositive
+  totalPrice Float
+  /// @IsCurrency
+  currency String @default("PLN")
+}
+
+model JobApplication {
+  id                    String     @id @default(auto()) @map("_id") @db.ObjectId
+  firstName             String
+  lastName              String
+  age                   Int
+  email                 String  @unique
+  aboutMe               String?
+  resumee               String?
+  jobTitle              String
+  /// @IsPositive
+  prefferedSalary       Float
 }
