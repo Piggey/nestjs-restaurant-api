@@ -4,7 +4,6 @@ import { PostgresService } from '../postgres/postgres.service';
 import { createApp, encodeUser, mockUserId } from '../test';
 import { UserRoles } from '../auth/model';
 import { CreateMenuDto } from './dto/create-menu.dto';
-import { send } from 'process';
 
 describe('MenuController (e2e, positive)', () => {
   let app: INestApplication;
@@ -239,6 +238,7 @@ describe('MenuController (e2e, positive)', () => {
 
 describe('MenuController (e2e, negative)', () => {
   let app: INestApplication;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   let postgres: PostgresService;
 
   beforeAll(async () => {
@@ -368,6 +368,4 @@ describe('MenuController (e2e, negative)', () => {
         });
       });
   });
-
-  it('')
 });
