@@ -29,7 +29,7 @@ generator nestjsDto {
 
 enum OrderStatus {
   NOT_APPROVED
-  APPROVED 
+  APPROVED
   IN_PROGRESS
   DELIVERY
   COMPLETED
@@ -50,39 +50,39 @@ type AddressType {
 }
 
 type MenuItemType {
-  itemId Int
-  name String
-  photoUrl String
+  itemId      Int
+  name        String
+  photoUrl    String
   description String
   ingredients String
-  quantity Int
-  price Float
+  quantity    Int
+  price       Float
 }
 
 model Order {
   /// @DtoReadOnly
-  id                    String     @id @default(auto()) @map("_id") @db.ObjectId
+  id           String         @id @default(auto()) @map("_id") @db.ObjectId
   /// @DtoReadOnly
-  createdAt DateTime @default(now())
-  status OrderStatus @default(NOT_APPROVED)
-  client ClientType
-  address AddressType
+  createdAt    DateTime       @default(now())
+  status       OrderStatus    @default(NOT_APPROVED)
+  client       ClientType
+  address      AddressType
   orderedItems MenuItemType[]
   /// @IsPositive
-  totalPrice Float
+  totalPrice   Float
   /// @IsCurrency
-  currency String @default("PLN")
+  currency     String         @default("PLN")
 }
 
 model JobApplication {
-  id                    String     @id @default(auto()) @map("_id") @db.ObjectId
-  firstName             String
-  lastName              String
-  age                   Int
-  email                 String  @unique
-  aboutMe               String?
-  resumee               String?
-  jobTitle              String
+  id              String  @id @default(auto()) @map("_id") @db.ObjectId
+  firstName       String
+  lastName        String
+  age             Int
+  email           String  @unique
+  aboutMe         String?
+  resumee         String? // to jest plik pdf
+  jobTitle        String
   /// @IsPositive
-  prefferedSalary       Float
+  prefferedSalary Float
 }

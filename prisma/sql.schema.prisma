@@ -90,7 +90,7 @@ model Manager {
   /// @DtoRelationCanConnectOnCreate
   /// @DtoRelationCanConnectOnUpdate
   /// @DtoRelationCanCreateOnUpdate
-  employee Employee @relation(fields: [employeeId], references: [employeeId])
+  employee   Employee @relation(fields: [employeeId], references: [employeeId])
   employeeId Int
 
   /// @DtoRelationCanConnectOnUpdate
@@ -126,7 +126,7 @@ model Category {
   categoryId Int      @id @default(autoincrement())
   /// @DtoReadOnly
   createdAt  DateTime @default(now())
-  available Boolean @default(true)
+  available  Boolean  @default(true)
 
   categoryName String
 
