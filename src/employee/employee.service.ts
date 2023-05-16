@@ -1,5 +1,11 @@
-import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
-import { ClientPrincipalDto } from 'src/auth/dto';
+import {
+  BadRequestException,
+  HttpException,
+  HttpStatus,
+  Injectable,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
 import { FetchEmployeesResponse } from './responses/fetch-employees.response';
 import { PostgresService } from '../postgres/postgres.service';
 import { UserRoles } from '../auth/model';
@@ -8,15 +14,15 @@ import { EmployeeCreatedResponse } from './responses/employee-created.response';
 import { UpdateEmployeeDto } from './dto/update-employee.dto';
 import { EmployeeUpdatedResponse } from './responses/employee-updated.response';
 import { EmployeeDeletedResponse } from './responses/employee-deleted.response';
+import { User } from '../user/entities/user.entity';
+import { Employee } from './entities/employee.entity';
 
 @Injectable()
 export class EmployeeService {
   constructor(private readonly db: PostgresService) {}
 
-  async fetchEmployees(
-    user: ClientPrincipalDto,
-  ): Promise<FetchEmployeesResponse> {
-    if (user.userRoles.includes(UserRoles.BOSS)) {
+  async fetchEmployees(user: User): Promise<FetchEmployeesResponse> {
+    if (user.userRole == UserRoles.BOSS) {
       const employees = await this.db.employee.findMany({
         include: {
           restaurant: { include: { address: true, manager: true } },
@@ -30,7 +36,7 @@ export class EmployeeService {
       return { employees };
     }
 
-    if (user.userRoles.includes(UserRoles.MANAGER)) {
+    if (user.userRole == UserRoles.MANAGER) {
       const employees = await this.db.employee.findMany({
         include: {
           address: true,
@@ -53,21 +59,27 @@ export class EmployeeService {
   async createEmployee(
     newEmployee: CreateEmployeeDto,
   ): Promise<EmployeeCreatedResponse> {
-    let employee;
+    let employee: Employee;
     try {
       employee = await this.db.employee.create({
         include: { address: true, user: true, restaurant: true },
         data: newEmployee,
       });
+
+      await this.db.user.update({
+        where: { userId: employee.user.userId },
+        data: { userRole: UserRoles.EMPLOYEE },
+      });
     } catch (error) {
       if (error.code === 'P2002') {
-        const err = new HttpException(
+        const err = new BadRequestException(
           'unique constraint violation when trying to create a new employee',
-          HttpStatus.BAD_REQUEST,
         );
         Logger.error(err);
         throw err;
       }
+
+      throw new BadRequestException('could not create a new employee');
     }
 
     return {
@@ -110,13 +122,14 @@ export class EmployeeService {
       });
     } catch (error) {
       if (error.code === 'P2025') {
-        const err = new HttpException(
-          `employee with id ${id} not found`,
-          HttpStatus.NOT_FOUND,
-        );
+        const err = new NotFoundException(`employee with id ${id} not found`);
         Logger.error(err);
         throw err;
       }
+
+      throw new BadRequestException(
+        'something went wrong when deleting employee',
+      );
     }
 
     return {
