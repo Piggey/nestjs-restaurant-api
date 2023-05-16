@@ -1,4 +1,10 @@
-import { IsInt, IsOptional, IsString } from 'class-validator';
+import {
+  IsInt,
+  IsNumber,
+  IsOptional,
+  IsPositive,
+  IsString,
+} from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class UpdateJobApplicationDto {
@@ -49,11 +55,12 @@ export class UpdateJobApplicationDto {
   @IsString()
   jobTitle?: string;
   @ApiProperty({
-    type: 'integer',
-    format: 'int32',
+    type: 'number',
+    format: 'float',
     required: false,
   })
   @IsOptional()
-  @IsInt()
+  @IsNumber()
+  @IsPositive()
   prefferedSalary?: number;
 }

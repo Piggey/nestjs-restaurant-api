@@ -1,5 +1,4 @@
 import {
-  IsEmail,
   IsNotEmpty,
   IsOptional,
   IsString,
@@ -69,11 +68,6 @@ export class CreateEmployeeDto {
   @IsNotEmpty()
   @IsString()
   lastName: string;
-  @ApiProperty()
-  @IsNotEmpty()
-  @IsString()
-  @IsEmail()
-  email: string;
   @ApiProperty({
     type: CreateEmployeeAddressRelationInputDto,
   })

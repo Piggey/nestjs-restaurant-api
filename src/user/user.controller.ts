@@ -1,4 +1,4 @@
-import { Controller, Get, Logger } from '@nestjs/common';
+import { Controller, Get, Logger, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import {
   ApiBadRequestResponse,
@@ -13,8 +13,14 @@ import {
   ClientPrincipalDto,
   SWAGGER_CLIENT_PRINCIPAL_HEADER_INFO,
 } from '../auth/dto';
-import { CLIENT_PRINCIPAL_HEADER, ClientPrincipal } from '../auth/decorator';
+import {
+  AllowMinRole,
+  CLIENT_PRINCIPAL_HEADER,
+  ClientPrincipal,
+} from '../auth/decorator';
 import { RequestErrorResponse } from '../app/response';
+import { RolesGuard } from '../auth/guard';
+import { UserRoles } from '../auth/model';
 
 @ApiTags('user')
 @Controller('user')
@@ -36,11 +42,13 @@ export class UserController {
     description: 'user with given `userId` not found in the database',
     type: RequestErrorResponse,
   })
+  @UseGuards(RolesGuard)
+  @AllowMinRole(UserRoles.CLIENT)
   @Get('me')
-  async fetchUser(
-    @ClientPrincipal() user: ClientPrincipalDto,
-  ): Promise<AboutUserResponse> {
-    Logger.log(`/user/me, userId = ${user.userId}`);
-    return this.userService.fetchUser(user);
+  async fetchUser(): // @ClientPrincipal() user: ClientPrincipalDto,
+  Promise<any> {
+    return true;
+    // Logger.log(`/user/me, userId = ${user.userId}`);
+    // return this.userService.fetchUser(user);
   }
 }

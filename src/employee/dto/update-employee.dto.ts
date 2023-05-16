@@ -1,4 +1,4 @@
-import { IsEmail, IsOptional, IsString, ValidateNested } from 'class-validator';
+import { IsOptional, IsString, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiExtraModels, ApiProperty } from '@nestjs/swagger';
 import { CreateRestaurantDto } from '../../restaurant/dto/create-restaurant.dto';
@@ -43,13 +43,6 @@ export class UpdateEmployeeDto {
   @IsOptional()
   @IsString()
   lastName?: string;
-  @ApiProperty({
-    required: false,
-  })
-  @IsOptional()
-  @IsString()
-  @IsEmail()
-  email?: string;
   @ApiProperty({
     required: false,
     type: UpdateEmployeeRestaurantRelationInputDto,
