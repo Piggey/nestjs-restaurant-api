@@ -3,8 +3,14 @@ import { IsByteLength, IsEnum, IsNotEmpty, IsString } from 'class-validator';
 import { UserRoles } from '../model';
 import { CLIENT_PRINCIPAL_HEADER } from '../decorator';
 
+/**
+ * DEPRECATED, DO NOT USE
+ */
 export const USER_ID_MAX_LENGTH = 32;
 
+/**
+ * DEPRECATED, DO NOT USE
+ */
 export const SWAGGER_CLIENT_PRINCIPAL_HEADER_INFO = {
   name: CLIENT_PRINCIPAL_HEADER,
   description: 'Client principal encoded as base64',
@@ -13,6 +19,9 @@ export const SWAGGER_CLIENT_PRINCIPAL_HEADER_INFO = {
   required: true,
 };
 
+/**
+ * DEPRECATED, DO NOT USE
+ */
 export class ClientPrincipalDto {
   @ApiProperty({ required: false })
   @IsString()
