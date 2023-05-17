@@ -16,7 +16,7 @@ import {
   FetchCategoriesResponse,
 } from './responses';
 import {
-  ApiCookieAuth,
+  ApiBearerAuth,
   ApiForbiddenResponse,
   ApiHeader,
   ApiNotFoundResponse,
@@ -30,7 +30,7 @@ import { RequestErrorResponse } from '../app/response';
 import { RolesGuard } from '../auth/guard';
 import { AllowMinRole } from '../auth/decorator';
 import { UserRoles } from '../auth/model';
-import { SWAGGER_CLIENT_PRINCIPAL_HEADER_INFO } from '../auth/dto';
+import { JWT_ACCESS_TOKEN_HEADER } from '../auth/dto';
 
 @ApiTags('category')
 @Controller('category')
@@ -67,8 +67,8 @@ export class CategoryController {
     description: 'insufficient `UserRoles` privileges. minimum = `BOSS`',
     type: RequestErrorResponse,
   })
-  @ApiHeader(SWAGGER_CLIENT_PRINCIPAL_HEADER_INFO)
-  @ApiCookieAuth()
+  @ApiBearerAuth()
+  @ApiHeader(JWT_ACCESS_TOKEN_HEADER)
   @UseGuards(RolesGuard)
   @AllowMinRole(UserRoles.BOSS)
   @Patch(':id')
@@ -100,8 +100,8 @@ export class CategoryController {
     description: 'insufficient `UserRoles` privileges. minimum = `BOSS`',
     type: RequestErrorResponse,
   })
-  @ApiCookieAuth()
-  @ApiHeader(SWAGGER_CLIENT_PRINCIPAL_HEADER_INFO)
+  @ApiBearerAuth()
+  @ApiHeader(JWT_ACCESS_TOKEN_HEADER)
   @UseGuards(RolesGuard)
   @AllowMinRole(UserRoles.BOSS)
   @Delete(':id')

@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { MenuService } from './menu.service';
 import {
-  ApiCookieAuth,
+  ApiBearerAuth,
   ApiForbiddenResponse,
   ApiHeader,
   ApiNotFoundResponse,
@@ -34,7 +34,7 @@ import { CreateMenuDto } from './dto/create-menu.dto';
 import { RolesGuard } from '../auth/guard';
 import { AllowMinRole } from '../auth/decorator';
 import { UserRoles } from '../auth/model';
-import { SWAGGER_CLIENT_PRINCIPAL_HEADER_INFO } from '../auth/dto';
+import { JWT_ACCESS_TOKEN_HEADER } from '../auth/dto';
 import { UpdateMenuDto } from './dto/update-menu.dto';
 
 @ApiTags('menu')
@@ -89,8 +89,8 @@ export class MenuController {
   }
 
   @ApiOperation({ summary: 'create a new menu item' })
-  @ApiCookieAuth()
-  @ApiHeader(SWAGGER_CLIENT_PRINCIPAL_HEADER_INFO)
+  @ApiBearerAuth()
+  @ApiHeader(JWT_ACCESS_TOKEN_HEADER)
   @ApiOkResponse({
     description: 'new item created',
     type: MenuItemCreatedResponse,
@@ -115,8 +115,8 @@ export class MenuController {
   }
 
   @ApiOperation({ summary: 'update menu item with given id' })
-  @ApiCookieAuth()
-  @ApiHeader(SWAGGER_CLIENT_PRINCIPAL_HEADER_INFO)
+  @ApiBearerAuth()
+  @ApiHeader(JWT_ACCESS_TOKEN_HEADER)
   @ApiOkResponse({
     description: 'item updated',
     type: MenuItemUpdatedResponse,
@@ -144,8 +144,8 @@ export class MenuController {
   @ApiOperation({
     summary: 'remove (mark as unavailable) menu item with given id',
   })
-  @ApiCookieAuth()
-  @ApiHeader(SWAGGER_CLIENT_PRINCIPAL_HEADER_INFO)
+  @ApiBearerAuth()
+  @ApiHeader(JWT_ACCESS_TOKEN_HEADER)
   @ApiOkResponse({
     description: 'item removed',
     type: MenuItemRemovedResponse,
