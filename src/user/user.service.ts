@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { AboutUserResponse } from './responses/about-user.response';
-import { ClientPrincipalDto } from '../auth/dto';
+import { JwtAccessTokenDto } from '../auth/dto';
 import { PostgresService } from '../db/postgres/postgres.service';
 import { User } from './entities/user.entity';
 import { Employee } from '../employee/entities/employee.entity';
@@ -9,14 +9,14 @@ import { Employee } from '../employee/entities/employee.entity';
 export class UserService {
   constructor(private readonly db: PostgresService) {}
 
-  async fetchUser(user: ClientPrincipalDto): Promise<AboutUserResponse> {
+  async aboutMe(payload: JwtAccessTokenDto): Promise<AboutUserResponse> {
     const dbUser: User = await this.db.user.findFirst({
-      where: { userId: user.userId },
+      where: { userEmail: payload.email },
     });
 
     if (!dbUser) {
       const err = new HttpException(
-        `user with id = ${user.userId} not found in the database`,
+        `user ${payload.email} not found in the database`,
         HttpStatus.NOT_FOUND,
       );
       Logger.error(err);

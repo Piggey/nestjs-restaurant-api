@@ -35,10 +35,6 @@ export class Employee {
   @ApiProperty({
     required: false,
   })
-  email: string;
-  @ApiProperty({
-    required: false,
-  })
   address?: Address;
   @ApiProperty({
     type: 'integer',
@@ -51,9 +47,11 @@ export class Employee {
   })
   user?: User;
   @ApiProperty({
+    type: 'integer',
+    format: 'int32',
     required: false,
   })
-  userId: string;
+  userId: number;
   @ApiProperty({
     required: false,
   })
