@@ -71,15 +71,19 @@ export class EmployeeService {
         data: { userRole: UserRoles.EMPLOYEE },
       });
     } catch (error) {
+      let err;
       if (error.code === 'P2002') {
-        const err = new BadRequestException(
+        err = new BadRequestException(
           'unique constraint violation when trying to create a new employee',
         );
-        Logger.error(err);
-        throw err;
+      } else if (error.code === 'P2025') {
+        err = new NotFoundException(error.meta.cause);
+      } else {
+        err = new BadRequestException('could not create a new employee');
       }
 
-      throw new BadRequestException('could not create a new employee');
+      Logger.error(err);
+      throw err;
     }
 
     return {
