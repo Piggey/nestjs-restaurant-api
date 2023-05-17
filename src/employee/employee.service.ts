@@ -114,11 +114,18 @@ export class EmployeeService {
   }
 
   async deleteEmployee(id: number): Promise<EmployeeDeletedResponse> {
-    let firedEmployee;
+    let firedEmployee: Employee;
     try {
       firedEmployee = await this.db.employee.update({
+        include: { user: true },
         where: { employeeId: id },
         data: { firedAt: new Date() },
+      });
+
+      // demote UserRole to CLIENT
+      await this.db.user.update({
+        where: { userId: firedEmployee.userId },
+        data: { userRole: UserRoles.CLIENT },
       });
     } catch (error) {
       if (error.code === 'P2025') {
