@@ -28,8 +28,4 @@ export class EmployeeDto {
     required: false,
   })
   lastName: string;
-  @ApiProperty({
-    required: false,
-  })
-  email: string;
 }

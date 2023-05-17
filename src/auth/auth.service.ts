@@ -1,23 +1,23 @@
 import { Injectable } from '@nestjs/common';
 import { PostgresService } from '../db/postgres/postgres.service';
-import { ClientPrincipalDto } from './dto';
 import { UserSignInResponse } from './responses';
 import { User } from '../user/entities/user.entity';
+import { JwtAccessTokenDto } from './dto';
 
 @Injectable()
 export class AuthService {
   constructor(private readonly db: PostgresService) {}
 
-  async signIn(user: ClientPrincipalDto): Promise<UserSignInResponse> {
+  async signIn(payload: JwtAccessTokenDto): Promise<UserSignInResponse> {
     const dbUser: User = await this.db.user.findFirst({
       where: {
-        userId: user.userId,
+        userEmail: payload.email,
       },
     });
 
     if (!dbUser) {
       const createdUser = await this.db.user.create({
-        data: { userId: user.userId },
+        data: { userEmail: payload.email },
       });
 
       return {

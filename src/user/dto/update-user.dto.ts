@@ -1,4 +1,4 @@
-import { IsByteLength, IsOptional, IsString } from 'class-validator';
+import { IsEmail, IsOptional, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class UpdateUserDto {
@@ -7,6 +7,6 @@ export class UpdateUserDto {
   })
   @IsOptional()
   @IsString()
-  @IsByteLength(32, 32)
-  userId?: string;
+  @IsEmail()
+  userEmail?: string;
 }

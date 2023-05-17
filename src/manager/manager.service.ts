@@ -6,6 +6,8 @@ import { CreateManagerDto } from './dto/create-manager.dto';
 import { ManagerUpdatedResponse } from './responses/manager-updated.response';
 import { UpdateManagerDto } from './dto/update-manager.dto';
 import { ManagerDeletedResponse } from './responses/manager-deleted.response';
+import { Manager } from './entities/manager.entity';
+import { UserRoles } from '../auth/model';
 
 @Injectable()
 export class ManagerService {
@@ -29,10 +31,19 @@ export class ManagerService {
   async createManager(
     newManager: CreateManagerDto,
   ): Promise<ManagerCreatedResponse> {
-    let manager;
+    let manager: Manager;
 
     try {
-      manager = await this.db.manager.create({ data: newManager });
+      manager = await this.db.manager.create({
+        include: { employee: { include: { user: true } } },
+        data: newManager,
+      });
+
+      // promote user to UserRole MANAGER
+      await this.db.user.update({
+        where: { userId: manager.employee.user.userId },
+        data: { userRole: UserRoles.MANAGER },
+      });
     } catch (error) {
       let err;
       if (error.code === 'P2002') {
@@ -94,13 +105,20 @@ export class ManagerService {
     managerId: number,
     restaurantId: number,
   ): Promise<ManagerDeletedResponse> {
-    let deleted;
+    let deleted: Manager;
     try {
       deleted = await this.db.manager.update({
+        include: { employee: { include: { user: true } } },
         where: { managerId },
         data: {
           managedRestaurants: { disconnect: { restaurantId } },
         },
+      });
+
+      // demote UserRole to EMPLOYEE
+      await this.db.user.update({
+        where: { userId: deleted.employee.user.userId },
+        data: { userRole: UserRoles.EMPLOYEE },
       });
     } catch (error) {
       const err = new HttpException(

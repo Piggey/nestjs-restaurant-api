@@ -13,7 +13,7 @@ import {
 import { EmployeeService } from './employee.service';
 import {
   ApiBadRequestResponse,
-  ApiCookieAuth,
+  ApiBearerAuth,
   ApiCreatedResponse,
   ApiForbiddenResponse,
   ApiHeader,
@@ -23,11 +23,8 @@ import {
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
-import { AllowMinRole, ClientPrincipal } from '../auth/decorator';
-import {
-  ClientPrincipalDto,
-  SWAGGER_CLIENT_PRINCIPAL_HEADER_INFO,
-} from '../auth/dto';
+import { AllowMinRole, UserDecorator } from '../auth/decorator';
+import { JWT_ACCESS_TOKEN_HEADER } from '../auth/dto';
 import { FetchEmployeesResponse } from './responses/fetch-employees.response';
 import { RolesGuard } from '../auth/guard';
 import { UserRoles } from '../auth/model';
@@ -37,10 +34,11 @@ import { UpdateEmployeeDto } from './dto/update-employee.dto';
 import { EmployeeCreatedResponse } from './responses/employee-created.response';
 import { EmployeeUpdatedResponse } from './responses/employee-updated.response';
 import { EmployeeDeletedResponse } from './responses/employee-deleted.response';
+import { User } from '../user/entities/user.entity';
 
 @ApiTags('employee')
-@ApiCookieAuth()
-@ApiHeader(SWAGGER_CLIENT_PRINCIPAL_HEADER_INFO)
+@ApiBearerAuth()
+@ApiHeader(JWT_ACCESS_TOKEN_HEADER)
 @ApiForbiddenResponse({
   description: 'insufficient `UserRoles` privileges. minimum = `MANAGER`',
   type: RequestErrorResponse,
@@ -60,7 +58,7 @@ export class EmployeeController {
   @AllowMinRole(UserRoles.MANAGER)
   @Get('/')
   async fetchEmployees(
-    @ClientPrincipal() user: ClientPrincipalDto,
+    @UserDecorator() user: User,
   ): Promise<FetchEmployeesResponse> {
     this.logger.log(`GET /employee, userId = ${user.userId}`);
     return this.employeeService.fetchEmployees(user);
@@ -79,10 +77,9 @@ export class EmployeeController {
   @AllowMinRole(UserRoles.MANAGER)
   @Post('/')
   async createEmployee(
-    @ClientPrincipal() user: ClientPrincipalDto,
     @Body() newEmployee: CreateEmployeeDto,
   ): Promise<EmployeeCreatedResponse> {
-    this.logger.log(`POST /employee, userId = ${user.userId}`);
+    this.logger.log(`POST /employee`);
     return this.employeeService.createEmployee(newEmployee);
   }
 
