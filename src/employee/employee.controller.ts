@@ -79,7 +79,7 @@ export class EmployeeController {
   async createEmployee(
     @Body() newEmployee: CreateEmployeeDto,
   ): Promise<EmployeeCreatedResponse> {
-    this.logger.log(`POST /employee - newEmployee: ${newEmployee}`);
+    this.logger.log(`POST /employee`);
     return this.employeeService.createEmployee(newEmployee);
   }
 
