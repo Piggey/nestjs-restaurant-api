@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { AboutUserResponse } from './responses/about-user.response';
-import { JwtAccessTokenDto } from '../auth/dto';
 import { PostgresService } from '../db/postgres/postgres.service';
+import { JwtAccessTokenDto } from '../auth/dto';
 import { User } from './entities/user.entity';
 import { Employee } from '../employee/entities/employee.entity';
 

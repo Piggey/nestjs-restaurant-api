@@ -5,12 +5,12 @@ import {
   createParamDecorator,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { PostgresService } from '../../postgres/postgres.service';
 import { User } from '../../user/entities/user.entity';
 import {
   decodeJwtPayload,
   extractTokenFromHeader,
 } from './jwt-payload.decorator';
+import { PostgresService } from '../../db/postgres/postgres.service';
 
 export const UserDecorator = createParamDecorator(
   async (_: unknown, ctx: ExecutionContext): Promise<User> => {
