@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ManagerController } from './manager.controller';
 import { ManagerService } from './manager.service';
-import { PostgresModule } from '../postgres/postgres.module';
+import { PostgresModule } from '../db/postgres/postgres.module';
 
 describe('ManagerController', () => {
   let controller: ManagerController;

@@ -4,7 +4,7 @@ import {
   CategoryUpdatedResponse,
   FetchCategoriesResponse,
 } from './responses';
-import { PostgresService } from '../postgres/postgres.service';
+import { PostgresService } from '../db/postgres/postgres.service';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 
 @Injectable()

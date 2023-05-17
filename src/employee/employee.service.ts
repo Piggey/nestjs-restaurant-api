@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { ClientPrincipalDto } from 'src/auth/dto';
 import { FetchEmployeesResponse } from './responses/fetch-employees.response';
-import { PostgresService } from '../postgres/postgres.service';
+import { PostgresService } from '../db/postgres/postgres.service';
 import { UserRoles } from '../auth/model';
 import { CreateEmployeeDto } from './dto/create-employee.dto';
 import { EmployeeCreatedResponse } from './responses/employee-created.response';

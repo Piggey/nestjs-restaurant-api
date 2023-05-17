@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PostgresService } from '../postgres/postgres.service';
+import { PostgresService } from '../db/postgres/postgres.service';
 import { ClientPrincipalDto } from './dto';
 import { UserSignInResponse } from './responses';
 import { User } from '../user/entities/user.entity';
