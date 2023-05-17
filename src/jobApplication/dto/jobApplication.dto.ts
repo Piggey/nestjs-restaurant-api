@@ -38,8 +38,8 @@ export class JobApplicationDto {
   })
   jobTitle: string;
   @ApiProperty({
-    type: 'integer',
-    format: 'int32',
+    type: 'number',
+    format: 'float',
     required: false,
   })
   prefferedSalary: number;
