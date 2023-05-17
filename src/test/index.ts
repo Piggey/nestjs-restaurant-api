@@ -7,10 +7,10 @@ import { UserModule } from '../user/user.module';
 import { CategoryModule } from '../category/category.module';
 import { RestaurantModule } from '../restaurant/restaurant.module';
 import { MenuModule } from '../menu/menu.module';
-import { PostgresService } from '../postgres/postgres.service';
-import { MongoService } from '../mongo/mongo.service';
-import { PostgresModule } from '../postgres/postgres.module';
-import { MongoModule } from '../mongo/mongo.module';
+import { PostgresService } from '../db/postgres/postgres.service';
+import { MongoService } from '../db/mongo/mongo.service';
+import { PostgresModule } from '../db/postgres/postgres.module';
+import { MongoModule } from '../db/mongo/mongo.module';
 
 type MockedApp = {
   app: INestApplication;

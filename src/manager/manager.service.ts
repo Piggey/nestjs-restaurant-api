@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { FetchManagersResponse } from './responses/fetch-managers.response';
-import { PostgresService } from '../postgres/postgres.service';
+import { PostgresService } from '../db/postgres/postgres.service';
 import { ManagerCreatedResponse } from './responses/manager-created.response';
 import { CreateManagerDto } from './dto/create-manager.dto';
 import { ManagerUpdatedResponse } from './responses/manager-updated.response';

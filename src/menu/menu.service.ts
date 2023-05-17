@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
-import { PostgresService } from '../postgres/postgres.service';
+import { PostgresService } from '../db/postgres/postgres.service';
 import {
   FetchMenuByCategoryResponse,
   FetchMenuItemResponse,

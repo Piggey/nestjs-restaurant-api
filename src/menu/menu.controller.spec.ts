@@ -1,6 +1,6 @@
 import * as request from 'supertest';
 import { INestApplication } from '@nestjs/common';
-import { PostgresService } from '../postgres/postgres.service';
+import { PostgresService } from '../db/postgres/postgres.service';
 import { createApp, encodeUser, mockUserId } from '../test';
 import { UserRoles } from '../auth/model';
 import { CreateMenuDto } from './dto/create-menu.dto';

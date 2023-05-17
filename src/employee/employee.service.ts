@@ -7,7 +7,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { FetchEmployeesResponse } from './responses/fetch-employees.response';
-import { PostgresService } from '../postgres/postgres.service';
+import { PostgresService } from '../db/postgres/postgres.service';
 import { UserRoles } from '../auth/model';
 import { CreateEmployeeDto } from './dto/create-employee.dto';
 import { EmployeeCreatedResponse } from './responses/employee-created.response';
