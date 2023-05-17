@@ -1,14 +1,16 @@
-
 -- -- COPY THIS PART FROM `migration.sql` FILE GENERATED FROM COMMAND npm run db:migrate -- --
-
 -- CreateEnum
 CREATE TYPE "Role" AS ENUM ('CLIENT', 'EMPLOYEE', 'DELIVERY', 'MANAGER', 'BOSS');
 
 -- CreateTable
 CREATE TABLE "User" (
-    "userId" TEXT NOT NULL,
+    "userId" SERIAL NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "loyaltyPoints" INTEGER NOT NULL DEFAULT 0
+    "userEmail" TEXT NOT NULL,
+    "userRole" "Role" NOT NULL DEFAULT 'CLIENT',
+    "loyaltyPoints" INTEGER NOT NULL DEFAULT 0,
+
+    CONSTRAINT "User_pkey" PRIMARY KEY ("userId")
 );
 
 -- CreateTable
@@ -18,9 +20,8 @@ CREATE TABLE "Employee" (
     "firedAt" TIMESTAMP(3),
     "firstName" TEXT NOT NULL,
     "lastName" TEXT NOT NULL,
-    "email" TEXT NOT NULL,
     "addressId" INTEGER NOT NULL,
-    "userId" TEXT NOT NULL,
+    "userId" INTEGER NOT NULL,
     "restaurantId" INTEGER NOT NULL,
 
     CONSTRAINT "Employee_pkey" PRIMARY KEY ("employeeId")
@@ -84,10 +85,7 @@ CREATE TABLE "Address" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "User_userId_key" ON "User"("userId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "Employee_email_key" ON "Employee"("email");
+CREATE UNIQUE INDEX "User_userEmail_key" ON "User"("userEmail");
 
 -- AddForeignKey
 ALTER TABLE "Employee" ADD CONSTRAINT "Employee_addressId_fkey" FOREIGN KEY ("addressId") REFERENCES "Address"("addressId") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -110,6 +108,28 @@ ALTER TABLE "Restaurant" ADD CONSTRAINT "Restaurant_managerId_fkey" FOREIGN KEY 
 -- AddForeignKey
 ALTER TABLE "Restaurant" ADD CONSTRAINT "Restaurant_addressId_fkey" FOREIGN KEY ("addressId") REFERENCES "Address"("addressId") ON DELETE RESTRICT ON UPDATE CASCADE;
 
+-- -- INSERT YOUR DATA HERE -- --
+INSERT INTO "Address" VALUES (1, 'Aleje politechniki', '9', 'Łódź', '93-590', 'Poland');
+INSERT INTO "Address" VALUES (2, 'Świętego Ducha', '16/24', 'Gdańsk', '80-834', 'Poland');
+INSERT INTO "Address" VALUES (3, 'Stefanowskiego', '17', 'Łódź', '90-537', 'Poland');
+INSERT INTO "Address" VALUES (4, 'Złota', '59', 'Warszawa', '00-120', 'Poland');
+INSERT INTO "Address" VALUES (5, 'Senatorska', '24/26', 'Łódź', '93-192', 'Poland');
+INSERT INTO "Address" VALUES (6, 'Gen. Walerego Wróblewskiego', '16/18', 'Łódź', '93-578', 'Poland');
 
--- -- INSERT DATA HERE -- --
-INSERT INTO "Address" VALUES (1, 'Aleje politechniki', '9', '93-590', 'Poland');
+INSERT INTO "Restaurant" ("restaurantId", "geoLat", "geoLong", "addressId") VALUES (1, 51.751579, 19.452930, 3);
+INSERT INTO "Restaurant" ("restaurantId", "geoLat", "geoLong", "addressId") VALUES (2, 52.230652, 21.002310, 4);
+INSERT INTO "Restaurant" ("restaurantId", "geoLat", "geoLong", "addressId") VALUES (3, 54.350910, 18.650740, 2);
+
+INSERT INTO "User" ("userId", "userEmail", "userRole") VALUES (1, 'boss@sumatywny.pl', 'BOSS');
+INSERT INTO "User" ("userId", "userEmail", "userRole") VALUES (2, 'manager@sumatywny.pl', 'MANAGER');
+INSERT INTO "User" ("userId", "userEmail", "userRole") VALUES (3, 'delivery@sumatywny.pl', 'DELIVERY');
+INSERT INTO "User" ("userId", "userEmail", "userRole") VALUES (4, 'employee@sumatywny.pl', 'EMPLOYEE');
+INSERT INTO "User" ("userId", "userEmail", "userRole") VALUES (5, 'client@sumatywny.pl', 'CLIENT');
+INSERT INTO "User" ("userId", "userEmail", "userRole") VALUES (6, '236653@edu.p.lodz.pl', 'BOSS');
+
+INSERT INTO "Employee" ("employeeId", "firstName", "lastName", "addressId", "userId", "restaurantId") VALUES (1, 'Jan', 'Kowalski', 1, 4, 1);
+INSERT INTO "Employee" ("employeeId", "firstName", "lastName", "addressId", "userId", "restaurantId") VALUES (2, 'Szymon', 'Rozwoźnik', 6, 3, 1);
+INSERT INTO "Employee" ("employeeId", "firstName", "lastName", "addressId", "userId", "restaurantId") VALUES (3, 'Przemysław', 'Zarządzający', 5, 2, 1);
+
+INSERT INTO "Manager" VALUES (1, 3);
+
