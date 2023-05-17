@@ -105,9 +105,15 @@ model Menu {
 
   name        String
   photoUrl    String
-  description String
+  description String?
+  /// @Min(0.01)
+  price Float
+  /// @Min(0)
+  /// @Max(5)
+  rating Float?
+  numberOfRatings Int?
   /// @description a list of ingredients separated by `,`
-  ingredients String
+  ingredients String?
   available   Boolean @default(true)
 
   /// @DtoRelationRequired

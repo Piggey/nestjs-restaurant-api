@@ -1,4 +1,12 @@
-import { IsOptional, IsString, ValidateNested } from 'class-validator';
+import {
+  IsInt,
+  IsNumber,
+  IsOptional,
+  IsString,
+  Max,
+  Min,
+  ValidateNested,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiExtraModels, ApiProperty } from '@nestjs/swagger';
 import { CreateCategoryDto } from '../../category/dto/create-category.dto';
@@ -45,17 +53,48 @@ export class UpdateMenuDto {
   photoUrl?: string;
   @ApiProperty({
     required: false,
+    nullable: true,
   })
   @IsOptional()
   @IsString()
-  description?: string;
+  description?: string | null;
   @ApiProperty({
-    description: 'a list of ingredients separated by `,`',
+    type: 'number',
+    format: 'float',
     required: false,
   })
   @IsOptional()
+  @IsNumber()
+  @Min(0.01)
+  price?: number;
+  @ApiProperty({
+    type: 'number',
+    format: 'float',
+    required: false,
+    nullable: true,
+  })
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  @Max(5)
+  rating?: number | null;
+  @ApiProperty({
+    type: 'integer',
+    format: 'int32',
+    required: false,
+    nullable: true,
+  })
+  @IsOptional()
+  @IsInt()
+  numberOfRatings?: number | null;
+  @ApiProperty({
+    description: 'a list of ingredients separated by `,`',
+    required: false,
+    nullable: true,
+  })
+  @IsOptional()
   @IsString()
-  ingredients?: string;
+  ingredients?: string | null;
   @ApiProperty({
     required: false,
     type: UpdateMenuCategoryRelationInputDto,
