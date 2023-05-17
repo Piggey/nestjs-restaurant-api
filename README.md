@@ -7,6 +7,7 @@ $ npm install
 
 ## [JSON object to base64 encoder](https://codebeautify.org/json-to-base64-converter)
 ## [base64 to JSON object encoder](https://codebeautify.org/base64-to-json-converter)
+## [JSON Web Token](https://jwt.io/)
 
 ## Running the app
 
@@ -14,12 +15,11 @@ $ npm install
 ```bash
 $ sudo docker-compose up -d
 ```
-OR
-```bash
-$ npm run db:start
 
-# update schema
-$ npm run db:push
+### generating schema files
+```bash
+npm run db:generate # generate DTO and Entity files
+npm run db:migrate # apply changes to Postgres database
 ```
 
 ### Start backend server
