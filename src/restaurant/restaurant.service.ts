@@ -9,10 +9,12 @@ import {
   FetchRestaurantResponse,
   FetchRestaurantsResponse,
   RestaurantCreatedResponse,
+  RestaurantUpdatedResponse,
 } from './responses';
 import { PostgresService } from '../db/postgres/postgres.service';
 import { Restaurant } from './entities/restaurant.entity';
 import { CreateRestaurantDto } from './dto/create-restaurant.dto';
+import { UpdateRestaurantDto } from './dto/update-restaurant.dto';
 
 @Injectable()
 export class RestaurantService {
@@ -57,6 +59,7 @@ export class RestaurantService {
   ): Promise<RestaurantCreatedResponse> {
     try {
       const restaurant = await this.db.restaurant.create({
+        include: { address: true, openingHours: true },
         data: newRestaurant,
       });
       return { restaurant };
@@ -67,6 +70,30 @@ export class RestaurantService {
       );
 
       Logger.log(err);
+      throw err;
+    }
+  }
+
+  async updateRestaurant(
+    id: number,
+    newRestaurant: UpdateRestaurantDto,
+  ): Promise<RestaurantUpdatedResponse> {
+    try {
+      const restaurant = await this.db.restaurant.update({
+        include: { address: true, openingHours: true },
+        where: { restaurantId: id },
+        data: newRestaurant,
+      });
+      return { restaurant };
+    } catch (error) {
+      let err;
+      if (error.code === 'P2025') {
+        err = new NotFoundException(`could not find restaurant with id ${id}`);
+      } else {
+        err = new HttpException(error.meta.cause, HttpStatus.FAILED_DEPENDENCY);
+      }
+
+      Logger.error(err);
       throw err;
     }
   }

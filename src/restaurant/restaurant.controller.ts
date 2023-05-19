@@ -6,6 +6,7 @@ import {
   Logger,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
   UseGuards,
 } from '@nestjs/common';
@@ -14,6 +15,7 @@ import {
   FetchRestaurantResponse,
   FetchRestaurantsResponse,
   RestaurantCreatedResponse,
+  RestaurantUpdatedResponse,
 } from './responses';
 import {
   ApiNotFoundResponse,
@@ -27,6 +29,7 @@ import { CreateRestaurantDto } from './dto/create-restaurant.dto';
 import { RolesGuard } from '../auth/guard';
 import { AllowMinRole } from '../auth/decorator';
 import { UserRoles } from '../auth/model';
+import { UpdateRestaurantDto } from './dto/update-restaurant.dto';
 
 @ApiTags('restaurant')
 @Controller('restaurant')
@@ -85,5 +88,30 @@ export class RestaurantController {
   ): Promise<RestaurantCreatedResponse> {
     this.logger.log('POST /restaurant');
     return this.restaurantService.createRestaurant(newRestaurant);
+  }
+
+  @ApiOperation({ summary: 'update data about a restaurant' })
+  @ApiOkResponse({
+    description: 'returns updated data',
+    type: RestaurantUpdatedResponse,
+  })
+  @ApiNotFoundResponse({
+    description: 'could not find a restaurant with given id',
+    type: RequestErrorResponse,
+  })
+  @ApiResponse({
+    status: HttpStatus.FAILED_DEPENDENCY,
+    description: 'database error when updating a restaurant',
+    type: RequestErrorResponse,
+  })
+  @UseGuards(RolesGuard)
+  @AllowMinRole(UserRoles.MANAGER)
+  @Patch(':id')
+  async updateRestaurant(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() newRestaurant: UpdateRestaurantDto,
+  ): Promise<RestaurantUpdatedResponse> {
+    this.logger.log(`PATCH /restaurant/${id}`);
+    return this.restaurantService.updateRestaurant(id, newRestaurant);
   }
 }

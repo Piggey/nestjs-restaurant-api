@@ -88,9 +88,7 @@ export class MenuService {
       throw err;
     }
 
-    return {
-      menuItem,
-    };
+    return { menuItem };
   }
 
   async createMenuItem(
@@ -109,9 +107,7 @@ export class MenuService {
       throw err;
     }
 
-    return {
-      menuItem,
-    };
+    return { menuItem };
   }
 
   async updateMenuItem(
@@ -143,9 +139,7 @@ export class MenuService {
       throw err;
     }
 
-    return {
-      menuItem,
-    };
+    return { menuItem };
   }
 
   async removeMenuItem(id: number): Promise<MenuItemRemovedResponse> {
@@ -176,8 +170,6 @@ export class MenuService {
       throw err;
     }
 
-    return {
-      menuItem,
-    };
+    return { menuItem };
   }
 }
