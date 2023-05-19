@@ -2,6 +2,9 @@
 -- CreateEnum
 CREATE TYPE "Role" AS ENUM ('CLIENT', 'EMPLOYEE', 'DELIVERY', 'MANAGER', 'BOSS');
 
+-- CreateEnum
+CREATE TYPE "Weekday" AS ENUM ('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday');
+
 -- CreateTable
 CREATE TABLE "User" (
     "userId" SERIAL NOT NULL,
@@ -67,12 +70,24 @@ CREATE TABLE "Category" (
 CREATE TABLE "Restaurant" (
     "restaurantId" SERIAL NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "available" BOOLEAN NOT NULL DEFAULT true,
     "geoLat" DOUBLE PRECISION NOT NULL,
-    "geoLong" DOUBLE PRECISION NOT NULL,
+    "geoLon" DOUBLE PRECISION NOT NULL,
     "managerId" INTEGER,
     "addressId" INTEGER NOT NULL,
 
     CONSTRAINT "Restaurant_pkey" PRIMARY KEY ("restaurantId")
+);
+
+-- CreateTable
+CREATE TABLE "OpeningHours" (
+    "openingHoursId" SERIAL NOT NULL,
+    "weekday" "Weekday" NOT NULL,
+    "startHourUtc" TIME NOT NULL,
+    "endHourUtc" TIME NOT NULL,
+    "restaurantId" INTEGER NOT NULL,
+
+    CONSTRAINT "OpeningHours_pkey" PRIMARY KEY ("openingHoursId")
 );
 
 -- CreateTable
@@ -111,6 +126,9 @@ ALTER TABLE "Restaurant" ADD CONSTRAINT "Restaurant_managerId_fkey" FOREIGN KEY 
 -- AddForeignKey
 ALTER TABLE "Restaurant" ADD CONSTRAINT "Restaurant_addressId_fkey" FOREIGN KEY ("addressId") REFERENCES "Address"("addressId") ON DELETE RESTRICT ON UPDATE CASCADE;
 
+-- AddForeignKey
+ALTER TABLE "OpeningHours" ADD CONSTRAINT "OpeningHours_restaurantId_fkey" FOREIGN KEY ("restaurantId") REFERENCES "Restaurant"("restaurantId") ON DELETE RESTRICT ON UPDATE CASCADE;
+
 -- -- INSERT YOUR DATA HERE -- --
 INSERT INTO "Address" VALUES (1, 'Aleje politechniki', '9', 'Łódź', '93-590', 'Poland');
 INSERT INTO "Address" VALUES (2, 'Świętego Ducha', '16/24', 'Gdańsk', '80-834', 'Poland');
@@ -119,9 +137,30 @@ INSERT INTO "Address" VALUES (4, 'Złota', '59', 'Warszawa', '00-120', 'Poland')
 INSERT INTO "Address" VALUES (5, 'Senatorska', '24/26', 'Łódź', '93-192', 'Poland');
 INSERT INTO "Address" VALUES (6, 'Gen. Walerego Wróblewskiego', '16/18', 'Łódź', '93-578', 'Poland');
 
-INSERT INTO "Restaurant" ("restaurantId", "geoLat", "geoLong", "addressId") VALUES (1, 51.751579, 19.452930, 3);
-INSERT INTO "Restaurant" ("restaurantId", "geoLat", "geoLong", "addressId") VALUES (2, 52.230652, 21.002310, 4);
-INSERT INTO "Restaurant" ("restaurantId", "geoLat", "geoLong", "addressId") VALUES (3, 54.350910, 18.650740, 2);
+INSERT INTO "Restaurant" ("restaurantId", "geoLat", "geoLon", "addressId") VALUES (1, 51.751579, 19.452930, 3);
+INSERT INTO "Restaurant" ("restaurantId", "geoLat", "geoLon", "addressId") VALUES (2, 52.230652, 21.002310, 4);
+INSERT INTO "Restaurant" ("restaurantId", "geoLat", "geoLon", "addressId") VALUES (3, 54.350910, 18.650740, 2);
+
+INSERT INTO "OpeningHours" ("openingHoursId", "weekday", "startHourUtc", "endHourUtc", "restaurantId")
+VALUES (1, 'Monday', '10:00', '23:00', 1);
+
+INSERT INTO "OpeningHours" ("openingHoursId", "weekday", "startHourUtc", "endHourUtc", "restaurantId")
+VALUES (2, 'Tuesday', '10:00', '23:00', 1);
+
+INSERT INTO "OpeningHours" ("openingHoursId", "weekday", "startHourUtc", "endHourUtc", "restaurantId")
+VALUES (3, 'Wednesday', '10:00', '23:00', 1);
+
+INSERT INTO "OpeningHours" ("openingHoursId", "weekday", "startHourUtc", "endHourUtc", "restaurantId")
+VALUES (4, 'Thursday', '10:00', '23:00', 1);
+
+INSERT INTO "OpeningHours" ("openingHoursId", "weekday", "startHourUtc", "endHourUtc", "restaurantId")
+VALUES (5, 'Friday', '12:00', '23:00', 1);
+
+INSERT INTO "OpeningHours" ("openingHoursId", "weekday", "startHourUtc", "endHourUtc", "restaurantId")
+VALUES (6, 'Saturday', '12:00', '23:00', 1);
+
+INSERT INTO "OpeningHours" ("openingHoursId", "weekday", "startHourUtc", "endHourUtc", "restaurantId")
+VALUES (7, 'Sunday', '12:00', '22:00', 1);
 
 INSERT INTO "User" ("userId", "userEmail", "userRole") VALUES (1, 'boss@sumatywny.pl', 'BOSS');
 INSERT INTO "User" ("userId", "userEmail", "userRole") VALUES (2, 'manager@sumatywny.pl', 'MANAGER');
@@ -135,6 +174,7 @@ INSERT INTO "Employee" ("employeeId", "firstName", "lastName", "addressId", "use
 INSERT INTO "Employee" ("employeeId", "firstName", "lastName", "addressId", "userId", "restaurantId") VALUES (3, 'Przemysław', 'Zarządzający', 5, 2, 1);
 
 INSERT INTO "Manager" VALUES (1, 3);
+UPDATE "Restaurant" SET "managerId" = 1 WHERE "restaurantId" = 1;
 
 INSERT INTO "Category" ("categoryId", "categoryName") VALUES (1, 'Burgers');
 INSERT INTO "Category" ("categoryId", "categoryName") VALUES (2, 'Pizza');
