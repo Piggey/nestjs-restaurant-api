@@ -149,7 +149,7 @@ export class RestaurantController {
   })
   @Get('/range')
   async fetchRestaurantsInRange(
-    dto: RestaurantsInRangeDto,
+    @Param() dto: RestaurantsInRangeDto,
   ): Promise<FetchRestaurantsResponse> {
     this.logger.log(`GET /restaurant/range ${dto.rangeKm}km`);
     return this.restaurantService.fetchRestaurants(dto);

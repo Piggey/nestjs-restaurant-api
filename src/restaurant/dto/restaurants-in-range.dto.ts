@@ -9,7 +9,7 @@ import {
 } from 'class-validator';
 
 export class RestaurantsInRangeDto {
-  @ApiProperty({ default: 10, minimum: 0, required: false })
+  @ApiProperty({ type: Number, minimum: 0, required: false })
   @IsOptional()
   @IsNumber()
   @IsPositive()
