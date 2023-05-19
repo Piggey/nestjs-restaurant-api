@@ -25,3 +25,25 @@ export class RestaurantService {
     };
   }
 
+  async fetchRestaurant(id: number): Promise<FetchRestaurantResponse> {
+    let restaurant: Restaurant;
+    try {
+      restaurant = await this.db.restaurant.findFirstOrThrow({
+        include: { address: true, openingHours: true },
+        where: { restaurantId: id, available: true },
+      });
+    } catch (error) {
+      let err;
+      if (error.code === 'P2025') {
+        err = new NotFoundException(`could not find restaurant with id ${id}`);
+      } else {
+        err = new HttpException(error.meta.cause, HttpStatus.FAILED_DEPENDENCY);
+      }
+
+      Logger.error(err);
+      throw err;
+    }
+
+    return { restaurant };
+  }
+}
