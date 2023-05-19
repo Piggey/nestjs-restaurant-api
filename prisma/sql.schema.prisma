@@ -142,11 +142,12 @@ model Restaurant {
   restaurantId Int      @id @default(autoincrement())
   /// @DtoReadOnly
   createdAt    DateTime @default(now())
+  available Boolean @default(true)
 
   /// @IsLatitude
   geoLat  Float
   /// @IsLongitude
-  geoLong Float
+  geoLon Float
 
   /// @DtoRelationCanConnectOnCreate
   /// @DtoRelationCanConnectOnUpdate
@@ -161,7 +162,33 @@ model Restaurant {
   address   Address @relation(fields: [addressId], references: [addressId])
   addressId Int
 
+  /// @DtoRelationRequired
+  /// @DtoRelationCanCreateOnCreate
+  /// @DtoRelationCanCreateOnUpdate
+  openingHours OpeningHours[]
+
   hiredEmployees Employee[] @relation(name: "workedAtRestaurant")
+}
+
+model OpeningHours {
+  /// @DtoReadOnly
+  openingHoursId Int @id @default(autoincrement())
+  weekday Weekday
+  startHourUtc DateTime @db.Time()
+  endHourUtc DateTime @db.Time()
+
+  restaurant Restaurant @relation(fields: [restaurantId], references: [restaurantId])
+  restaurantId Int 
+}
+
+enum Weekday {
+  Monday
+  Tuesday
+  Wednesday
+  Thursday
+  Friday
+  Saturday
+  Sunday
 }
 
 model Address {
