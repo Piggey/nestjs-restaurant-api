@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpStatus,
   Logger,
@@ -15,6 +16,7 @@ import {
   FetchRestaurantResponse,
   FetchRestaurantsResponse,
   RestaurantCreatedResponse,
+  RestaurantDeletedResponse,
   RestaurantUpdatedResponse,
 } from './responses';
 import {
@@ -113,5 +115,29 @@ export class RestaurantController {
   ): Promise<RestaurantUpdatedResponse> {
     this.logger.log(`PATCH /restaurant/${id}`);
     return this.restaurantService.updateRestaurant(id, newRestaurant);
+  }
+
+  @ApiOperation({ summary: 'delete (mark as unavailable) a restaurant' })
+  @ApiOkResponse({
+    description: 'returns data about deleted restaurant',
+    type: RestaurantDeletedResponse,
+  })
+  @ApiNotFoundResponse({
+    description: 'could not find a restaurant with given id',
+    type: RequestErrorResponse,
+  })
+  @ApiResponse({
+    status: HttpStatus.FAILED_DEPENDENCY,
+    description: 'database error when deleting a restaurant',
+    type: RequestErrorResponse,
+  })
+  @UseGuards(RolesGuard)
+  @AllowMinRole(UserRoles.BOSS)
+  @Delete(':id')
+  async deleteRestaurant(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<RestaurantDeletedResponse> {
+    this.logger.log(`DELETE /restaurant/${id}`);
+    return this.restaurantService.deleteRestaurant(id);
   }
 }

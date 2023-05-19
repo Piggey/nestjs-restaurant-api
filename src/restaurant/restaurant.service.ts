@@ -9,6 +9,7 @@ import {
   FetchRestaurantResponse,
   FetchRestaurantsResponse,
   RestaurantCreatedResponse,
+  RestaurantDeletedResponse,
   RestaurantUpdatedResponse,
 } from './responses';
 import { PostgresService } from '../db/postgres/postgres.service';
@@ -85,6 +86,32 @@ export class RestaurantService {
         data: newRestaurant,
       });
       return { restaurant };
+    } catch (error) {
+      let err;
+      if (error.code === 'P2025') {
+        err = new NotFoundException(`could not find restaurant with id ${id}`);
+      } else {
+        err = new HttpException(error.meta.cause, HttpStatus.FAILED_DEPENDENCY);
+      }
+
+      Logger.error(err);
+      throw err;
+    }
+  }
+
+  async deleteRestaurant(id: number): Promise<RestaurantDeletedResponse> {
+    const firedEmployees = await this.db.employee.updateMany({
+      where: { restaurantId: id },
+      data: { firedAt: Date() },
+    });
+
+    try {
+      const restaurant = await this.db.restaurant.update({
+        include: { address: true, openingHours: true },
+        where: { restaurantId: id },
+        data: { available: false },
+      });
+      return { firedEmployeesCount: firedEmployees.count, restaurant };
     } catch (error) {
       let err;
       if (error.code === 'P2025') {
