@@ -5,9 +5,14 @@ import {
   Logger,
   NotFoundException,
 } from '@nestjs/common';
-import { FetchRestaurantResponse, FetchRestaurantsResponse } from './responses';
+import {
+  FetchRestaurantResponse,
+  FetchRestaurantsResponse,
+  RestaurantCreatedResponse,
+} from './responses';
 import { PostgresService } from '../db/postgres/postgres.service';
 import { Restaurant } from './entities/restaurant.entity';
+import { CreateRestaurantDto } from './dto/create-restaurant.dto';
 
 @Injectable()
 export class RestaurantService {
@@ -45,5 +50,24 @@ export class RestaurantService {
     }
 
     return { restaurant };
+  }
+
+  async createRestaurant(
+    newRestaurant: CreateRestaurantDto,
+  ): Promise<RestaurantCreatedResponse> {
+    try {
+      const restaurant = await this.db.restaurant.create({
+        data: newRestaurant,
+      });
+      return { restaurant };
+    } catch (error) {
+      const err = new HttpException(
+        error.meta.cause,
+        HttpStatus.FAILED_DEPENDENCY,
+      );
+
+      Logger.log(err);
+      throw err;
+    }
   }
 }

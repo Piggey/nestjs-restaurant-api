@@ -1,6 +1,20 @@
-import { Controller, Get, Logger, Param, ParseIntPipe } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpStatus,
+  Logger,
+  Param,
+  ParseIntPipe,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { RestaurantService } from './restaurant.service';
-import { FetchRestaurantResponse, FetchRestaurantsResponse } from './responses';
+import {
+  FetchRestaurantResponse,
+  FetchRestaurantsResponse,
+  RestaurantCreatedResponse,
+} from './responses';
 import {
   ApiNotFoundResponse,
   ApiOkResponse,
@@ -9,6 +23,10 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { RequestErrorResponse } from '../app/response';
+import { CreateRestaurantDto } from './dto/create-restaurant.dto';
+import { RolesGuard } from '../auth/guard';
+import { AllowMinRole } from '../auth/decorator';
+import { UserRoles } from '../auth/model';
 
 @ApiTags('restaurant')
 @Controller('restaurant')
@@ -37,7 +55,7 @@ export class RestaurantController {
     type: RequestErrorResponse,
   })
   @ApiResponse({
-    status: 424,
+    status: HttpStatus.FAILED_DEPENDENCY,
     description: 'database error when getting restaurant data',
     type: RequestErrorResponse,
   })
@@ -47,5 +65,25 @@ export class RestaurantController {
   ): Promise<FetchRestaurantResponse> {
     this.logger.log(`GET /restaurant/${id}`);
     return this.restaurantService.fetchRestaurant(id);
+  }
+
+  @ApiOperation({ summary: 'creates a new restaurant' })
+  @ApiOkResponse({
+    description: 'created a new restaurant and returned its data',
+    type: RestaurantCreatedResponse,
+  })
+  @ApiResponse({
+    status: HttpStatus.FAILED_DEPENDENCY,
+    description: 'database error when creating a new restaurant',
+    type: RequestErrorResponse,
+  })
+  @UseGuards(RolesGuard)
+  @AllowMinRole(UserRoles.BOSS)
+  @Post('/')
+  async createRestaurant(
+    @Body() newRestaurant: CreateRestaurantDto,
+  ): Promise<RestaurantCreatedResponse> {
+    this.logger.log('POST /restaurant');
+    return this.restaurantService.createRestaurant(newRestaurant);
   }
 }
