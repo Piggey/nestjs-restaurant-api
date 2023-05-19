@@ -32,6 +32,7 @@ import { RolesGuard } from '../auth/guard';
 import { AllowMinRole } from '../auth/decorator';
 import { UserRoles } from '../auth/model';
 import { UpdateRestaurantDto } from './dto/update-restaurant.dto';
+import { RestaurantsInRangeDto } from './dto/restaurants-in-range.dto';
 
 @ApiTags('restaurant')
 @Controller('restaurant')
@@ -139,5 +140,18 @@ export class RestaurantController {
   ): Promise<RestaurantDeletedResponse> {
     this.logger.log(`DELETE /restaurant/${id}`);
     return this.restaurantService.deleteRestaurant(id);
+  }
+
+  @ApiOperation({ summary: 'get all restaurants in given range' })
+  @ApiOkResponse({
+    description: 'returns all restaurants, along with number of restaurants',
+    type: FetchRestaurantsResponse,
+  })
+  @Get('/range')
+  async fetchRestaurantsInRange(
+    dto: RestaurantsInRangeDto,
+  ): Promise<FetchRestaurantsResponse> {
+    this.logger.log(`GET /restaurant/range ${dto.rangeKm}km`);
+    return this.restaurantService.fetchRestaurants(dto);
   }
 }

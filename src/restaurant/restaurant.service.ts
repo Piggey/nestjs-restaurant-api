@@ -16,20 +16,41 @@ import { PostgresService } from '../db/postgres/postgres.service';
 import { Restaurant } from './entities/restaurant.entity';
 import { CreateRestaurantDto } from './dto/create-restaurant.dto';
 import { UpdateRestaurantDto } from './dto/update-restaurant.dto';
+import { RestaurantsInRangeDto } from './dto/restaurants-in-range.dto';
 
 @Injectable()
 export class RestaurantService {
   constructor(private readonly db: PostgresService) {}
 
-  async fetchRestaurants(): Promise<FetchRestaurantsResponse> {
+  async fetchRestaurants(
+    inRangeDto?: RestaurantsInRangeDto,
+  ): Promise<FetchRestaurantsResponse> {
     const restaurants = await this.db.restaurant.findMany({
       include: { address: true, openingHours: true },
       where: { available: true },
     });
 
+    if (!inRangeDto) {
+      return {
+        restaurantsAvailable: restaurants.length,
+        restaurants,
+      };
+    }
+
+    const restaurantsInRange = restaurants.filter((r) => {
+      const d = this.haversineDistance(
+        inRangeDto.userLat,
+        inRangeDto.userLon,
+        r.geoLat,
+        r.geoLon,
+      );
+
+      return d <= inRangeDto.rangeKm;
+    });
+
     return {
-      restaurantsAvailable: restaurants.length,
-      restaurants,
+      restaurantsAvailable: restaurantsInRange.length,
+      restaurants: restaurantsInRange,
     };
   }
 
@@ -122,6 +143,33 @@ export class RestaurantService {
 
       Logger.error(err);
       throw err;
+    }
+  }
+
+  private haversineDistance(
+    uLat: number,
+    uLon: number,
+    rLat: number,
+    rLon: number,
+  ): number {
+    // https://en.wikipedia.org/wiki/Haversine_formula
+    const EARTH_RADIUS_KM = 6371;
+
+    const dLat = degreesToRadians(rLat - uLat);
+    const dLon = degreesToRadians(rLon - uLon);
+
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(degreesToRadians(uLat)) *
+        Math.cos(degreesToRadians(rLat)) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return EARTH_RADIUS_KM * c;
+
+    function degreesToRadians(degrees: number): number {
+      return degrees * (Math.PI / 180);
     }
   }
 }
