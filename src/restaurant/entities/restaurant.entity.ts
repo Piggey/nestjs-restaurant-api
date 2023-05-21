@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Manager } from '../../manager/entities/manager.entity';
 import { Address } from '../../address/entities/address.entity';
-import { OpeningHours } from '../../openingHours/entities/openingHours.entity';
+import { OpeningHours } from '../../opening-hours/entities/opening-hours.entity';
 import { Employee } from '../../employee/entities/employee.entity';
 
 export class Restaurant {

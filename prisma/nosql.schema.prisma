@@ -25,6 +25,7 @@ generator nestjsDto {
   outputToNestJsResourceStructure = "true"
   classValidation                 = "true"
   prettier                        = "true"
+  fileNamingStyle                 = "kebab"
 }
 
 enum OrderStatus {

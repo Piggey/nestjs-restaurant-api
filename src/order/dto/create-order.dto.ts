@@ -7,9 +7,9 @@ import {
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
-import { CreateClientTypeDto } from '../../clientType/dto/create-clientType.dto';
-import { CreateAddressTypeDto } from '../../addressType/dto/create-addressType.dto';
-import { CreateMenuItemTypeDto } from '../../menuItemType/dto/create-menuItemType.dto';
+import { CreateClientTypeDto } from '../../client-type/dto/create-client-type.dto';
+import { CreateAddressTypeDto } from '../../address-type/dto/create-address-type.dto';
+import { CreateMenuItemTypeDto } from '../../menu-item-type/dto/create-menu-item-type.dto';
 
 export class CreateOrderDto {
   @ApiProperty()
