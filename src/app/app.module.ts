@@ -10,12 +10,14 @@ import { OrderModule } from '../order/order.module';
 import { PostgresModule } from '../db/postgres/postgres.module';
 import { MongoModule } from '../db/mongo/mongo.module';
 import { ConfigModule } from '@nestjs/config';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
     PostgresModule,
     MongoModule,
     ConfigModule.forRoot({ isGlobal: true }),
+    JwtModule.register({ global: true }),
     AuthModule,
     UserModule,
     EmployeeModule,
