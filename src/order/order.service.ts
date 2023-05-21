@@ -11,6 +11,7 @@ import { MongoService } from '../db/mongo/mongo.service';
 import { FetchOrderResponse, FetchOrdersResponse } from './responses';
 import { Order } from './entities/order.entity';
 import { OrderStatus } from '@prisma-mongo/prisma/client';
+import { CreateOrderDto } from './dto/create-order.dto';
 
 @Injectable()
 export class OrderService {
@@ -60,6 +61,18 @@ export class OrderService {
       data: { status: OrderStatus.CLIENT_CANCELLED },
     });
 
+    return { order };
+  }
+
+  async createOrder(
+    user: User,
+    newOrder: CreateOrderDto,
+  ): Promise<FetchOrderResponse> {
+    if (user.userEmail !== newOrder.userEmail) {
+      throw new ForbiddenException('oj ty smieszku');
+    }
+
+    const order = await this.db.order.create({ data: newOrder });
     return { order };
   }
 
