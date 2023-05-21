@@ -37,13 +37,13 @@ enum Role {
 
 model User {
   /// @DtoReadOnly
-  userId    Int   @id @default(autoincrement())
+  userId        Int        @id @default(autoincrement())
   /// @DtoReadOnly
   /// @DtoUpdateHidden
-  createdAt DateTime @default(now())
+  createdAt     DateTime   @default(now())
   /// @IsEmail
-  userEmail String @unique
-  userRole Role @default(CLIENT)
+  userEmail     String     @unique
+  userRole      Role       @default(CLIENT)
   loyaltyPoints Int        @default(0)
   employeeInfo  Employee[]
 }
@@ -69,8 +69,8 @@ model Employee {
 
   /// @DtoRelationRequired
   /// @DtoRelationCanConnectOnCreate
-  user   User   @relation(fields: [userId], references: [userId])
-  userId Int 
+  user   User @relation(fields: [userId], references: [userId])
+  userId Int
 
   /// @DtoRelationRequired
   /// @DtoRelationCanConnectOnCreate
@@ -104,18 +104,18 @@ model Menu {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt()
 
-  name        String
-  photoUrl    String
-  description String?
+  name            String
+  photoUrl        String
+  description     String?
   /// @Min(0.01)
-  price Float
+  price           Float
   /// @Min(0)
   /// @Max(5)
-  rating Float?
+  rating          Float?
   numberOfRatings Int?
   /// @description a list of ingredients separated by `,`
-  ingredients String?
-  available   Boolean @default(true)
+  ingredients     String?
+  available       Boolean @default(true)
 
   /// @DtoRelationRequired
   /// @DtoRelationCanConnectOnCreate
@@ -143,10 +143,10 @@ model Restaurant {
   restaurantId Int      @id @default(autoincrement())
   /// @DtoReadOnly
   createdAt    DateTime @default(now())
-  available Boolean @default(true)
+  available    Boolean  @default(true)
 
   /// @IsLatitude
-  geoLat  Float
+  geoLat Float
   /// @IsLongitude
   geoLon Float
 
@@ -173,13 +173,13 @@ model Restaurant {
 
 model OpeningHours {
   /// @DtoReadOnly
-  openingHoursId Int @id @default(autoincrement())
-  weekday Weekday
-  startHourUtc DateTime @db.Time()
-  endHourUtc DateTime @db.Time()
+  openingHoursId Int      @id @default(autoincrement())
+  weekday        Weekday
+  startHourUtc   DateTime @db.Time()
+  endHourUtc     DateTime @db.Time()
 
-  restaurant Restaurant @relation(fields: [restaurantId], references: [restaurantId])
-  restaurantId Int 
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [restaurantId])
+  restaurantId Int
 }
 
 enum Weekday {
