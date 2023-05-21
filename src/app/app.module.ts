@@ -9,11 +9,13 @@ import { CategoryModule } from '../category/category.module';
 import { OrderModule } from '../order/order.module';
 import { PostgresModule } from '../db/postgres/postgres.module';
 import { MongoModule } from '../db/mongo/mongo.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
     PostgresModule,
     MongoModule,
+    ConfigModule.forRoot({ isGlobal: true }),
     AuthModule,
     UserModule,
     EmployeeModule,
