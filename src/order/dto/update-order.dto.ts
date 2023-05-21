@@ -1,6 +1,7 @@
 import {
   IsArray,
   IsEmail,
+  IsInt,
   IsNumber,
   IsOptional,
   IsPositive,
@@ -22,11 +23,20 @@ export class UpdateOrderDto {
   userEmail?: string;
   @ApiProperty({
     required: false,
+    nullable: true,
   })
   @IsOptional()
   @ValidateNested()
   @Type(() => UpdateAddressTypeDto)
-  address?: UpdateAddressTypeDto;
+  address?: UpdateAddressTypeDto | null;
+  @ApiProperty({
+    type: 'integer',
+    format: 'int32',
+    required: false,
+  })
+  @IsOptional()
+  @IsInt()
+  restaurantId?: number;
   @ApiProperty({
     isArray: true,
     required: false,

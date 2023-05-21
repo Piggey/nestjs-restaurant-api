@@ -34,7 +34,7 @@ enum OrderStatus {
   IN_PROGRESS
   DELIVERY
   COMPLETED
-  CUSTOMER_CANCELLED
+  CLIENT_CANCELLED
   EMPLOYEE_CANCELLED
 }
 
@@ -65,7 +65,8 @@ model Order {
   status       OrderStatus    @default(NOT_APPROVED)
   /// @IsEmail
   userEmail    String
-  address      AddressType
+  address      AddressType?
+  restaurantId Int
   orderedItems MenuItemType[]
   /// @IsPositive
   totalPrice   Float

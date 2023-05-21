@@ -31,8 +31,15 @@ export class Order {
   userEmail: string;
   @ApiProperty({
     required: false,
+    nullable: true,
   })
-  address: AddressTypeDto;
+  address: AddressTypeDto | null;
+  @ApiProperty({
+    type: 'integer',
+    format: 'int32',
+    required: false,
+  })
+  restaurantId: number;
   @ApiProperty({
     isArray: true,
     required: false,
