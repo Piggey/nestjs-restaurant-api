@@ -64,6 +64,7 @@ model Order {
   id           String         @id @default(auto()) @map("_id") @db.ObjectId
   /// @DtoReadOnly
   createdAt    DateTime       @default(now())
+  updatedAt DateTime @updatedAt()
   status       OrderStatus    @default(NOT_APPROVED)
   client       ClientType
   address      AddressType
