@@ -1,16 +1,29 @@
 import {
+  BadRequestException,
   CanActivate,
   ExecutionContext,
   Injectable,
+  Logger,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { UserRoleLevel, UserRoles } from '../model';
-import { extractTokenFromHeader, getUserFromToken } from '../decorator';
+import { PostgresService } from '../../db/postgres/postgres.service';
+import { JwtService } from '@nestjs/jwt';
+import { JwtAccessTokenDto } from '../dto';
+import { ConfigService } from '@nestjs/config';
+import { User } from '../../user/entities/user.entity';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
-  constructor(private readonly reflector: Reflector) {}
+  private readonly logger = new Logger(RolesGuard.name);
+  constructor(
+    private readonly reflector: Reflector,
+    private readonly config: ConfigService,
+    private readonly jwt: JwtService,
+    private readonly db: PostgresService,
+  ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const req = context.switchToHttp().getRequest<Request>();
@@ -19,13 +32,53 @@ export class RolesGuard implements CanActivate {
       context.getHandler(),
     )[0];
 
-    const token = extractTokenFromHeader(req);
+    this.logger.log(
+      `Authorizing ${req.method} ${req.url} | required role: ${requiredRole}`,
+    );
+
+    const token = this.extractTokenFromHeader(req);
     if (!token) {
+      this.logger.error('Authorization failed: token not provided');
       throw new UnauthorizedException();
     }
 
-    const user = await getUserFromToken(token);
+    const payload = await this.decodeJwtPayload(token);
+    const user = await this.getUserFromPayload(payload);
+    if (!user) {
+      this.logger.error('Authorization failed: could not find user');
+      throw new NotFoundException();
+    }
+
+    req['payload'] = payload;
+    req['user'] = user;
     return this.validateClientRoles(user.userRole as UserRoles, requiredRole);
+  }
+
+  private extractTokenFromHeader(request: Request): string | undefined {
+    const [type, token] = request.headers['authorization']?.split(' ') ?? [];
+    return type === 'Bearer' ? token : undefined;
+  }
+
+  private async decodeJwtPayload(token: string): Promise<JwtAccessTokenDto> {
+    try {
+      const payload = this.jwt.verifyAsync(token, {
+        secret: this.config.get('JWT_SECRET'),
+      });
+      return payload;
+    } catch {
+      Logger.error('could not parse JWT token');
+      throw new BadRequestException('could not parse JWT token');
+    }
+  }
+
+  private async getUserFromPayload(
+    payload: JwtAccessTokenDto,
+  ): Promise<User | null> {
+    const user = await this.db.user.findUnique({
+      where: { userEmail: payload.email },
+    });
+
+    return user;
   }
 
   private validateClientRoles(
