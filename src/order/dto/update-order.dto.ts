@@ -7,9 +7,9 @@ import {
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
-import { UpdateClientTypeDto } from '../../clientType/dto/update-clientType.dto';
-import { UpdateAddressTypeDto } from '../../addressType/dto/update-addressType.dto';
-import { UpdateMenuItemTypeDto } from '../../menuItemType/dto/update-menuItemType.dto';
+import { UpdateClientTypeDto } from '../../client-type/dto/update-client-type.dto';
+import { UpdateAddressTypeDto } from '../../address-type/dto/update-address-type.dto';
+import { UpdateMenuItemTypeDto } from '../../menu-item-type/dto/update-menu-item-type.dto';
 
 export class UpdateOrderDto {
   @ApiProperty({

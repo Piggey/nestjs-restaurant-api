@@ -12,7 +12,7 @@ import { ApiExtraModels, ApiProperty } from '@nestjs/swagger';
 import { ConnectManagerDto } from '../../manager/dto/connect-manager.dto';
 import { CreateAddressDto } from '../../address/dto/create-address.dto';
 import { ConnectAddressDto } from '../../address/dto/connect-address.dto';
-import { CreateOpeningHoursDto } from '../../openingHours/dto/create-openingHours.dto';
+import { CreateOpeningHoursDto } from '../../opening-hours/dto/create-opening-hours.dto';
 
 export class CreateRestaurantManagerRelationInputDto {
   @ApiProperty({

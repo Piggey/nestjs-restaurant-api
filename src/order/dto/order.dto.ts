@@ -1,8 +1,8 @@
 import { OrderStatus } from '../../../node_modules/@prisma-mongo/prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
-import { ClientTypeDto } from '../../clientType/dto/clientType.dto';
-import { AddressTypeDto } from '../../addressType/dto/addressType.dto';
-import { MenuItemTypeDto } from '../../menuItemType/dto/menuItemType.dto';
+import { ClientTypeDto } from '../../client-type/dto/client-type.dto';
+import { AddressTypeDto } from '../../address-type/dto/address-type.dto';
+import { MenuItemTypeDto } from '../../menu-item-type/dto/menu-item-type.dto';
 
 export class OrderDto {
   @ApiProperty({
