@@ -1,4 +1,11 @@
-import { Controller, Get, Logger, Param, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Delete,
+  Get,
+  Logger,
+  Param,
+  UseGuards,
+} from '@nestjs/common';
 import { OrderService } from './order.service';
 import {
   ApiForbiddenResponse,
@@ -60,6 +67,11 @@ export class OrderController {
     return this.orderService.fetchOrder(id, user);
   }
 
+  @ApiOperation({ summary: "fetch all client's pending orders" })
+  @ApiOkResponse({
+    description: 'returns a list of pending orders',
+    type: FetchOrdersResponse,
+  })
   @AllowMinRole(UserRoles.CLIENT)
   @Get('pending')
   async fetchPendingOrders(
@@ -67,5 +79,14 @@ export class OrderController {
   ): Promise<FetchOrdersResponse> {
     this.logger.log(`GET /order/pending, userEmail = ${user.userEmail}`);
     return this.orderService.fetchOrders(user, true);
+  }
+
+  @Delete(':id')
+  async cancelOrder(
+    @Param('id') id: string,
+    @UserDecorator() user: User,
+  ): Promise<FetchOrderResponse> {
+    this.logger.log(`DELETE /order/${id}, userEmail = ${user.userEmail}`);
+    return this.orderService.cancelOrder(id, user);
   }
 }

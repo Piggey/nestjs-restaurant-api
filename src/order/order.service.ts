@@ -41,6 +41,29 @@ export class OrderService {
   }
 
   async fetchOrder(id: string, user: User): Promise<FetchOrderResponse> {
+    const order = await this.databaseFetchOrder(id);
+    if (order.userEmail !== user.userEmail) {
+      throw new ForbiddenException();
+    }
+
+    return { order };
+  }
+
+  async cancelOrder(id: string, user: User): Promise<FetchOrderResponse> {
+    const oldOrder = await this.databaseFetchOrder(id);
+    if (oldOrder.userEmail !== user.userEmail) {
+      throw new ForbiddenException();
+    }
+
+    const order = await this.db.order.update({
+      where: { id },
+      data: { status: OrderStatus.CLIENT_CANCELLED },
+    });
+
+    return { order };
+  }
+
+  private async databaseFetchOrder(id: string): Promise<Order> {
     let order: Order;
     try {
       order = await this.db.order.findUniqueOrThrow({ where: { id } });
@@ -56,10 +79,6 @@ export class OrderService {
       throw err;
     }
 
-    if (order.userEmail !== user.userEmail) {
-      throw new ForbiddenException();
-    }
-
-    return { order };
+    return order;
   }
 }
