@@ -1,6 +1,5 @@
 import { OrderStatus } from '../../../node_modules/@prisma-mongo/prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
-import { ClientTypeDto } from '../../client-type/dto/client-type.dto';
 import { AddressTypeDto } from '../../address-type/dto/address-type.dto';
 import { MenuItemTypeDto } from '../../menu-item-type/dto/menu-item-type.dto';
 
@@ -16,6 +15,12 @@ export class OrderDto {
   })
   createdAt: Date;
   @ApiProperty({
+    type: 'string',
+    format: 'date-time',
+    required: false,
+  })
+  updatedAt: Date;
+  @ApiProperty({
     enum: OrderStatus,
     required: false,
   })
@@ -23,11 +28,18 @@ export class OrderDto {
   @ApiProperty({
     required: false,
   })
-  client: ClientTypeDto;
+  userEmail: string;
   @ApiProperty({
     required: false,
+    nullable: true,
   })
-  address: AddressTypeDto;
+  address: AddressTypeDto | null;
+  @ApiProperty({
+    type: 'integer',
+    format: 'int32',
+    required: false,
+  })
+  restaurantId: number;
   @ApiProperty({
     isArray: true,
     required: false,
