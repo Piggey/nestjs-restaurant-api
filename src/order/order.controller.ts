@@ -153,12 +153,51 @@ export class OrderController {
     description: 'database error when fetching data',
     type: RequestErrorResponse,
   })
+  @ApiForbiddenResponse({
+    description: 'insufficient `UserRoles` privileges. minimum = `EMPLOYEE`',
+    type: RequestErrorResponse,
+  })
   @AllowMinRole(UserRoles.EMPLOYEE)
   @Get('restaurant/:id')
   async fetchOrdersByRestaurant(
     @Param('id', ParseIntPipe) id: number,
+    @UserDecorator() user: User,
   ): Promise<FetchOrdersResponse> {
     this.logger.log(`GET /order/restaurant/${id}`);
-    return this.orderService.fetchOrdersByRestaurant(id);
+    return this.orderService.fetchOrdersByRestaurant(id, user);
+  }
+
+  @ApiOperation({
+    summary: 'fetch all pending orders for a restaurant with given id',
+  })
+  @ApiOkResponse({
+    description: 'returns pending orders data',
+    type: FetchOrdersResponse,
+  })
+  @ApiNotFoundResponse({
+    description: 'could not find a restaurant with given id',
+    type: RequestErrorResponse,
+  })
+  @ApiBadRequestResponse({
+    description: 'incorrect id',
+    type: RequestErrorResponse,
+  })
+  @ApiResponse({
+    status: HttpStatus.FAILED_DEPENDENCY,
+    description: 'database error when fetching data',
+    type: RequestErrorResponse,
+  })
+  @ApiForbiddenResponse({
+    description: 'insufficient `UserRoles` privileges. minimum = `EMPLOYEE`',
+    type: RequestErrorResponse,
+  })
+  @AllowMinRole(UserRoles.EMPLOYEE)
+  @Get('restaurant/:id/pending')
+  async fetchPendingOrdersByRestaurant(
+    @Param('id', ParseIntPipe) id: number,
+    @UserDecorator() user: User,
+  ): Promise<FetchOrdersResponse> {
+    this.logger.log(`GET /order/restaurant/${id}/pending`);
+    return this.orderService.fetchOrdersByRestaurant(id, user, true);
   }
 }
