@@ -19,6 +19,7 @@ import { OrderStatus } from '@prisma-mongo/prisma/client';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { PostgresService } from '../db/postgres/postgres.service';
 import { Restaurant } from '../restaurant/entities/restaurant.entity';
+import { UpdateOrderStatusDto } from './dto/update-order-status.dto';
 
 const RESTAURANT_CLOSING_TIME_OFFSET_HOURS = 1;
 const LOYALTY_POINTS_MULTIPLIER = 0.1;
@@ -31,6 +32,15 @@ const WEEKDAYS = [
   'Friday',
   'Saturday',
 ];
+const OrderStatusLevel: Record<OrderStatus, number> = {
+  NOT_APPROVED: 1,
+  APPROVED: 2,
+  IN_PROGRESS: 3,
+  DELIVERY: 4,
+  COMPLETED: 5,
+  CLIENT_CANCELLED: 6,
+  EMPLOYEE_CANCELLED: 7,
+};
 
 @Injectable()
 export class OrderService {
@@ -86,7 +96,9 @@ export class OrderService {
     }
 
     // make sure restaurant exists
-    const restaurant = await this.fetchRestaurant(newOrder.restaurantId);
+    const restaurant = await this.databaseFetchRestaurant(
+      newOrder.restaurantId,
+    );
 
     // make sure order is placed when restaurant is open
     const currentDateTime = new Date();
@@ -132,17 +144,10 @@ export class OrderService {
     pendingOnly?: boolean,
   ): Promise<FetchOrdersResponse> {
     // make sure theres a restaurant with given id
-    const restaurant = await this.fetchRestaurant(id);
+    const restaurant = await this.databaseFetchRestaurant(id);
 
     // make sure employee works in this restaurant
-    try {
-      await this.postgres.employee.findFirstOrThrow({
-        where: {
-          user: { userEmail: user.userEmail },
-          restaurantId: restaurant.restaurantId,
-        },
-      });
-    } catch (error) {
+    if (!(await this.employeeWorksInRestaurant(user, restaurant))) {
       throw new ForbiddenException();
     }
 
@@ -158,7 +163,49 @@ export class OrderService {
     return { orders };
   }
 
-  private async fetchRestaurant(id: number): Promise<Restaurant> {
+  async updateOrderStatus(
+    updateStatusDto: UpdateOrderStatusDto,
+    user: User,
+  ): Promise<FetchOrderResponse> {
+    // make sure restaurant exists
+    const order = await this.databaseFetchOrder(updateStatusDto.id);
+    const restaurant = await this.databaseFetchRestaurant(order.restaurantId);
+
+    // make sure employee works in this restaurant
+    if (!(await this.employeeWorksInRestaurant(user, restaurant))) {
+      throw new ForbiddenException();
+    }
+
+    // make sure we dont update status backwards
+    if (
+      OrderStatusLevel[updateStatusDto.status] < OrderStatusLevel[order.status]
+    ) {
+      throw new BadRequestException('cannot reverse order status');
+    }
+
+    // update status
+    const newOrder = await this.mongo.order.update({
+      where: { id: updateStatusDto.id },
+      data: { status: updateStatusDto.status },
+    });
+    return { order: newOrder };
+  }
+
+  private async employeeWorksInRestaurant(
+    user: User,
+    restaurant: Restaurant,
+  ): Promise<boolean> {
+    const employee = await this.postgres.employee.findFirstOrThrow({
+      where: {
+        user: { userEmail: user.userEmail },
+        restaurantId: restaurant.restaurantId,
+      },
+    });
+
+    return !!employee;
+  }
+
+  private async databaseFetchRestaurant(id: number): Promise<Restaurant> {
     try {
       const restaurant = await this.postgres.restaurant.findUniqueOrThrow({
         include: { address: true, openingHours: true },
@@ -190,9 +237,9 @@ export class OrderService {
   }
 
   private async databaseFetchOrder(id: string): Promise<Order> {
-    let order: Order;
     try {
-      order = await this.mongo.order.findUniqueOrThrow({ where: { id } });
+      const order = await this.mongo.order.findUniqueOrThrow({ where: { id } });
+      return order;
     } catch (error) {
       let err;
       if (error.code === 'P2025') {
@@ -204,7 +251,5 @@ export class OrderService {
       Logger.error(err);
       throw err;
     }
-
-    return order;
   }
 }

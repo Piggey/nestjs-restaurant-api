@@ -7,6 +7,7 @@ import {
   Logger,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
   UseGuards,
 } from '@nestjs/common';
@@ -33,6 +34,7 @@ import {
 import { RequestErrorResponse } from '../app/response';
 import { JWT_ACCESS_TOKEN_HEADER } from '../auth/dto';
 import { CreateOrderDto } from './dto/create-order.dto';
+import { UpdateOrderStatusDto } from './dto/update-order-status.dto';
 
 @ApiTags('order')
 @ApiHeader(JWT_ACCESS_TOKEN_HEADER)
@@ -203,5 +205,37 @@ export class OrderController {
   ): Promise<FetchOrdersResponse> {
     this.logger.log(`GET /order/restaurant/${id}/pending`);
     return this.orderService.fetchOrdersByRestaurant(id, user, true);
+  }
+
+  @ApiOperation({ summary: 'update status of an order' })
+  @ApiOkResponse({
+    description: 'order updated',
+    type: FetchOrderResponse,
+  })
+  @ApiNotFoundResponse({
+    description: 'could not find a restaurant with given id',
+    type: RequestErrorResponse,
+  })
+  @ApiBadRequestResponse({
+    description: 'incorrect id OR tried to reverse order status',
+    type: RequestErrorResponse,
+  })
+  @ApiResponse({
+    status: HttpStatus.FAILED_DEPENDENCY,
+    description: 'database error when fetching data',
+    type: RequestErrorResponse,
+  })
+  @ApiForbiddenResponse({
+    description: 'insufficient `UserRoles` privileges. minimum = `EMPLOYEE`',
+    type: RequestErrorResponse,
+  })
+  @AllowMinRole(UserRoles.EMPLOYEE)
+  @Patch(':id/status')
+  async updateOrderStatus(
+    @Param() updateStatusDto: UpdateOrderStatusDto,
+    @UserDecorator() user: User,
+  ): Promise<FetchOrderResponse> {
+    this.logger.log(`PATCH /order/${updateStatusDto.id}`);
+    return this.orderService.updateOrderStatus(updateStatusDto, user);
   }
 }
