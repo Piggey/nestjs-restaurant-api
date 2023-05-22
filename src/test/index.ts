@@ -11,6 +11,7 @@ import { PostgresService } from '../db/postgres/postgres.service';
 import { MongoService } from '../db/mongo/mongo.service';
 import { PostgresModule } from '../db/postgres/postgres.module';
 import { MongoModule } from '../db/mongo/mongo.module';
+import { JwtModule } from '@nestjs/jwt';
 
 type MockedApp = {
   app: INestApplication;
@@ -21,7 +22,8 @@ type MockedApp = {
 export const createApp = async (): Promise<MockedApp> => {
   const module: TestingModule = await Test.createTestingModule({
     imports: [
-      ConfigModule.forRoot(),
+      ConfigModule.forRoot({ isGlobal: true }),
+      JwtModule.register({ global: true }),
       PostgresModule,
       MongoModule,
       AuthModule,
