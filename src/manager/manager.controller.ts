@@ -13,7 +13,7 @@ import {
 import { ManagerService } from './manager.service';
 import {
   ApiBadRequestResponse,
-  ApiCookieAuth,
+  ApiBearerAuth,
   ApiCreatedResponse,
   ApiForbiddenResponse,
   ApiHeader,
@@ -23,7 +23,7 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { SWAGGER_CLIENT_PRINCIPAL_HEADER_INFO } from '../auth/dto';
+import { JWT_ACCESS_TOKEN_HEADER } from '../auth/dto';
 import { RequestErrorResponse } from '../app/response';
 import { AllowMinRole } from '../auth/decorator';
 import { UserRoles } from '../auth/model';
@@ -36,8 +36,8 @@ import { UpdateManagerDto } from './dto/update-manager.dto';
 import { ManagerDeletedResponse } from './responses/manager-deleted.response';
 
 @ApiTags('manager')
-@ApiCookieAuth()
-@ApiHeader(SWAGGER_CLIENT_PRINCIPAL_HEADER_INFO)
+@ApiBearerAuth()
+@ApiHeader(JWT_ACCESS_TOKEN_HEADER)
 @ApiForbiddenResponse({
   description: 'insufficient `UserRoles` privileges. minimum = `BOSS`',
   type: RequestErrorResponse,

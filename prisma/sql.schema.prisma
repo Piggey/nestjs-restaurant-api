@@ -24,6 +24,7 @@ generator nestjsDto {
   outputToNestJsResourceStructure = "true"
   classValidation                 = "true"
   prettier                        = "true"
+  fileNamingStyle                 = "kebab"
 }
 
 enum Role {
@@ -35,13 +36,14 @@ enum Role {
 }
 
 model User {
-  /// @DtoUpdateHidden
-  /// @IsByteLength(32, 32)
-  userId    String   @unique
+  /// @DtoReadOnly
+  userId    Int   @id @default(autoincrement())
   /// @DtoReadOnly
   /// @DtoUpdateHidden
   createdAt DateTime @default(now())
-
+  /// @IsEmail
+  userEmail String @unique
+  userRole Role @default(CLIENT)
   loyaltyPoints Int        @default(0)
   employeeInfo  Employee[]
 }
@@ -58,8 +60,6 @@ model Employee {
 
   firstName String
   lastName  String
-  /// @IsEmail
-  email     String @unique
 
   /// @DtoRelationRequired
   /// @DtoRelationCanConnectOnCreate
@@ -70,8 +70,7 @@ model Employee {
   /// @DtoRelationRequired
   /// @DtoRelationCanConnectOnCreate
   user   User   @relation(fields: [userId], references: [userId])
-  /// @IsByteLength(32, 32)
-  userId String
+  userId Int 
 
   /// @DtoRelationRequired
   /// @DtoRelationCanConnectOnCreate
@@ -90,7 +89,7 @@ model Manager {
   /// @DtoRelationCanConnectOnCreate
   /// @DtoRelationCanConnectOnUpdate
   /// @DtoRelationCanCreateOnUpdate
-  employee Employee @relation(fields: [employeeId], references: [employeeId])
+  employee   Employee @relation(fields: [employeeId], references: [employeeId])
   employeeId Int
 
   /// @DtoRelationCanConnectOnUpdate
@@ -107,9 +106,15 @@ model Menu {
 
   name        String
   photoUrl    String
-  description String
+  description String?
+  /// @Min(0.01)
+  price Float
+  /// @Min(0)
+  /// @Max(5)
+  rating Float?
+  numberOfRatings Int?
   /// @description a list of ingredients separated by `,`
-  ingredients String
+  ingredients String?
   available   Boolean @default(true)
 
   /// @DtoRelationRequired
@@ -126,6 +131,7 @@ model Category {
   categoryId Int      @id @default(autoincrement())
   /// @DtoReadOnly
   createdAt  DateTime @default(now())
+  available  Boolean  @default(true)
 
   categoryName String
 
@@ -137,11 +143,12 @@ model Restaurant {
   restaurantId Int      @id @default(autoincrement())
   /// @DtoReadOnly
   createdAt    DateTime @default(now())
+  available Boolean @default(true)
 
   /// @IsLatitude
   geoLat  Float
   /// @IsLongitude
-  geoLong Float
+  geoLon Float
 
   /// @DtoRelationCanConnectOnCreate
   /// @DtoRelationCanConnectOnUpdate
@@ -156,7 +163,33 @@ model Restaurant {
   address   Address @relation(fields: [addressId], references: [addressId])
   addressId Int
 
+  /// @DtoRelationRequired
+  /// @DtoRelationCanCreateOnCreate
+  /// @DtoRelationCanCreateOnUpdate
+  openingHours OpeningHours[]
+
   hiredEmployees Employee[] @relation(name: "workedAtRestaurant")
+}
+
+model OpeningHours {
+  /// @DtoReadOnly
+  openingHoursId Int @id @default(autoincrement())
+  weekday Weekday
+  startHourUtc DateTime @db.Time()
+  endHourUtc DateTime @db.Time()
+
+  restaurant Restaurant @relation(fields: [restaurantId], references: [restaurantId])
+  restaurantId Int 
+}
+
+enum Weekday {
+  Monday
+  Tuesday
+  Wednesday
+  Thursday
+  Friday
+  Saturday
+  Sunday
 }
 
 model Address {

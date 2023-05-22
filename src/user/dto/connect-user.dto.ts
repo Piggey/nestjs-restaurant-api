@@ -1,10 +1,22 @@
-import { IsByteLength, IsNotEmpty, IsString } from 'class-validator';
+import { IsEmail, IsInt, IsOptional, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class ConnectUserDto {
-  @ApiProperty()
-  @IsNotEmpty()
+  @ApiProperty({
+    type: 'integer',
+    format: 'int32',
+    required: false,
+    nullable: true,
+  })
+  @IsOptional()
+  @IsInt()
+  userId?: number;
+  @ApiProperty({
+    required: false,
+    nullable: true,
+  })
+  @IsOptional()
   @IsString()
-  @IsByteLength(32, 32)
-  userId: string;
+  @IsEmail()
+  userEmail?: string;
 }

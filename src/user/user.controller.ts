@@ -1,7 +1,8 @@
-import { Controller, Get, Logger } from '@nestjs/common';
+import { Controller, Get, Logger, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import {
   ApiBadRequestResponse,
+  ApiBearerAuth,
   ApiHeader,
   ApiNotFoundResponse,
   ApiOkResponse,
@@ -9,20 +10,26 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { AboutUserResponse } from './responses/about-user.response';
+import { JWT_ACCESS_TOKEN_HEADER, JwtAccessTokenDto } from '../auth/dto';
 import {
-  ClientPrincipalDto,
-  SWAGGER_CLIENT_PRINCIPAL_HEADER_INFO,
-} from '../auth/dto';
-import { CLIENT_PRINCIPAL_HEADER, ClientPrincipal } from '../auth/decorator';
+  AllowMinRole,
+  CLIENT_PRINCIPAL_HEADER,
+  JwtPayload,
+} from '../auth/decorator';
 import { RequestErrorResponse } from '../app/response';
+import { RolesGuard } from '../auth/guard';
+import { UserRoles } from '../auth/model';
 
+@ApiHeader(JWT_ACCESS_TOKEN_HEADER)
+@ApiBearerAuth()
+@UseGuards(RolesGuard)
 @ApiTags('user')
 @Controller('user')
 export class UserController {
+  private readonly logger = new Logger(UserController.name);
   constructor(private readonly userService: UserService) {}
 
   @ApiOperation({ summary: 'return all information about a user' })
-  @ApiHeader(SWAGGER_CLIENT_PRINCIPAL_HEADER_INFO)
   @ApiOkResponse({
     description:
       'returns user data. also returns employee data if this user is also an employee',
@@ -36,11 +43,12 @@ export class UserController {
     description: 'user with given `userId` not found in the database',
     type: RequestErrorResponse,
   })
+  @AllowMinRole(UserRoles.CLIENT)
   @Get('me')
-  async fetchUser(
-    @ClientPrincipal() user: ClientPrincipalDto,
+  async aboutMe(
+    @JwtPayload() payload: JwtAccessTokenDto,
   ): Promise<AboutUserResponse> {
-    Logger.log(`/user/me, userId = ${user.userId}`);
-    return this.userService.fetchUser(user);
+    this.logger.log(`/auth/me - ${payload.email}`);
+    return this.userService.aboutMe(payload);
   }
 }

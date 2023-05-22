@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Manager } from '../../manager/entities/manager.entity';
 import { Address } from '../../address/entities/address.entity';
+import { OpeningHours } from '../../opening-hours/entities/opening-hours.entity';
 import { Employee } from '../../employee/entities/employee.entity';
 
 export class Restaurant {
@@ -17,6 +18,10 @@ export class Restaurant {
   })
   createdAt: Date;
   @ApiProperty({
+    required: false,
+  })
+  available: boolean;
+  @ApiProperty({
     type: 'number',
     format: 'float',
     required: false,
@@ -27,7 +32,7 @@ export class Restaurant {
     format: 'float',
     required: false,
   })
-  geoLong: number;
+  geoLon: number;
   @ApiProperty({
     required: false,
     nullable: true,
@@ -50,6 +55,11 @@ export class Restaurant {
     required: false,
   })
   addressId: number;
+  @ApiProperty({
+    isArray: true,
+    required: false,
+  })
+  openingHours?: OpeningHours[];
   @ApiProperty({
     isArray: true,
     required: false,

@@ -14,6 +14,10 @@ export class RestaurantDto {
   })
   createdAt: Date;
   @ApiProperty({
+    required: false,
+  })
+  available: boolean;
+  @ApiProperty({
     type: 'number',
     format: 'float',
     required: false,
@@ -24,5 +28,5 @@ export class RestaurantDto {
     format: 'float',
     required: false,
   })
-  geoLong: number;
+  geoLon: number;
 }

@@ -1,4 +1,5 @@
 import {
+  IsArray,
   IsLatitude,
   IsLongitude,
   IsNotEmpty,
@@ -11,6 +12,7 @@ import { ApiExtraModels, ApiProperty } from '@nestjs/swagger';
 import { ConnectManagerDto } from '../../manager/dto/connect-manager.dto';
 import { CreateAddressDto } from '../../address/dto/create-address.dto';
 import { ConnectAddressDto } from '../../address/dto/connect-address.dto';
+import { CreateOpeningHoursDto } from '../../opening-hours/dto/create-opening-hours.dto';
 
 export class UpdateRestaurantManagerRelationInputDto {
   @ApiProperty({
@@ -41,6 +43,17 @@ export class UpdateRestaurantAddressRelationInputDto {
   @Type(() => ConnectAddressDto)
   connect?: ConnectAddressDto;
 }
+export class UpdateRestaurantOpeningHoursRelationInputDto {
+  @ApiProperty({
+    isArray: true,
+    type: CreateOpeningHoursDto,
+  })
+  @IsNotEmpty()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => CreateOpeningHoursDto)
+  create: CreateOpeningHoursDto[];
+}
 
 @ApiExtraModels(
   ConnectManagerDto,
@@ -48,6 +61,8 @@ export class UpdateRestaurantAddressRelationInputDto {
   CreateAddressDto,
   ConnectAddressDto,
   UpdateRestaurantAddressRelationInputDto,
+  CreateOpeningHoursDto,
+  UpdateRestaurantOpeningHoursRelationInputDto,
 )
 export class UpdateRestaurantDto {
   @ApiProperty({
@@ -67,7 +82,7 @@ export class UpdateRestaurantDto {
   @IsOptional()
   @IsNumber()
   @IsLongitude()
-  geoLong?: number;
+  geoLon?: number;
   @ApiProperty({
     required: false,
     nullable: true,
@@ -85,4 +100,12 @@ export class UpdateRestaurantDto {
   @ValidateNested()
   @Type(() => UpdateRestaurantAddressRelationInputDto)
   address?: UpdateRestaurantAddressRelationInputDto;
+  @ApiProperty({
+    required: false,
+    type: UpdateRestaurantOpeningHoursRelationInputDto,
+  })
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => UpdateRestaurantOpeningHoursRelationInputDto)
+  openingHours?: UpdateRestaurantOpeningHoursRelationInputDto;
 }
