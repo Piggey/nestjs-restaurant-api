@@ -25,7 +25,11 @@ import { AllowMinRole, UserDecorator } from '../auth/decorator';
 import { User } from '../user/entities/user.entity';
 import { RolesGuard } from '../auth/guard';
 import { UserRoles } from '../auth/model';
-import { FetchOrderResponse, FetchOrdersResponse } from './responses';
+import {
+  FetchOrderResponse,
+  FetchOrdersResponse,
+  OrderCreatedResponse,
+} from './responses';
 import { RequestErrorResponse } from '../app/response';
 import { JWT_ACCESS_TOKEN_HEADER } from '../auth/dto';
 import { CreateOrderDto } from './dto/create-order.dto';
@@ -104,7 +108,7 @@ export class OrderController {
   async createOrder(
     @UserDecorator() user: User,
     @Body() newOrder: CreateOrderDto,
-  ): Promise<FetchOrderResponse> {
+  ): Promise<OrderCreatedResponse> {
     this.logger.log(`POST /order, userEmail = ${user.userEmail}`);
     return this.orderService.createOrder(user, newOrder);
   }

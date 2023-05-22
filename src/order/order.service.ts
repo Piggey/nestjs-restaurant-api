@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ForbiddenException,
   HttpException,
   HttpStatus,
@@ -8,12 +9,28 @@ import {
 } from '@nestjs/common';
 import { User } from '../user/entities/user.entity';
 import { MongoService } from '../db/mongo/mongo.service';
-import { FetchOrderResponse, FetchOrdersResponse } from './responses';
+import {
+  FetchOrderResponse,
+  FetchOrdersResponse,
+  OrderCreatedResponse,
+} from './responses';
 import { Order } from './entities/order.entity';
 import { OrderStatus } from '@prisma-mongo/prisma/client';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { PostgresService } from '../db/postgres/postgres.service';
 import { Restaurant } from '../restaurant/entities/restaurant.entity';
+
+const RESTAURANT_CLOSING_TIME_OFFSET_HOURS = 1;
+const LOYALTY_POINTS_MULTIPLIER = 0.1;
+const WEEKDAYS = [
+  'Sunday',
+  'Monday',
+  'Tuesday',
+  'Wednesday',
+  'Thursday',
+  'Friday',
+  'Saturday',
+];
 
 @Injectable()
 export class OrderService {
@@ -63,13 +80,50 @@ export class OrderService {
   async createOrder(
     user: User,
     newOrder: CreateOrderDto,
-  ): Promise<FetchOrderResponse> {
+  ): Promise<OrderCreatedResponse> {
     if (user.userEmail !== newOrder.userEmail) {
       throw new ForbiddenException('oj ty smieszku');
     }
 
+    // make sure restaurant exists
+    const restaurant = await this.fetchRestaurant(newOrder.restaurantId);
+
+    // make sure order is placed when restaurant is open
+    const currentDateTime = new Date();
+    const hours = restaurant.openingHours.find(
+      (day) => day.weekday === WEEKDAYS[currentDateTime.getDay()],
+    );
+
+    // offset restaurant's closing time
+    hours.endHourUtc.setHours(
+      hours.endHourUtc.getHours() - RESTAURANT_CLOSING_TIME_OFFSET_HOURS,
+    );
+    const startHour =
+      hours.startHourUtc.getHours() * 100 + hours.startHourUtc.getMinutes();
+    const endHour =
+      hours.endHourUtc.getHours() * 100 + hours.endHourUtc.getMinutes();
+    const currentHour =
+      currentDateTime.getHours() * 100 + currentDateTime.getMinutes();
+
+    if (currentHour < startHour || currentHour > endHour) {
+      throw new BadRequestException('cannot order when restaurant is closed');
+    }
+
+    // calculate loyalty points and update user's db entry
+    const loyaltyPointsGained = Math.floor(
+      newOrder.totalPrice * LOYALTY_POINTS_MULTIPLIER,
+    );
+
+    // place an order
     const order = await this.mongo.order.create({ data: newOrder });
-    return { order };
+
+    // update client's lotalty points
+    const updatedUser = await this.postgres.user.update({
+      where: { userEmail: newOrder.userEmail },
+      data: { loyaltyPoints: user.loyaltyPoints + loyaltyPointsGained },
+    });
+
+    return { order, user: updatedUser, loyaltyPointsGained };
   }
 
   async fetchOrdersByRestaurant(
@@ -78,22 +132,7 @@ export class OrderService {
     pendingOnly?: boolean,
   ): Promise<FetchOrdersResponse> {
     // make sure theres a restaurant with given id
-    let restaurant: Restaurant;
-    try {
-      restaurant = await this.postgres.restaurant.findUniqueOrThrow({
-        where: { restaurantId: id },
-      });
-    } catch (error) {
-      let err;
-      if (error.code === 'P2025') {
-        err = new NotFoundException(`order ${id} not found`);
-      } else {
-        err = new HttpException(error.meta.cause, HttpStatus.FAILED_DEPENDENCY);
-      }
-
-      Logger.error(err);
-      throw err;
-    }
+    const restaurant = await this.fetchRestaurant(id);
 
     // make sure employee works in this restaurant
     try {
@@ -117,6 +156,26 @@ export class OrderService {
     }
 
     return { orders };
+  }
+
+  private async fetchRestaurant(id: number): Promise<Restaurant> {
+    try {
+      const restaurant = await this.postgres.restaurant.findUniqueOrThrow({
+        include: { address: true, openingHours: true },
+        where: { restaurantId: id },
+      });
+      return restaurant;
+    } catch (error) {
+      let err;
+      if (error.code === 'P2025') {
+        err = new NotFoundException(`order ${id} not found`);
+      } else {
+        err = new HttpException(error.meta.cause, HttpStatus.FAILED_DEPENDENCY);
+      }
+
+      Logger.error(err);
+      throw err;
+    }
   }
 
   private filterPendingOnly(orders: Order[]): Order[] {
