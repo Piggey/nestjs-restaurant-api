@@ -3,18 +3,22 @@ import {
   Controller,
   Delete,
   Get,
+  HttpStatus,
   Logger,
   Param,
+  ParseIntPipe,
   Post,
   UseGuards,
 } from '@nestjs/common';
 import { OrderService } from './order.service';
 import {
+  ApiBadRequestResponse,
   ApiForbiddenResponse,
   ApiHeader,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
+  ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
 import { AllowMinRole, UserDecorator } from '../auth/decorator';
@@ -61,6 +65,12 @@ export class OrderController {
     description: 'could not find an order with given id',
     type: RequestErrorResponse,
   })
+  @ApiResponse({
+    status: HttpStatus.FAILED_DEPENDENCY,
+    description: 'database error when fetching order',
+    type: RequestErrorResponse,
+  })
+  @AllowMinRole(UserRoles.CLIENT)
   @Get(':id')
   async fetchOrder(
     @Param('id') id: string,
@@ -108,6 +118,11 @@ export class OrderController {
     description: 'could not find an order with this id',
     type: RequestErrorResponse,
   })
+  @ApiResponse({
+    status: HttpStatus.FAILED_DEPENDENCY,
+    description: 'database error when cancelling order',
+    type: RequestErrorResponse,
+  })
   @AllowMinRole(UserRoles.CLIENT)
   @Delete(':id')
   async cancelOrder(
@@ -116,5 +131,34 @@ export class OrderController {
   ): Promise<FetchOrderResponse> {
     this.logger.log(`DELETE /order/${id}, userEmail = ${user.userEmail}`);
     return this.orderService.cancelOrder(id, user);
+  }
+
+  @ApiOperation({
+    summary: 'fetch all orders from a restaurant with a given id',
+  })
+  @ApiOkResponse({
+    description: 'returns zero or more orders',
+    type: FetchOrdersResponse,
+  })
+  @ApiNotFoundResponse({
+    description: 'could not find a restaurant with given id',
+    type: RequestErrorResponse,
+  })
+  @ApiBadRequestResponse({
+    description: 'incorrect id',
+    type: RequestErrorResponse,
+  })
+  @ApiResponse({
+    status: HttpStatus.FAILED_DEPENDENCY,
+    description: 'database error when fetching data',
+    type: RequestErrorResponse,
+  })
+  @AllowMinRole(UserRoles.EMPLOYEE)
+  @Get('restaurant/:id')
+  async fetchOrdersByRestaurant(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<FetchOrdersResponse> {
+    this.logger.log(`GET /order/restaurant/${id}`);
+    return this.orderService.fetchOrdersByRestaurant(id);
   }
 }

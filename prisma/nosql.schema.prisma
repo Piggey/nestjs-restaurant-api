@@ -58,6 +58,7 @@ type MenuItemType {
 
 model Order {
   /// @DtoReadOnly
+  /// @IsMongoId
   id           String         @id @default(auto()) @map("_id") @db.ObjectId
   /// @DtoReadOnly
   createdAt    DateTime       @default(now())
@@ -75,6 +76,8 @@ model Order {
 }
 
 model JobApplication {
+  /// @DtoReadOnly
+  /// @IsMongoId
   id              String  @id @default(auto()) @map("_id") @db.ObjectId
   firstName       String
   lastName        String
