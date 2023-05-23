@@ -1,4 +1,4 @@
-import { IsOptional, IsString } from 'class-validator';
+import { IsMongoId, IsOptional, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class ConnectJobApplicationDto {
@@ -8,6 +8,7 @@ export class ConnectJobApplicationDto {
   })
   @IsOptional()
   @IsString()
+  @IsMongoId()
   id?: string;
   @ApiProperty({
     required: false,
