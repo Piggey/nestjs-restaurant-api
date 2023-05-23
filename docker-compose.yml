@@ -2,8 +2,8 @@ services:
   sumatywny-api:
     build: .
     ports:
-      - "3000:3000"
-      - "5555:5555"
+      - "3333:3333" # API 
+      - "5555:5555" # Prisma Studio
     depends_on:
       - postgres
       - mongo
@@ -15,11 +15,11 @@ services:
       POSTGRES_USER: postgres_user
       POSTGRES_DB: sumatywny
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
       - ./postgres-init.sql:/docker-entrypoint-initdb.d/init.sql
   mongo:
     image: mongo:6
     restart: always
     ports:
-      - "27017:27017"
+      - "27018:27017"

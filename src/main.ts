@@ -3,14 +3,14 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app/app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
-const API_PORT = 3000;
-const SWA_PORT = 4280;
+const API_PORT = process.env['API_PORT'];
+const APP_PORT = process.env['SWA_PORT'];
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     cors: {
       credentials: true,
-      origin: `http://localhost:${SWA_PORT}`,
+      origin: `http://localhost:${APP_PORT}`,
     },
   });
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
