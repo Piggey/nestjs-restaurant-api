@@ -1,14 +1,17 @@
 import {
+  Body,
   Controller,
   Get,
   HttpStatus,
   Logger,
   Param,
   Patch,
+  Post,
   UseGuards,
 } from '@nestjs/common';
 import { JobApplicationService } from './job-application.service';
 import {
+  ApiBadRequestResponse,
   ApiBearerAuth,
   ApiForbiddenResponse,
   ApiNotFoundResponse,
@@ -25,6 +28,7 @@ import { RolesGuard } from '../auth/guard';
 import { AllowMinRole } from '../auth/decorator';
 import { UserRoles } from '../auth/model';
 import { RequestErrorResponse } from '../app/response';
+import { CreateJobApplicationDto } from './dto/create-job-application.dto';
 
 @ApiTags('application/job')
 @Controller('application/job')
@@ -77,5 +81,22 @@ export class JobApplicationController {
   ): Promise<FetchJobApplicationResponse> {
     this.logger.log(`PATCH /application/job/${id}`);
     return this.jobApplicationService.respondToJobApplication(id);
+  }
+
+  @ApiOperation({ summary: 'create a new job application' })
+  @ApiOkResponse({
+    description: 'job application created',
+    type: FetchJobApplicationResponse,
+  })
+  @ApiBadRequestResponse({
+    description: 'job application data incorrect',
+    type: RequestErrorResponse,
+  })
+  @Post('')
+  async createJobApplication(
+    @Body() newJobApplication: CreateJobApplicationDto,
+  ): Promise<FetchJobApplicationResponse> {
+    this.logger.log('POST /application/job');
+    return this.jobApplicationService.createJobApplication(newJobApplication);
   }
 }

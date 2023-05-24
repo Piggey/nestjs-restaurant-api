@@ -10,6 +10,7 @@ import {
   FetchJobApplicationResponse,
   FetchJobApplicationsResponse,
 } from './responses';
+import { CreateJobApplicationDto } from './dto/create-job-application.dto';
 
 @Injectable()
 export class JobApplicationService {
@@ -43,5 +44,15 @@ export class JobApplicationService {
       Logger.error(err);
       throw err;
     }
+  }
+
+  async createJobApplication(
+    newJobApplication: CreateJobApplicationDto,
+  ): Promise<FetchJobApplicationResponse> {
+    const jobApplication = await this.mongo.jobApplication.create({
+      data: newJobApplication,
+    });
+
+    return { jobApplication };
   }
 }
