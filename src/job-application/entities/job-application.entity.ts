@@ -8,6 +8,10 @@ export class JobApplication {
   @ApiProperty({
     required: false,
   })
+  respondedTo: boolean;
+  @ApiProperty({
+    required: false,
+  })
   firstName: string;
   @ApiProperty({
     required: false,
@@ -32,7 +36,7 @@ export class JobApplication {
     required: false,
     nullable: true,
   })
-  resumee: string | null;
+  resumee: Buffer | null;
   @ApiProperty({
     required: false,
   })

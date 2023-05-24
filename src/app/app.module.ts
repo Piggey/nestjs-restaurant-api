@@ -12,6 +12,7 @@ import { MongoModule } from '../db/mongo/mongo.module';
 import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { JobModule } from '../job/job.module';
+import { JobApplicationModule } from '../job-application/job-application.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { JobModule } from '../job/job.module';
     CategoryModule,
     OrderModule,
     JobModule,
+    JobApplicationModule,
   ],
 })
 export class AppModule {}

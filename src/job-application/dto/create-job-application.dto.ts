@@ -1,4 +1,5 @@
 import {
+  IsEmail,
   IsInt,
   IsNotEmpty,
   IsNumber,
@@ -23,10 +24,12 @@ export class CreateJobApplicationDto {
   })
   @IsNotEmpty()
   @IsInt()
+  @IsPositive()
   age: number;
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
+  @IsEmail()
   email: string;
   @ApiProperty({
     required: false,
@@ -40,8 +43,7 @@ export class CreateJobApplicationDto {
     nullable: true,
   })
   @IsOptional()
-  @IsString()
-  resumee?: string;
+  resumee?: Buffer;
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
