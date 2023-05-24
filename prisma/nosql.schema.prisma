@@ -79,12 +79,15 @@ model JobApplication {
   /// @DtoReadOnly
   /// @IsMongoId
   id              String  @id @default(auto()) @map("_id") @db.ObjectId
+  respondedTo     Boolean @default(false)
   firstName       String
   lastName        String
+  /// @IsPositive
   age             Int
+  /// @IsEmail
   email           String  @unique
   aboutMe         String?
-  resumee         String? // to jest plik pdf
+  resumee         Bytes?
   jobTitle        String
   /// @IsPositive
   prefferedSalary Float
