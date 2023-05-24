@@ -1,5 +1,6 @@
 import {
   IsNotEmpty,
+  IsNumber,
   IsOptional,
   IsString,
   ValidateNested,
@@ -10,6 +11,8 @@ import { CreateAddressDto } from '../../address/dto/create-address.dto';
 import { ConnectAddressDto } from '../../address/dto/connect-address.dto';
 import { ConnectUserDto } from '../../user/dto/connect-user.dto';
 import { ConnectRestaurantDto } from '../../restaurant/dto/connect-restaurant.dto';
+import { CreateJobDto } from '../../job/dto/create-job.dto';
+import { ConnectJobDto } from '../../job/dto/connect-job.dto';
 
 export class CreateEmployeeAddressRelationInputDto {
   @ApiProperty({
@@ -49,6 +52,26 @@ export class CreateEmployeeRestaurantRelationInputDto {
   @Type(() => ConnectRestaurantDto)
   connect: ConnectRestaurantDto;
 }
+export class CreateEmployeeJobRelationInputDto {
+  @ApiProperty({
+    required: false,
+    nullable: true,
+    type: CreateJobDto,
+  })
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => CreateJobDto)
+  create?: CreateJobDto;
+  @ApiProperty({
+    required: false,
+    nullable: true,
+    type: ConnectJobDto,
+  })
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => ConnectJobDto)
+  connect?: ConnectJobDto;
+}
 
 @ApiExtraModels(
   CreateAddressDto,
@@ -58,6 +81,9 @@ export class CreateEmployeeRestaurantRelationInputDto {
   CreateEmployeeUserRelationInputDto,
   ConnectRestaurantDto,
   CreateEmployeeRestaurantRelationInputDto,
+  CreateJobDto,
+  ConnectJobDto,
+  CreateEmployeeJobRelationInputDto,
 )
 export class CreateEmployeeDto {
   @ApiProperty()
@@ -89,4 +115,18 @@ export class CreateEmployeeDto {
   @ValidateNested()
   @Type(() => CreateEmployeeRestaurantRelationInputDto)
   restaurant: CreateEmployeeRestaurantRelationInputDto;
+  @ApiProperty({
+    type: CreateEmployeeJobRelationInputDto,
+  })
+  @IsNotEmpty()
+  @ValidateNested()
+  @Type(() => CreateEmployeeJobRelationInputDto)
+  job: CreateEmployeeJobRelationInputDto;
+  @ApiProperty({
+    type: 'number',
+    format: 'float',
+  })
+  @IsNotEmpty()
+  @IsNumber()
+  salary: number;
 }
