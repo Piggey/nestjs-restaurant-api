@@ -1,37 +1,50 @@
+import { Role } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
+import { Employee } from '../../employee/entities/employee.entity';
 
-export class EmployeeDto {
+export class Job {
   @ApiProperty({
     type: 'integer',
     format: 'int32',
     required: false,
   })
-  employeeId: number;
+  jobId: number;
   @ApiProperty({
     type: 'string',
     format: 'date-time',
     required: false,
   })
-  hiredAt: Date;
+  createdAt: Date;
   @ApiProperty({
     type: 'string',
     format: 'date-time',
     required: false,
-    nullable: true,
   })
-  firedAt: Date | null;
+  updatedAt: Date;
   @ApiProperty({
     required: false,
   })
-  firstName: string;
-  @ApiProperty({
-    required: false,
-  })
-  lastName: string;
+  jobTitle: string;
   @ApiProperty({
     type: 'number',
     format: 'float',
     required: false,
   })
-  salary: number;
+  minSalary: number;
+  @ApiProperty({
+    type: 'number',
+    format: 'float',
+    required: false,
+  })
+  maxSalary: number;
+  @ApiProperty({
+    enum: Role,
+    required: false,
+  })
+  role: Role;
+  @ApiProperty({
+    isArray: true,
+    required: false,
+  })
+  employees?: Employee[];
 }

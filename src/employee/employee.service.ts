@@ -16,6 +16,7 @@ import { EmployeeUpdatedResponse } from './responses/employee-updated.response';
 import { EmployeeDeletedResponse } from './responses/employee-deleted.response';
 import { User } from '../user/entities/user.entity';
 import { Employee } from './entities/employee.entity';
+import { CreateJobDto } from '../job/dto/create-job.dto';
 
 @Injectable()
 export class EmployeeService {
@@ -59,16 +60,28 @@ export class EmployeeService {
   async createEmployee(
     newEmployee: CreateEmployeeDto,
   ): Promise<EmployeeCreatedResponse> {
+    // make sure employee's salary is within its job range
+    const job = await this.databaseFetchJob(newEmployee);
+    if (
+      newEmployee.salary < job.minSalary ||
+      newEmployee.salary > job.maxSalary
+    ) {
+      throw new BadRequestException(
+        "new employee's salary is not within job's range",
+      );
+    }
+
     let employee: Employee;
     try {
       employee = await this.db.employee.create({
-        include: { address: true, user: true, restaurant: true },
+        include: { address: true, user: true, restaurant: true, job: true },
         data: newEmployee,
       });
 
+      // assign correct UserRole based on new employee data
       await this.db.user.update({
         where: { userId: employee.user.userId },
-        data: { userRole: UserRoles.EMPLOYEE },
+        data: { userRole: employee.job.role },
       });
     } catch (error) {
       let err;
@@ -147,5 +160,22 @@ export class EmployeeService {
       employeeDeleted: true,
       employeeData: firedEmployee,
     };
+  }
+
+  private async databaseFetchJob(
+    newEmployee: CreateEmployeeDto,
+  ): Promise<CreateJobDto> {
+    if (newEmployee.job.create) {
+      return newEmployee.job.create;
+    }
+
+    const job = await this.db.job.findUnique({
+      where: newEmployee.job.connect,
+    });
+    if (!job) {
+      throw new NotFoundException('could not find job with this id');
+    }
+
+    return job;
   }
 }

@@ -11,6 +11,7 @@ import { PostgresModule } from '../db/postgres/postgres.module';
 import { MongoModule } from '../db/mongo/mongo.module';
 import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
+import { JobModule } from '../job/job.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { JwtModule } from '@nestjs/jwt';
     RestaurantModule,
     CategoryModule,
     OrderModule,
+    JobModule,
   ],
 })
 export class AppModule {}
