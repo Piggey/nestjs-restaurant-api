@@ -1,3 +1,4 @@
+import { Role } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class JobDto {
@@ -35,4 +36,9 @@ export class JobDto {
     required: false,
   })
   maxSalary: number;
+  @ApiProperty({
+    enum: Role,
+    required: false,
+  })
+  role: Role;
 }

@@ -1,3 +1,4 @@
+import { Role } from '@prisma/client';
 import { IsNumber, IsOptional, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
@@ -24,4 +25,10 @@ export class UpdateJobDto {
   @IsOptional()
   @IsNumber()
   maxSalary?: number;
+  @ApiProperty({
+    enum: Role,
+    required: false,
+  })
+  @IsOptional()
+  role?: Role;
 }

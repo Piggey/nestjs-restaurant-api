@@ -102,6 +102,7 @@ model Job {
   jobTitle String
   minSalary Float
   maxSalary Float
+  role Role
 
   employees Employee[]
 }

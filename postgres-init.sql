@@ -40,6 +40,7 @@ CREATE TABLE "Job" (
     "jobTitle" TEXT NOT NULL,
     "minSalary" DOUBLE PRECISION NOT NULL,
     "maxSalary" DOUBLE PRECISION NOT NULL,
+    "role" "Role" NOT NULL,
 
     CONSTRAINT "Job_pkey" PRIMARY KEY ("jobId")
 );
@@ -186,17 +187,17 @@ INSERT INTO "User" ("userId", "userEmail", "userRole") VALUES (4, 'employee@suma
 INSERT INTO "User" ("userId", "userEmail", "userRole") VALUES (5, 'client@sumatywny.pl', 'CLIENT');
 INSERT INTO "User" ("userId", "userEmail", "userRole") VALUES (6, '236653@edu.p.lodz.pl', 'BOSS');
 
-INSERT INTO "Job" ("jobId", "updatedAt", "jobTitle", "minSalary", "maxSalary")
-VALUES (1, CURRENT_TIMESTAMP, 'Chef', 50, 100);
+INSERT INTO "Job" ("jobId", "updatedAt", "jobTitle", "minSalary", "maxSalary", "role")
+VALUES (1, CURRENT_TIMESTAMP, 'Chef', 50, 100, 'EMPLOYEE');
 
-INSERT INTO "Job" ("jobId", "updatedAt", "jobTitle", "minSalary", "maxSalary")
-VALUES (2, CURRENT_TIMESTAMP, 'Chef''s assistant', 24, 40);
+INSERT INTO "Job" ("jobId", "updatedAt", "jobTitle", "minSalary", "maxSalary", "role")
+VALUES (2, CURRENT_TIMESTAMP, 'Chef''s assistant', 24, 40, 'EMPLOYEE');
 
-INSERT INTO "Job" ("jobId", "updatedAt", "jobTitle", "minSalary", "maxSalary")
-VALUES (3, CURRENT_TIMESTAMP, 'Food Delivery Driver', 24, 40);
+INSERT INTO "Job" ("jobId", "updatedAt", "jobTitle", "minSalary", "maxSalary", "role")
+VALUES (3, CURRENT_TIMESTAMP, 'Food Delivery Driver', 24, 40, 'DELIVERY');
 
-INSERT INTO "Job" ("jobId", "updatedAt", "jobTitle", "minSalary", "maxSalary")
-VALUES (4, CURRENT_TIMESTAMP, 'Manager', 80, 150);
+INSERT INTO "Job" ("jobId", "updatedAt", "jobTitle", "minSalary", "maxSalary", "role")
+VALUES (4, CURRENT_TIMESTAMP, 'Manager', 80, 150, 'MANAGER');
 
 INSERT INTO "Employee" ("employeeId", "firstName", "lastName", "addressId", "userId", "restaurantId", "jobId", "salary") 
 VALUES (1, 'Jan', 'Pracownik', 1, 4, 1, 1, 85.25);
