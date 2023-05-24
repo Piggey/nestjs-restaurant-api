@@ -26,8 +26,22 @@ CREATE TABLE "Employee" (
     "addressId" INTEGER NOT NULL,
     "userId" INTEGER NOT NULL,
     "restaurantId" INTEGER NOT NULL,
+    "jobId" INTEGER NOT NULL,
+    "salary" DOUBLE PRECISION NOT NULL,
 
     CONSTRAINT "Employee_pkey" PRIMARY KEY ("employeeId")
+);
+
+-- CreateTable
+CREATE TABLE "Job" (
+    "jobId" SERIAL NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "jobTitle" TEXT NOT NULL,
+    "minSalary" DOUBLE PRECISION NOT NULL,
+    "maxSalary" DOUBLE PRECISION NOT NULL,
+
+    CONSTRAINT "Job_pkey" PRIMARY KEY ("jobId")
 );
 
 -- CreateTable
@@ -115,6 +129,9 @@ ALTER TABLE "Employee" ADD CONSTRAINT "Employee_userId_fkey" FOREIGN KEY ("userI
 ALTER TABLE "Employee" ADD CONSTRAINT "Employee_restaurantId_fkey" FOREIGN KEY ("restaurantId") REFERENCES "Restaurant"("restaurantId") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "Employee" ADD CONSTRAINT "Employee_jobId_fkey" FOREIGN KEY ("jobId") REFERENCES "Job"("jobId") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "Manager" ADD CONSTRAINT "Manager_employeeId_fkey" FOREIGN KEY ("employeeId") REFERENCES "Employee"("employeeId") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -169,9 +186,26 @@ INSERT INTO "User" ("userId", "userEmail", "userRole") VALUES (4, 'employee@suma
 INSERT INTO "User" ("userId", "userEmail", "userRole") VALUES (5, 'client@sumatywny.pl', 'CLIENT');
 INSERT INTO "User" ("userId", "userEmail", "userRole") VALUES (6, '236653@edu.p.lodz.pl', 'BOSS');
 
-INSERT INTO "Employee" ("employeeId", "firstName", "lastName", "addressId", "userId", "restaurantId") VALUES (1, 'Jan', 'Pracownik', 1, 4, 1);
-INSERT INTO "Employee" ("employeeId", "firstName", "lastName", "addressId", "userId", "restaurantId") VALUES (2, 'Szymon', 'Rozwoźnik', 6, 3, 1);
-INSERT INTO "Employee" ("employeeId", "firstName", "lastName", "addressId", "userId", "restaurantId") VALUES (3, 'Przemysław', 'Zarządzający', 5, 2, 1);
+INSERT INTO "Job" ("jobId", "updatedAt", "jobTitle", "minSalary", "maxSalary")
+VALUES (1, CURRENT_TIMESTAMP, 'Chef', 50, 100);
+
+INSERT INTO "Job" ("jobId", "updatedAt", "jobTitle", "minSalary", "maxSalary")
+VALUES (2, CURRENT_TIMESTAMP, 'Chef''s assistant', 24, 40);
+
+INSERT INTO "Job" ("jobId", "updatedAt", "jobTitle", "minSalary", "maxSalary")
+VALUES (3, CURRENT_TIMESTAMP, 'Food Delivery Driver', 24, 40);
+
+INSERT INTO "Job" ("jobId", "updatedAt", "jobTitle", "minSalary", "maxSalary")
+VALUES (4, CURRENT_TIMESTAMP, 'Manager', 80, 150);
+
+INSERT INTO "Employee" ("employeeId", "firstName", "lastName", "addressId", "userId", "restaurantId", "jobId", "salary") 
+VALUES (1, 'Jan', 'Pracownik', 1, 4, 1, 1, 85.25);
+
+INSERT INTO "Employee" ("employeeId", "firstName", "lastName", "addressId", "userId", "restaurantId", "jobId", "salary") 
+VALUES (2, 'Szymon', 'Rozwoźnik', 6, 3, 1, 3, 30.13);
+
+INSERT INTO "Employee" ("employeeId", "firstName", "lastName", "addressId", "userId", "restaurantId", "jobId", "salary") 
+VALUES (3, 'Przemysław', 'Zarządzający', 5, 2, 1, 4, 100);
 
 INSERT INTO "Manager" VALUES (1, 3);
 UPDATE "Restaurant" SET "managerId" = 1 WHERE "restaurantId" = 1;
