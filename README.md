@@ -11,7 +11,9 @@ $ npm install
 
 ## Running the app
 
-### Start database Docker images
+### Run production through Docker
+1. Make sure correct environment variables are set in `.env` file
+2. Start docker images using this command:
 ```bash
 $ sudo docker-compose up -d
 ```
