@@ -78,18 +78,42 @@ model Order {
 model JobApplication {
   /// @DtoReadOnly
   /// @IsMongoId
-  id              String  @id @default(auto()) @map("_id") @db.ObjectId
-  respondedTo     Boolean @default(false)
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  /// @DtoReadOnly
+  createdAt       DateTime @default(now())
+  respondedTo     Boolean  @default(false)
   firstName       String
   lastName        String
   /// @IsPositive
   /// @IsMin(18)
   age             Int
   /// @IsEmail
-  email           String  @unique
+  email           String   @unique
   aboutMe         String?
   resumee         Bytes?
   jobTitle        String
   /// @IsPositive
   prefferedSalary Float
+}
+
+model FranchiseApplication {
+  /// @DtoReadOnly
+  /// @IsMongoId
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  /// @DtoReadOnly
+  createdAt DateTime @default(now())
+
+  respondedTo      Boolean @default(false)
+  firstName        String
+  lastName         String
+  /// @IsPhoneNumber
+  phoneNumber      String
+  /// @IsEmail
+  email            String
+  aboutMe          String
+  reasonForOpening String
+  /// @IsLongitude
+  longitude        Float
+  /// @IsLatitude
+  latitude         Float
 }

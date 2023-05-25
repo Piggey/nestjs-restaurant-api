@@ -13,6 +13,7 @@ import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { JobModule } from '../job/job.module';
 import { JobApplicationModule } from '../job-application/job-application.module';
+import { FranchiseApplicationModule } from '../franchise-application/franchise-application.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { JobApplicationModule } from '../job-application/job-application.module'
     OrderModule,
     JobModule,
     JobApplicationModule,
+    FranchiseApplicationModule,
   ],
 })
 export class AppModule {}
