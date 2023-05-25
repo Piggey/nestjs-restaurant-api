@@ -6,6 +6,12 @@ export class JobApplication {
   })
   id: string;
   @ApiProperty({
+    type: 'string',
+    format: 'date-time',
+    required: false,
+  })
+  createdAt: Date;
+  @ApiProperty({
     required: false,
   })
   respondedTo: boolean;

@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class JobApplicationDto {
+export class FranchiseApplication {
   @ApiProperty({
     required: false,
   })
@@ -24,33 +24,31 @@ export class JobApplicationDto {
   })
   lastName: string;
   @ApiProperty({
-    type: 'integer',
-    format: 'int32',
     required: false,
   })
-  age: number;
+  phoneNumber: string;
   @ApiProperty({
     required: false,
   })
   email: string;
   @ApiProperty({
     required: false,
-    nullable: true,
   })
-  aboutMe: string | null;
-  @ApiProperty({
-    required: false,
-    nullable: true,
-  })
-  resumee: Buffer | null;
+  aboutMe: string;
   @ApiProperty({
     required: false,
   })
-  jobTitle: string;
+  reasonForOpening: string;
   @ApiProperty({
     type: 'number',
     format: 'float',
     required: false,
   })
-  prefferedSalary: number;
+  longitude: number;
+  @ApiProperty({
+    type: 'number',
+    format: 'float',
+    required: false,
+  })
+  latitude: number;
 }
