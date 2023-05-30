@@ -3,14 +3,13 @@ import { UserService } from './user.service';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
-  ApiHeader,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
 import { AboutUserResponse } from './responses/about-user.response';
-import { JWT_ACCESS_TOKEN_HEADER, JwtAccessTokenDto } from '../auth/dto';
+import { JwtAccessTokenDto } from '../auth/dto';
 import {
   AllowMinRole,
   CLIENT_PRINCIPAL_HEADER,
@@ -20,7 +19,6 @@ import { RequestErrorResponse } from '../app/response';
 import { RolesGuard } from '../auth/guard';
 import { UserRoles } from '../auth/model';
 
-@ApiHeader(JWT_ACCESS_TOKEN_HEADER)
 @ApiBearerAuth()
 @UseGuards(RolesGuard)
 @ApiTags('user')

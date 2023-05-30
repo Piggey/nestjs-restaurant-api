@@ -20,6 +20,7 @@ async function bootstrap() {
     .setTitle('Moduł sumatywny - Restauracje')
     .setDescription('Opis API systemu zarządzania siecią restauracji.')
     .setVersion('0.1.0')
+    .addBearerAuth()
     .setExternalDoc('JSON Web Tokens', 'https://jwt.io/')
     .build();
 

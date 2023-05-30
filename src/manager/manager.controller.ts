@@ -16,14 +16,12 @@ import {
   ApiBearerAuth,
   ApiCreatedResponse,
   ApiForbiddenResponse,
-  ApiHeader,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { JWT_ACCESS_TOKEN_HEADER } from '../auth/dto';
 import { RequestErrorResponse } from '../app/response';
 import { AllowMinRole } from '../auth/decorator';
 import { UserRoles } from '../auth/model';
@@ -37,7 +35,6 @@ import { ManagerDeletedResponse } from './responses/manager-deleted.response';
 
 @ApiTags('manager')
 @ApiBearerAuth()
-@ApiHeader(JWT_ACCESS_TOKEN_HEADER)
 @ApiForbiddenResponse({
   description: 'insufficient `UserRoles` privileges. minimum = `BOSS`',
   type: RequestErrorResponse,

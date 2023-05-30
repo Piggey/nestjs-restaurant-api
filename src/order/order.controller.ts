@@ -6,7 +6,7 @@ import {
   HttpStatus,
   Logger,
   Param,
-  ParseIntPipe,
+  ParseUUIDPipe,
   Patch,
   Post,
   UseGuards,
@@ -15,7 +15,6 @@ import { OrderService } from './order.service';
 import {
   ApiBadRequestResponse,
   ApiForbiddenResponse,
-  ApiHeader,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
@@ -32,12 +31,10 @@ import {
   OrderCreatedResponse,
 } from './responses';
 import { RequestErrorResponse } from '../app/response';
-import { JWT_ACCESS_TOKEN_HEADER } from '../auth/dto';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderStatusDto } from './dto/update-order-status.dto';
 
 @ApiTags('order')
-@ApiHeader(JWT_ACCESS_TOKEN_HEADER)
 @ApiForbiddenResponse({
   description: 'insufficient `UserRoles` privileges. minimum = `CLIENT`',
   type: RequestErrorResponse,
@@ -166,7 +163,7 @@ export class OrderController {
   @AllowMinRole(UserRoles.EMPLOYEE)
   @Get('restaurant/:id')
   async fetchOrdersByRestaurant(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id', ParseUUIDPipe) id: number,
     @UserDecorator() user: User,
   ): Promise<FetchOrdersResponse> {
     this.logger.log(`GET /order/restaurant/${id}`);
@@ -200,7 +197,7 @@ export class OrderController {
   @AllowMinRole(UserRoles.EMPLOYEE)
   @Get('restaurant/:id/pending')
   async fetchPendingOrdersByRestaurant(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id', ParseUUIDPipe) id: number,
     @UserDecorator() user: User,
   ): Promise<FetchOrdersResponse> {
     this.logger.log(`GET /order/restaurant/${id}/pending`);

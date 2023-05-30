@@ -18,7 +18,6 @@ import {
 import {
   ApiBearerAuth,
   ApiForbiddenResponse,
-  ApiHeader,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
@@ -30,7 +29,6 @@ import { RequestErrorResponse } from '../app/response';
 import { RolesGuard } from '../auth/guard';
 import { AllowMinRole } from '../auth/decorator';
 import { UserRoles } from '../auth/model';
-import { JWT_ACCESS_TOKEN_HEADER } from '../auth/dto';
 
 @ApiTags('category')
 @Controller('category')
@@ -68,7 +66,6 @@ export class CategoryController {
     type: RequestErrorResponse,
   })
   @ApiBearerAuth()
-  @ApiHeader(JWT_ACCESS_TOKEN_HEADER)
   @UseGuards(RolesGuard)
   @AllowMinRole(UserRoles.BOSS)
   @Patch(':id')
@@ -101,7 +98,6 @@ export class CategoryController {
     type: RequestErrorResponse,
   })
   @ApiBearerAuth()
-  @ApiHeader(JWT_ACCESS_TOKEN_HEADER)
   @UseGuards(RolesGuard)
   @AllowMinRole(UserRoles.BOSS)
   @Delete(':id')
