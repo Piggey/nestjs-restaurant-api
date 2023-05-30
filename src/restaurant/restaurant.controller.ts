@@ -20,6 +20,7 @@ import {
   RestaurantUpdatedResponse,
 } from './responses';
 import {
+  ApiBearerAuth,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
@@ -83,6 +84,7 @@ export class RestaurantController {
     description: 'database error when creating a new restaurant',
     type: RequestErrorResponse,
   })
+  @ApiBearerAuth()
   @UseGuards(RolesGuard)
   @AllowMinRole(UserRoles.BOSS)
   @Post('/')
@@ -107,6 +109,7 @@ export class RestaurantController {
     description: 'database error when updating a restaurant',
     type: RequestErrorResponse,
   })
+  @ApiBearerAuth()
   @UseGuards(RolesGuard)
   @AllowMinRole(UserRoles.MANAGER)
   @Patch(':id')
@@ -132,6 +135,7 @@ export class RestaurantController {
     description: 'database error when deleting a restaurant',
     type: RequestErrorResponse,
   })
+  @ApiBearerAuth()
   @UseGuards(RolesGuard)
   @AllowMinRole(UserRoles.BOSS)
   @Delete(':id')

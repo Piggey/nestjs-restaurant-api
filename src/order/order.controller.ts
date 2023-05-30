@@ -14,6 +14,7 @@ import {
 import { OrderService } from './order.service';
 import {
   ApiBadRequestResponse,
+  ApiBearerAuth,
   ApiForbiddenResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
@@ -39,6 +40,7 @@ import { UpdateOrderStatusDto } from './dto/update-order-status.dto';
   description: 'insufficient `UserRoles` privileges. minimum = `CLIENT`',
   type: RequestErrorResponse,
 })
+@ApiBearerAuth()
 @UseGuards(RolesGuard)
 @Controller('order')
 export class OrderController {
