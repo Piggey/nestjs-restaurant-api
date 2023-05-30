@@ -5,7 +5,7 @@ import {
   Get,
   Logger,
   Param,
-  ParseIntPipe,
+  ParseUUIDPipe,
   Patch,
   UseGuards,
 } from '@nestjs/common';
@@ -73,7 +73,7 @@ export class CategoryController {
   @AllowMinRole(UserRoles.BOSS)
   @Patch(':id')
   async updateCategory(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id', ParseUUIDPipe) id: string,
     @Body() newCategory: UpdateCategoryDto,
   ): Promise<CategoryUpdatedResponse> {
     this.logger.log(`PATCH /category/${id}`);
@@ -106,7 +106,7 @@ export class CategoryController {
   @AllowMinRole(UserRoles.BOSS)
   @Delete(':id')
   async deleteCategory(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id', ParseUUIDPipe) id: string,
   ): Promise<CategoryDeletedResponse> {
     this.logger.log(`DELETE /category/${id}`);
     return this.categoryService.deleteCategory(id);

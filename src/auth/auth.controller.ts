@@ -1,16 +1,15 @@
-import { Controller, Get, Logger, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Logger, Post, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import {
   ApiBadRequestResponse,
   ApiCreatedResponse,
-  ApiHeader,
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
-import { AllowMinRole, JwtPayload } from './decorator';
+import { AllowMinRole } from './decorator';
 import { RolesGuard } from './guard';
 import { UserRoles } from './model';
-import { JWT_ACCESS_TOKEN_HEADER, JwtAccessTokenDto } from './dto';
+import { SignInDto } from './dto';
 import { UserSignInResponse } from './responses';
 import { RequestErrorResponse } from '../app/response';
 
@@ -20,7 +19,6 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @ApiOperation({ summary: 'sign a new user to our database' })
-  @ApiHeader(JWT_ACCESS_TOKEN_HEADER)
   @ApiCreatedResponse({
     description:
       'successfully signed a user in. returns `true` if new used had to be created in the database, otherwise returns `false`',
@@ -32,11 +30,9 @@ export class AuthController {
     type: RequestErrorResponse,
   })
   @Post('signin')
-  async signIn(
-    @JwtPayload() payload: JwtAccessTokenDto,
-  ): Promise<UserSignInResponse> {
-    Logger.log(`/auth/signin, ${payload.email}`);
-    return this.authService.signIn(payload);
+  async signIn(@Body() dto: SignInDto): Promise<UserSignInResponse> {
+    Logger.log(`/auth/signin, ${dto.email}`);
+    return this.authService.signIn(dto);
   }
 
   @Get('test')

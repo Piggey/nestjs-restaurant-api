@@ -54,7 +54,7 @@ export class RestaurantService {
     };
   }
 
-  async fetchRestaurant(id: number): Promise<FetchRestaurantResponse> {
+  async fetchRestaurant(id: string): Promise<FetchRestaurantResponse> {
     let restaurant: Restaurant;
     try {
       restaurant = await this.db.restaurant.findFirstOrThrow({
@@ -97,7 +97,7 @@ export class RestaurantService {
   }
 
   async updateRestaurant(
-    id: number,
+    id: string,
     newRestaurant: UpdateRestaurantDto,
   ): Promise<RestaurantUpdatedResponse> {
     try {
@@ -120,7 +120,7 @@ export class RestaurantService {
     }
   }
 
-  async deleteRestaurant(id: number): Promise<RestaurantDeletedResponse> {
+  async deleteRestaurant(id: string): Promise<RestaurantDeletedResponse> {
     const firedEmployees = await this.db.employee.updateMany({
       where: { restaurantId: id },
       data: { firedAt: Date() },

@@ -4,11 +4,9 @@ import { Employee } from '../../employee/entities/employee.entity';
 
 export class Job {
   @ApiProperty({
-    type: 'integer',
-    format: 'int32',
     required: false,
   })
-  jobId: number;
+  jobId: string;
   @ApiProperty({
     type: 'string',
     format: 'date-time',

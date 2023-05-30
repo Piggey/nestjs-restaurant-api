@@ -1,14 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Restaurant } from '../../restaurant/entities/restaurant.entity';
 import { Employee } from '../../employee/entities/employee.entity';
+import { Restaurant } from '../../restaurant/entities/restaurant.entity';
 
 export class Address {
   @ApiProperty({
-    type: 'integer',
-    format: 'int32',
     required: false,
   })
-  addressId: number;
+  addressId: string;
   @ApiProperty({
     required: false,
   })
@@ -33,10 +31,10 @@ export class Address {
     isArray: true,
     required: false,
   })
-  restaurants?: Restaurant[];
+  employees?: Employee[];
   @ApiProperty({
     isArray: true,
     required: false,
   })
-  employees?: Employee[];
+  restaurants?: Restaurant[];
 }

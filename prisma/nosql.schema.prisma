@@ -67,7 +67,7 @@ model Order {
   /// @IsEmail
   userEmail    String
   address      AddressType?
-  restaurantId Int
+  restaurantId String
   orderedItems MenuItemType[]
   /// @IsPositive
   totalPrice   Float

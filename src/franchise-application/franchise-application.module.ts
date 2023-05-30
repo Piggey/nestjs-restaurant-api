@@ -4,6 +4,6 @@ import { FranchiseApplicationController } from './franchise-application.controll
 
 @Module({
   controllers: [FranchiseApplicationController],
-  providers: [FranchiseApplicationService]
+  providers: [FranchiseApplicationService],
 })
 export class FranchiseApplicationModule {}

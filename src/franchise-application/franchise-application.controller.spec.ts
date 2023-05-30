@@ -11,7 +11,9 @@ describe('FranchiseApplicationController', () => {
       providers: [FranchiseApplicationService],
     }).compile();
 
-    controller = module.get<FranchiseApplicationController>(FranchiseApplicationController);
+    controller = module.get<FranchiseApplicationController>(
+      FranchiseApplicationController,
+    );
   });
 
   it('should be defined', () => {
