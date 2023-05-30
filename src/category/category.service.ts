@@ -21,7 +21,7 @@ export class CategoryService {
   }
 
   async updateCategory(
-    id: number,
+    id: string,
     newCategory: UpdateCategoryDto,
   ): Promise<CategoryUpdatedResponse> {
     let category;
@@ -53,7 +53,7 @@ export class CategoryService {
     };
   }
 
-  async deleteCategory(id: number): Promise<CategoryDeletedResponse> {
+  async deleteCategory(id: string): Promise<CategoryDeletedResponse> {
     const menuItems = await this.db.menu.updateMany({
       where: { categoryId: id },
       data: { available: false },

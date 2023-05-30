@@ -5,7 +5,7 @@ import {
   Get,
   Logger,
   Param,
-  ParseIntPipe,
+  ParseUUIDPipe,
   Patch,
   Post,
   UseGuards,
@@ -100,18 +100,18 @@ export class ManagerController {
   @AllowMinRole(UserRoles.BOSS)
   @Patch(':id')
   async updateManager(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id', ParseUUIDPipe) id: string,
     @Body() updatedManager: UpdateManagerDto,
   ): Promise<ManagerUpdatedResponse> {
     return this.managerService.updateManager(id, updatedManager);
   }
 
-  @ApiOperation({ summary: 'fire a manager from managing a restaurant' })
+  @ApiOperation({ summary: 'fire a manager' })
   @AllowMinRole(UserRoles.BOSS)
-  @Delete(':managerId/:restaurantId')
+  @Delete(':id')
   async deleteManager(
-    @Param('managerId', ParseIntPipe) managerId: number,
-    @Param('restaurantId', ParseIntPipe) restaurantId: number,
+    @Param('id', ParseUUIDPipe) managerId: string,
+    @Param('restaurantId', ParseUUIDPipe) restaurantId: string,
   ): Promise<ManagerDeletedResponse> {
     return this.managerService.deleteManager(managerId, restaurantId);
   }

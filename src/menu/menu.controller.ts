@@ -5,7 +5,7 @@ import {
   Get,
   Logger,
   Param,
-  ParseIntPipe,
+  ParseUUIDPipe,
   Patch,
   Post,
   UseGuards,
@@ -65,7 +65,7 @@ export class MenuController {
   })
   @Get(':id')
   async fetchMenuItem(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id', ParseUUIDPipe) id: string,
   ): Promise<FetchMenuItemResponse> {
     this.logger.log(`GET /menu/${id}`);
     return this.menuService.fetchMenuItem(id);
@@ -82,7 +82,7 @@ export class MenuController {
   })
   @Get('/category/:id')
   async fetchMenuByCategory(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id', ParseUUIDPipe) id: string,
   ): Promise<FetchMenuByCategoryResponse> {
     this.logger.log(`GET /menu/category/${id}`);
     return this.menuService.fetchMenuByCategory(id);
@@ -134,7 +134,7 @@ export class MenuController {
   @AllowMinRole(UserRoles.BOSS)
   @Patch(':id')
   async updateMenuItem(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id', ParseUUIDPipe) id: string,
     @Body() updatedItem: UpdateMenuDto,
   ): Promise<MenuItemUpdatedResponse> {
     this.logger.log(`PATCH /menu/${id}`);
@@ -167,7 +167,7 @@ export class MenuController {
   @AllowMinRole(UserRoles.BOSS)
   @Delete(':id')
   async removeMenuItem(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id', ParseUUIDPipe) id: string,
   ): Promise<MenuItemRemovedResponse> {
     this.logger.log(`DELETE /menu/${id}`);
     return this.menuService.removeMenuItem(id);

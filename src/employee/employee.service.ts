@@ -106,7 +106,7 @@ export class EmployeeService {
   }
 
   async updateEmployee(
-    id: number,
+    id: string,
     updatedEmployee: UpdateEmployeeDto,
   ): Promise<EmployeeUpdatedResponse> {
     let updated;
@@ -116,10 +116,13 @@ export class EmployeeService {
         data: updatedEmployee,
       });
     } catch (error) {
-      const err = new HttpException(
-        `could not update employee ${id}`,
-        HttpStatus.BAD_REQUEST,
-      );
+      let err;
+      if (error.code === 'P2025') {
+        err = new NotFoundException(`could not find employee with id ${id}`);
+      } else {
+        err = new HttpException(error.meta.cause, HttpStatus.FAILED_DEPENDENCY);
+      }
+
       Logger.error(err);
       throw err;
     }
@@ -130,7 +133,7 @@ export class EmployeeService {
     };
   }
 
-  async deleteEmployee(id: number): Promise<EmployeeDeletedResponse> {
+  async deleteEmployee(id: string): Promise<EmployeeDeletedResponse> {
     let firedEmployee: Employee;
     try {
       firedEmployee = await this.db.employee.update({
@@ -145,15 +148,15 @@ export class EmployeeService {
         data: { userRole: UserRoles.CLIENT },
       });
     } catch (error) {
+      let err;
       if (error.code === 'P2025') {
-        const err = new NotFoundException(`employee with id ${id} not found`);
-        Logger.error(err);
-        throw err;
+        err = new NotFoundException(`employee with id ${id} not found`);
+      } else {
+        err = new HttpException(error.meta.cause, HttpStatus.FAILED_DEPENDENCY);
       }
 
-      throw new BadRequestException(
-        'something went wrong when deleting employee',
-      );
+      Logger.error(err);
+      throw err;
     }
 
     return {

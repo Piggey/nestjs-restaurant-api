@@ -139,7 +139,7 @@ export class OrderService {
   }
 
   async fetchOrdersByRestaurant(
-    id: number,
+    id: string,
     user: User,
     pendingOnly?: boolean,
   ): Promise<FetchOrdersResponse> {
@@ -205,7 +205,7 @@ export class OrderService {
     return !!employee;
   }
 
-  private async databaseFetchRestaurant(id: number): Promise<Restaurant> {
+  private async databaseFetchRestaurant(id: string): Promise<Restaurant> {
     try {
       const restaurant = await this.postgres.restaurant.findUniqueOrThrow({
         include: { address: true, openingHours: true },
