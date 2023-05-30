@@ -35,11 +35,9 @@ export class Order {
   })
   address: AddressTypeDto | null;
   @ApiProperty({
-    type: 'integer',
-    format: 'int32',
     required: false,
   })
-  restaurantId: number;
+  restaurantId: string;
   @ApiProperty({
     isArray: true,
     required: false,

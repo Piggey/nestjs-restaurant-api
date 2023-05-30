@@ -10,11 +10,11 @@ export class Manager {
   @ApiProperty({
     required: false,
   })
-  employeeId: string;
+  employee?: Employee;
   @ApiProperty({
     required: false,
   })
-  employee?: Employee;
+  employeeId: string;
   @ApiProperty({
     isArray: true,
     required: false,

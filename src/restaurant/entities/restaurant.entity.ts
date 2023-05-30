@@ -1,8 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Employee } from '../../employee/entities/employee.entity';
-import { OpeningHours } from '../../opening-hours/entities/opening-hours.entity';
-import { Address } from '../../address/entities/address.entity';
 import { Manager } from '../../manager/entities/manager.entity';
+import { Address } from '../../address/entities/address.entity';
+import { OpeningHours } from '../../opening-hours/entities/opening-hours.entity';
+import { Employee } from '../../employee/entities/employee.entity';
 
 export class Restaurant {
   @ApiProperty({
@@ -35,7 +35,16 @@ export class Restaurant {
     required: false,
     nullable: true,
   })
+  manager?: Manager | null;
+  @ApiProperty({
+    required: false,
+    nullable: true,
+  })
   managerId: string | null;
+  @ApiProperty({
+    required: false,
+  })
+  address?: Address;
   @ApiProperty({
     required: false,
   })
@@ -44,19 +53,10 @@ export class Restaurant {
     isArray: true,
     required: false,
   })
-  hiredEmployees?: Employee[];
+  openingHours?: OpeningHours[];
   @ApiProperty({
     isArray: true,
     required: false,
   })
-  openingHours?: OpeningHours[];
-  @ApiProperty({
-    required: false,
-  })
-  address?: Address;
-  @ApiProperty({
-    required: false,
-    nullable: true,
-  })
-  manager?: Manager | null;
+  hiredEmployees?: Employee[];
 }

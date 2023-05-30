@@ -64,9 +64,9 @@ export class Menu {
   @ApiProperty({
     required: false,
   })
-  categoryId: string;
+  category?: Category;
   @ApiProperty({
     required: false,
   })
-  category?: Category;
+  categoryId: string;
 }

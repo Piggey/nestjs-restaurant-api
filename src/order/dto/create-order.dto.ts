@@ -1,7 +1,6 @@
 import {
   IsArray,
   IsEmail,
-  IsInt,
   IsNotEmpty,
   IsNumber,
   IsOptional,
@@ -28,13 +27,10 @@ export class CreateOrderDto {
   @ValidateNested()
   @Type(() => CreateAddressTypeDto)
   address?: CreateAddressTypeDto;
-  @ApiProperty({
-    type: 'integer',
-    format: 'int32',
-  })
+  @ApiProperty()
   @IsNotEmpty()
-  @IsInt()
-  restaurantId: number;
+  @IsString()
+  restaurantId: string;
   @ApiProperty({
     isArray: true,
   })
