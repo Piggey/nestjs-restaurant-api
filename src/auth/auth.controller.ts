@@ -3,14 +3,13 @@ import { AuthService } from './auth.service';
 import {
   ApiBadRequestResponse,
   ApiCreatedResponse,
-  ApiHeader,
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
 import { AllowMinRole, JwtPayload } from './decorator';
 import { RolesGuard } from './guard';
 import { UserRoles } from './model';
-import { JWT_ACCESS_TOKEN_HEADER, JwtAccessTokenDto } from './dto';
+import { JwtAccessTokenDto } from './dto';
 import { UserSignInResponse } from './responses';
 import { RequestErrorResponse } from '../app/response';
 
@@ -20,7 +19,6 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @ApiOperation({ summary: 'sign a new user to our database' })
-  @ApiHeader(JWT_ACCESS_TOKEN_HEADER)
   @ApiCreatedResponse({
     description:
       'successfully signed a user in. returns `true` if new used had to be created in the database, otherwise returns `false`',
