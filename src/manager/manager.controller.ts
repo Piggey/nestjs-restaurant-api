@@ -103,11 +103,11 @@ export class ManagerController {
     return this.managerService.updateManager(id, updatedManager);
   }
 
-  @ApiOperation({ summary: 'fire a manager' })
+  @ApiOperation({ summary: 'fire a manager from a restaurant' })
   @AllowMinRole(UserRoles.BOSS)
-  @Delete(':id')
+  @Delete(':managerId/:restaurantId')
   async deleteManager(
-    @Param('id', ParseUUIDPipe) managerId: string,
+    @Param('managerId', ParseUUIDPipe) managerId: string,
     @Param('restaurantId', ParseUUIDPipe) restaurantId: string,
   ): Promise<ManagerDeletedResponse> {
     return this.managerService.deleteManager(managerId, restaurantId);
