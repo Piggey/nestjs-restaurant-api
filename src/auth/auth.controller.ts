@@ -1,4 +1,4 @@
-import { Controller, Get, Logger, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Logger, Post, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import {
   ApiBadRequestResponse,
@@ -6,10 +6,10 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
-import { AllowMinRole, JwtPayload } from './decorator';
+import { AllowMinRole } from './decorator';
 import { RolesGuard } from './guard';
 import { UserRoles } from './model';
-import { JwtAccessTokenDto } from './dto';
+import { SignInDto } from './dto';
 import { UserSignInResponse } from './responses';
 import { RequestErrorResponse } from '../app/response';
 
@@ -30,11 +30,9 @@ export class AuthController {
     type: RequestErrorResponse,
   })
   @Post('signin')
-  async signIn(
-    @JwtPayload() payload: JwtAccessTokenDto,
-  ): Promise<UserSignInResponse> {
-    Logger.log(`/auth/signin, ${payload.email}`);
-    return this.authService.signIn(payload);
+  async signIn(@Body() dto: SignInDto): Promise<UserSignInResponse> {
+    Logger.log(`/auth/signin, ${dto.email}`);
+    return this.authService.signIn(dto);
   }
 
   @Get('test')

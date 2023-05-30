@@ -2,11 +2,9 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class EmployeeDto {
   @ApiProperty({
-    type: 'integer',
-    format: 'int32',
     required: false,
   })
-  employeeId: number;
+  employeeId: string;
   @ApiProperty({
     type: 'string',
     format: 'date-time',

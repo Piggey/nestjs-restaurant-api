@@ -3,11 +3,9 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class UserDto {
   @ApiProperty({
-    type: 'integer',
-    format: 'int32',
     required: false,
   })
-  userId: number;
+  userId: string;
   @ApiProperty({
     type: 'string',
     format: 'date-time',

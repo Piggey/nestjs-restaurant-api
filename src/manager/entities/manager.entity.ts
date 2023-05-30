@@ -4,21 +4,17 @@ import { Restaurant } from '../../restaurant/entities/restaurant.entity';
 
 export class Manager {
   @ApiProperty({
-    type: 'integer',
-    format: 'int32',
     required: false,
   })
-  managerId: number;
+  managerId: string;
   @ApiProperty({
     required: false,
   })
   employee?: Employee;
   @ApiProperty({
-    type: 'integer',
-    format: 'int32',
     required: false,
   })
-  employeeId: number;
+  employeeId: string;
   @ApiProperty({
     isArray: true,
     required: false,

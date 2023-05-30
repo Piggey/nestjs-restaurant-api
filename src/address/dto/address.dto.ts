@@ -2,11 +2,9 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class AddressDto {
   @ApiProperty({
-    type: 'integer',
-    format: 'int32',
     required: false,
   })
-  addressId: number;
+  addressId: string;
   @ApiProperty({
     required: false,
   })

@@ -163,7 +163,7 @@ export class OrderController {
   @AllowMinRole(UserRoles.EMPLOYEE)
   @Get('restaurant/:id')
   async fetchOrdersByRestaurant(
-    @Param('id', ParseUUIDPipe) id: number,
+    @Param('id', ParseUUIDPipe) id: string,
     @UserDecorator() user: User,
   ): Promise<FetchOrdersResponse> {
     this.logger.log(`GET /order/restaurant/${id}`);
@@ -197,7 +197,7 @@ export class OrderController {
   @AllowMinRole(UserRoles.EMPLOYEE)
   @Get('restaurant/:id/pending')
   async fetchPendingOrdersByRestaurant(
-    @Param('id', ParseUUIDPipe) id: number,
+    @Param('id', ParseUUIDPipe) id: string,
     @UserDecorator() user: User,
   ): Promise<FetchOrdersResponse> {
     this.logger.log(`GET /order/restaurant/${id}/pending`);

@@ -6,6 +6,7 @@ import {
   Logger,
   Param,
   ParseIntPipe,
+  ParseUUIDPipe,
   Patch,
   Post,
   UseGuards,
@@ -93,7 +94,7 @@ export class EmployeeController {
   @AllowMinRole(UserRoles.MANAGER)
   @Patch(':id')
   async updateEmployee(
-    @Param('id', ParseIntPipe) id,
+    @Param('id', ParseUUIDPipe) id: string,
     @Body() updatedEmployee: UpdateEmployeeDto,
   ): Promise<EmployeeUpdatedResponse> {
     this.logger.log(`PATCH /employee/${id}`);

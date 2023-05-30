@@ -6,7 +6,7 @@ import {
   HttpStatus,
   Logger,
   Param,
-  ParseIntPipe,
+  ParseUUIDPipe,
   Patch,
   Post,
   UseGuards,
@@ -67,7 +67,7 @@ export class RestaurantController {
   })
   @Get(':id')
   async fetchRestaurant(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id', ParseUUIDPipe) id: string,
   ): Promise<FetchRestaurantResponse> {
     this.logger.log(`GET /restaurant/${id}`);
     return this.restaurantService.fetchRestaurant(id);
@@ -111,7 +111,7 @@ export class RestaurantController {
   @AllowMinRole(UserRoles.MANAGER)
   @Patch(':id')
   async updateRestaurant(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id', ParseUUIDPipe) id: string,
     @Body() newRestaurant: UpdateRestaurantDto,
   ): Promise<RestaurantUpdatedResponse> {
     this.logger.log(`PATCH /restaurant/${id}`);
@@ -136,7 +136,7 @@ export class RestaurantController {
   @AllowMinRole(UserRoles.BOSS)
   @Delete(':id')
   async deleteRestaurant(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id', ParseUUIDPipe) id: string,
   ): Promise<RestaurantDeletedResponse> {
     this.logger.log(`DELETE /restaurant/${id}`);
     return this.restaurantService.deleteRestaurant(id);

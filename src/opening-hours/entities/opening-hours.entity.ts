@@ -4,11 +4,9 @@ import { Restaurant } from '../../restaurant/entities/restaurant.entity';
 
 export class OpeningHours {
   @ApiProperty({
-    type: 'integer',
-    format: 'int32',
     required: false,
   })
-  openingHoursId: number;
+  openingHoursId: string;
   @ApiProperty({
     enum: Weekday,
     required: false,
@@ -29,11 +27,9 @@ export class OpeningHours {
   @ApiProperty({
     required: false,
   })
-  restaurant?: Restaurant;
+  restaurantId: string;
   @ApiProperty({
-    type: 'integer',
-    format: 'int32',
     required: false,
   })
-  restaurantId: number;
+  restaurant?: Restaurant;
 }

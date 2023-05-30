@@ -6,11 +6,9 @@ import { Employee } from '../../employee/entities/employee.entity';
 
 export class Restaurant {
   @ApiProperty({
-    type: 'integer',
-    format: 'int32',
     required: false,
   })
-  restaurantId: number;
+  restaurantId: string;
   @ApiProperty({
     type: 'string',
     format: 'date-time',
@@ -39,22 +37,18 @@ export class Restaurant {
   })
   manager?: Manager | null;
   @ApiProperty({
-    type: 'integer',
-    format: 'int32',
     required: false,
     nullable: true,
   })
-  managerId: number | null;
+  managerId: string | null;
   @ApiProperty({
     required: false,
   })
   address?: Address;
   @ApiProperty({
-    type: 'integer',
-    format: 'int32',
     required: false,
   })
-  addressId: number;
+  addressId: string;
   @ApiProperty({
     isArray: true,
     required: false,

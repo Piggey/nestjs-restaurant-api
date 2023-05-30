@@ -1,4 +1,10 @@
-import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
 import { PostgresService } from '../db/postgres/postgres.service';
 import {
   FetchMenuByCategoryResponse,
@@ -27,21 +33,22 @@ export class MenuService {
     };
   }
 
-  async fetchMenuByCategory(id: number): Promise<FetchMenuByCategoryResponse> {
+  async fetchMenuByCategory(id: string): Promise<FetchMenuByCategoryResponse> {
     let category;
     try {
       category = await this.db.category.findFirst({
         where: { categoryId: id },
       });
     } catch (error) {
+      let err;
       if (error.code === 'P2025') {
-        const err = new HttpException(
-          `category with id ${id} not found`,
-          HttpStatus.NOT_FOUND,
-        );
-        Logger.error(err);
-        throw err;
+        err = new NotFoundException(`category with id ${id} not found`);
+      } else {
+        err = new HttpException(error.meta.cause, HttpStatus.FAILED_DEPENDENCY);
       }
+
+      Logger.error(err);
+      throw err;
     }
 
     const menuItems = await this.db.menu.findMany({
@@ -58,7 +65,7 @@ export class MenuService {
     };
   }
 
-  async fetchMenuItem(id: number): Promise<FetchMenuItemResponse> {
+  async fetchMenuItem(id: string): Promise<FetchMenuItemResponse> {
     let menuItem;
     try {
       menuItem = await this.db.menu.findFirstOrThrow({
@@ -71,17 +78,9 @@ export class MenuService {
     } catch (error) {
       let err;
       if (error.code === 'P2025') {
-        err = new HttpException(
-          `menu item with id ${id} not found`,
-          HttpStatus.NOT_FOUND,
-        );
+        err = new NotFoundException(`menu item with id ${id} not found`);
       } else {
-        err = new HttpException(
-          `something went wrong when accessing menu item ${id}`,
-          HttpStatus.FAILED_DEPENDENCY,
-        );
-
-        Logger.error(error);
+        err = new HttpException(error.meta.cause, HttpStatus.FAILED_DEPENDENCY);
       }
 
       Logger.error(err);
@@ -99,10 +98,10 @@ export class MenuService {
       menuItem = await this.db.menu.create({ data: newItem });
     } catch (error) {
       const err = new HttpException(
-        'something went wrong when creating a new menu item',
+        error.meta.cause,
         HttpStatus.FAILED_DEPENDENCY,
       );
-      Logger.error(error.message);
+
       Logger.error(err);
       throw err;
     }
@@ -111,7 +110,7 @@ export class MenuService {
   }
 
   async updateMenuItem(
-    id: number,
+    id: string,
     updatedItem: UpdateMenuDto,
   ): Promise<MenuItemUpdatedResponse> {
     let menuItem;
@@ -142,7 +141,7 @@ export class MenuService {
     return { menuItem };
   }
 
-  async removeMenuItem(id: number): Promise<MenuItemRemovedResponse> {
+  async removeMenuItem(id: string): Promise<MenuItemRemovedResponse> {
     let menuItem;
     try {
       menuItem = await this.db.menu.update({
@@ -154,18 +153,11 @@ export class MenuService {
     } catch (error) {
       let err;
       if (error.code === 'P2025') {
-        err = new HttpException(
-          `menu item with id ${id} not found`,
-          HttpStatus.NOT_FOUND,
-        );
+        err = new NotFoundException(`menu item with id ${id} not found`);
       } else {
-        err = new HttpException(
-          `could not remove menu item ${id}`,
-          HttpStatus.FAILED_DEPENDENCY,
-        );
+        err = new HttpException(error.meta.cause, HttpStatus.FAILED_DEPENDENCY);
       }
 
-      Logger.error(error.message);
       Logger.error(err);
       throw err;
     }

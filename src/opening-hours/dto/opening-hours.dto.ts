@@ -3,11 +3,9 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class OpeningHoursDto {
   @ApiProperty({
-    type: 'integer',
-    format: 'int32',
     required: false,
   })
-  openingHoursId: number;
+  openingHoursId: string;
   @ApiProperty({
     enum: Weekday,
     required: false,

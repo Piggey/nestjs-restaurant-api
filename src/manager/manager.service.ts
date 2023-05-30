@@ -1,4 +1,10 @@
-import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
 import { FetchManagersResponse } from './responses/fetch-managers.response';
 import { PostgresService } from '../db/postgres/postgres.service';
 import { ManagerCreatedResponse } from './responses/manager-created.response';
@@ -69,7 +75,7 @@ export class ManagerService {
   }
 
   async updateManager(
-    id: number,
+    id: string,
     updatedManager: UpdateManagerDto,
   ): Promise<ManagerUpdatedResponse> {
     let updated;
@@ -81,16 +87,11 @@ export class ManagerService {
     } catch (error) {
       let err;
       if (error.code === 'P2025') {
-        err = new HttpException(
-          `manager with id ${id} not found`,
-          HttpStatus.NOT_FOUND,
-        );
+        err = new NotFoundException(`manager with id ${id} not found`);
       } else {
-        err = new HttpException(
-          `could not update manager with id = ${id}`,
-          HttpStatus.FAILED_DEPENDENCY,
-        );
+        err = new HttpException(error.meta.cause, HttpStatus.FAILED_DEPENDENCY);
       }
+
       Logger.error(err);
       throw err;
     }
@@ -102,8 +103,8 @@ export class ManagerService {
   }
 
   async deleteManager(
-    managerId: number,
-    restaurantId: number,
+    managerId: string,
+    restaurantId: string,
   ): Promise<ManagerDeletedResponse> {
     let deleted: Manager;
     try {
