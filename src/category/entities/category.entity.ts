@@ -3,11 +3,9 @@ import { Menu } from '../../menu/entities/menu.entity';
 
 export class Category {
   @ApiProperty({
-    type: 'integer',
-    format: 'int32',
     required: false,
   })
-  categoryId: number;
+  categoryId: string;
   @ApiProperty({
     type: 'string',
     format: 'date-time',

@@ -1,17 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Address } from '../../address/entities/address.entity';
-import { User } from '../../user/entities/user.entity';
-import { Restaurant } from '../../restaurant/entities/restaurant.entity';
 import { Job } from '../../job/entities/job.entity';
+import { Restaurant } from '../../restaurant/entities/restaurant.entity';
+import { User } from '../../user/entities/user.entity';
 import { Manager } from '../../manager/entities/manager.entity';
 
 export class Employee {
   @ApiProperty({
-    type: 'integer',
-    format: 'int32',
     required: false,
   })
-  employeeId: number;
+  employeeId: string;
   @ApiProperty({
     type: 'string',
     format: 'date-time',
@@ -36,49 +34,41 @@ export class Employee {
   @ApiProperty({
     required: false,
   })
-  address?: Address;
-  @ApiProperty({
-    type: 'integer',
-    format: 'int32',
-    required: false,
-  })
-  addressId: number;
+  addressId: string;
   @ApiProperty({
     required: false,
   })
-  user?: User;
-  @ApiProperty({
-    type: 'integer',
-    format: 'int32',
-    required: false,
-  })
-  userId: number;
+  userId: string;
   @ApiProperty({
     required: false,
   })
-  restaurant?: Restaurant;
-  @ApiProperty({
-    type: 'integer',
-    format: 'int32',
-    required: false,
-  })
-  restaurantId: number;
+  restaurantId: string;
   @ApiProperty({
     required: false,
   })
-  job?: Job;
-  @ApiProperty({
-    type: 'integer',
-    format: 'int32',
-    required: false,
-  })
-  jobId: number;
+  jobId: string;
   @ApiProperty({
     type: 'number',
     format: 'float',
     required: false,
   })
   salary: number;
+  @ApiProperty({
+    required: false,
+  })
+  address?: Address;
+  @ApiProperty({
+    required: false,
+  })
+  job?: Job;
+  @ApiProperty({
+    required: false,
+  })
+  restaurant?: Restaurant;
+  @ApiProperty({
+    required: false,
+  })
+  user?: User;
   @ApiProperty({
     isArray: true,
     required: false,

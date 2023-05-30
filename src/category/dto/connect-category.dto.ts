@@ -1,12 +1,9 @@
-import { IsInt, IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class ConnectCategoryDto {
-  @ApiProperty({
-    type: 'integer',
-    format: 'int32',
-  })
+  @ApiProperty()
   @IsNotEmpty()
-  @IsInt()
-  categoryId: number;
+  @IsString()
+  categoryId: string;
 }

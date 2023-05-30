@@ -1,12 +1,9 @@
-import { IsInt, IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class ConnectRestaurantDto {
-  @ApiProperty({
-    type: 'integer',
-    format: 'int32',
-  })
+  @ApiProperty()
   @IsNotEmpty()
-  @IsInt()
-  restaurantId: number;
+  @IsString()
+  restaurantId: string;
 }

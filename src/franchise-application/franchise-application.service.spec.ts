@@ -9,7 +9,9 @@ describe('FranchiseApplicationService', () => {
       providers: [FranchiseApplicationService],
     }).compile();
 
-    service = module.get<FranchiseApplicationService>(FranchiseApplicationService);
+    service = module.get<FranchiseApplicationService>(
+      FranchiseApplicationService,
+    );
   });
 
   it('should be defined', () => {

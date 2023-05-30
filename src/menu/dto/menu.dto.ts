@@ -2,11 +2,9 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class MenuDto {
   @ApiProperty({
-    type: 'integer',
-    format: 'int32',
     required: false,
   })
-  itemId: number;
+  itemId: string;
   @ApiProperty({
     type: 'string',
     format: 'date-time',

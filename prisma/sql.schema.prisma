@@ -1,19 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// in order for schema changes to take effect use
-// npm run db:migrate
-
-// we're using nestjs-dto generator
-// which also created swagger docs
-// more options here: https://www.npmjs.com/package/@brakebein/prisma-generator-nestjs-dto
-
-datasource db {
-  provider = "postgresql"
-  url      = env("POSTGRES_URL")
-}
-
-// turns out we need both generators
 generator client {
   provider = "prisma-client-js"
 }
@@ -21,23 +5,20 @@ generator client {
 generator nestjsDto {
   provider                        = "prisma-generator-nestjs-dto"
   output                          = "../src"
-  outputToNestJsResourceStructure = "true"
-  classValidation                 = "true"
   prettier                        = "true"
+  outputToNestJsResourceStructure = "true"
   fileNamingStyle                 = "kebab"
+  classValidation                 = "true"
 }
 
-enum Role {
-  CLIENT
-  EMPLOYEE
-  DELIVERY
-  MANAGER
-  BOSS
+datasource db {
+  provider = "postgresql"
+  url      = env("POSTGRES_URL")
 }
 
 model User {
   /// @DtoReadOnly
-  userId        Int        @id @default(autoincrement())
+  userId        String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   /// @DtoReadOnly
   /// @DtoUpdateHidden
   createdAt     DateTime   @default(now())
@@ -51,84 +32,54 @@ model User {
 model Employee {
   /// @DtoUpdateHidden
   /// @DtoReadOnly
-  employeeId Int       @id @default(autoincrement())
+  employeeId   String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   /// @DtoReadOnly
   /// @DtoUpdateHidden
-  hiredAt    DateTime  @default(now())
+  hiredAt      DateTime   @default(now())
   /// @DtoReadOnly
-  firedAt    DateTime?
-
-  firstName String
-  lastName  String
-
-  /// @DtoRelationRequired
-  /// @DtoRelationCanConnectOnCreate
-  /// @DtoRelationCanCreateOnCreate
-  address   Address @relation(fields: [addressId], references: [addressId])
-  addressId Int
-
-  /// @DtoRelationRequired
-  /// @DtoRelationCanConnectOnCreate
-  user   User @relation(fields: [userId], references: [userId])
-  userId Int
-
-  /// @DtoRelationRequired
-  /// @DtoRelationCanConnectOnCreate
-  /// @DtoRelationCanCreateOnUpdate
-  /// @DtoRelationCanConnectOnUpdate
-  restaurant   Restaurant @relation(name: "workedAtRestaurant", fields: [restaurantId], references: [restaurantId])
-  restaurantId Int
-
-  /// @DtoRelationRequired
-  /// @DtoRelationCanCreateOnCreate
-  /// @DtoRelationCanConnectOnCreate
-  /// @DtoRelationCanCreateOnUpdate
-  /// @DtoRelationCanConnectOnUpdate
-  job Job @relation(fields: [jobId], references: [jobId])
-  jobId Int
-  salary Float
-
-  managerInfo Manager[]
+  firedAt      DateTime?
+  firstName    String
+  lastName     String
+  addressId    String     @db.Uuid
+  userId       String     @db.Uuid
+  restaurantId String     @db.Uuid
+  jobId        String     @db.Uuid
+  salary       Float
+  address      Address    @relation(fields: [addressId], references: [addressId])
+  job          Job        @relation(fields: [jobId], references: [jobId])
+  restaurant   Restaurant @relation("workedAtRestaurant", fields: [restaurantId], references: [restaurantId])
+  user         User       @relation(fields: [userId], references: [userId])
+  managerInfo  Manager[]
 }
 
 model Job {
   /// @DtoReadOnly
-  jobId Int       @id @default(autoincrement())
+  jobId     String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   /// @DtoReadOnly
-  createdAt DateTime  @default(now())
+  createdAt DateTime   @default(now())
   /// @DtoReadOnly
-  updatedAt DateTime @updatedAt()
-
-  jobTitle String
+  updatedAt DateTime   @updatedAt
+  jobTitle  String
   minSalary Float
   maxSalary Float
-  role Role
-
+  role      Role
   employees Employee[]
 }
 
 model Manager {
   /// @DtoReadOnly
-  managerId Int @id @default(autoincrement())
-
-  /// @DtoRelationCanConnectOnCreate
-  /// @DtoRelationCanConnectOnUpdate
-  /// @DtoRelationCanCreateOnUpdate
-  employee   Employee @relation(fields: [employeeId], references: [employeeId])
-  employeeId Int
-
-  /// @DtoRelationCanConnectOnUpdate
-  /// @DtoRelationCanConnectOnCreate
-  managedRestaurants Restaurant[] @relation(name: "managedRestaurants")
+  managerId          String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  employeeId         String       @db.Uuid
+  employee           Employee     @relation(fields: [employeeId], references: [employeeId])
+  managedRestaurants Restaurant[] @relation("managedRestaurants")
 }
 
 model Menu {
   /// @DtoReadOnly
-  itemId    Int      @id @default(autoincrement())
+  itemId          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   /// @DtoReadOnly
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt()
-
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
   name            String
   photoUrl        String
   description     String?
@@ -140,71 +91,67 @@ model Menu {
   numberOfRatings Int?
   /// @description a list of ingredients separated by `,`
   ingredients     String?
-  available       Boolean @default(true)
-
-  /// @DtoRelationRequired
-  /// @DtoRelationCanConnectOnCreate
-  /// @DtoRelationCanCreateOnCreate
-  /// @DtoRelationCanConnectOnUpdate
-  /// @DtoRelationCanCreateOnUpdate
-  category   Category @relation(fields: [categoryId], references: [categoryId])
-  categoryId Int
+  available       Boolean  @default(true)
+  categoryId      String   @db.Uuid
+  category        Category @relation(fields: [categoryId], references: [categoryId])
 }
 
 model Category {
   /// @DtoReadOnly
-  categoryId Int      @id @default(autoincrement())
+  categoryId   String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   /// @DtoReadOnly
-  createdAt  DateTime @default(now())
-  available  Boolean  @default(true)
-
+  createdAt    DateTime @default(now())
+  available    Boolean  @default(true)
   categoryName String
-
-  menuItems Menu[]
+  menuItems    Menu[]
 }
 
 model Restaurant {
   /// @DtoReadOnly
-  restaurantId Int      @id @default(autoincrement())
+  restaurantId   String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   /// @DtoReadOnly
-  createdAt    DateTime @default(now())
-  available    Boolean  @default(true)
-
+  createdAt      DateTime       @default(now())
+  available      Boolean        @default(true)
   /// @IsLatitude
-  geoLat Float
+  geoLat         Float
   /// @IsLongitude
-  geoLon Float
-
-  /// @DtoRelationCanConnectOnCreate
-  /// @DtoRelationCanConnectOnUpdate
-  manager   Manager? @relation(name: "managedRestaurants", fields: [managerId], references: [managerId])
-  managerId Int?
-
-  /// @DtoRelationRequired
-  /// @DtoRelationCanCreateOnCreate
-  /// @DtoRelationCanConnectOnCreate
-  /// @DtoRelationCanCreateOnUpdate
-  /// @DtoRelationCanConnectOnUpdate
-  address   Address @relation(fields: [addressId], references: [addressId])
-  addressId Int
-
-  /// @DtoRelationRequired
-  /// @DtoRelationCanCreateOnCreate
-  /// @DtoRelationCanCreateOnUpdate
-  openingHours OpeningHours[]
-
-  hiredEmployees Employee[] @relation(name: "workedAtRestaurant")
+  geoLon         Float
+  managerId      String?        @db.Uuid
+  addressId      String         @db.Uuid
+  hiredEmployees Employee[]     @relation("workedAtRestaurant")
+  openingHours   OpeningHours[]
+  address        Address        @relation(fields: [addressId], references: [addressId])
+  manager        Manager?       @relation("managedRestaurants", fields: [managerId], references: [managerId])
 }
 
 model OpeningHours {
   /// @DtoReadOnly
-  openingHoursId Int      @id @default(autoincrement())
+  openingHoursId String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   weekday        Weekday
-  startHourUtc   DateTime @db.Time()
-  endHourUtc     DateTime @db.Time()
+  startHourUtc   DateTime   @db.Time(6)
+  endHourUtc     DateTime   @db.Time(6)
+  restaurantId   String     @db.Uuid
+  restaurant     Restaurant @relation(fields: [restaurantId], references: [restaurantId])
+}
 
-  restaurant   Restaurant @relation(fields: [restaurantId], references: [restaurantId])
-  restaurantId Int
+model Address {
+  /// @DtoReadOnly
+  addressId   String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  street      String
+  streetNo    String
+  city        String
+  postalCode  String
+  country     String
+  employees   Employee[]
+  restaurants Restaurant[]
+}
+
+enum Role {
+  CLIENT
+  EMPLOYEE
+  DELIVERY
+  MANAGER
+  BOSS
 }
 
 enum Weekday {
@@ -215,17 +162,4 @@ enum Weekday {
   Friday
   Saturday
   Sunday
-}
-
-model Address {
-  /// @DtoReadOnly
-  addressId  Int    @id @default(autoincrement())
-  street     String
-  streetNo   String
-  city       String
-  postalCode String
-  country    String
-
-  restaurants Restaurant[]
-  employees   Employee[]
 }
