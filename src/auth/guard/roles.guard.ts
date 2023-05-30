@@ -37,14 +37,14 @@ export class RolesGuard implements CanActivate {
     );
 
     const token = this.extractTokenFromHeader(req);
-    this.logger.log('authorization token found');
+    this.logger.log('Authorization token found');
     if (!token) {
       this.logger.error('Authorization failed: token not provided');
       throw new UnauthorizedException();
     }
 
     const payload = await this.decodeJwtPayload(token);
-    this.logger.log('authorization payload decoded');
+    this.logger.log('Authorization payload decoded');
     const user = await this.getUserFromPayload(payload);
     if (!user) {
       this.logger.error('Authorization failed: could not find user');
