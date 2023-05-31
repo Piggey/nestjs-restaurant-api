@@ -6,4 +6,8 @@ export class CreateCategoryDto {
   @IsNotEmpty()
   @IsString()
   categoryName: string;
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsString()
+  photoUrl: string;
 }

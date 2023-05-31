@@ -8,4 +8,10 @@ export class UpdateCategoryDto {
   @IsOptional()
   @IsString()
   categoryName?: string;
+  @ApiProperty({
+    required: false,
+  })
+  @IsOptional()
+  @IsString()
+  photoUrl?: string;
 }

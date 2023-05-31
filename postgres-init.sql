@@ -77,6 +77,7 @@ CREATE TABLE "Category" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "available" BOOLEAN NOT NULL DEFAULT true,
     "categoryName" TEXT NOT NULL,
+    "photoUrl" TEXT NOT NULL,
 
     CONSTRAINT "Category_pkey" PRIMARY KEY ("categoryId")
 );
@@ -124,13 +125,13 @@ CREATE UNIQUE INDEX "User_userEmail_key" ON "User"("userEmail");
 ALTER TABLE "Employee" ADD CONSTRAINT "Employee_addressId_fkey" FOREIGN KEY ("addressId") REFERENCES "Address"("addressId") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Employee" ADD CONSTRAINT "Employee_jobId_fkey" FOREIGN KEY ("jobId") REFERENCES "Job"("jobId") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Employee" ADD CONSTRAINT "Employee_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("userId") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Employee" ADD CONSTRAINT "Employee_restaurantId_fkey" FOREIGN KEY ("restaurantId") REFERENCES "Restaurant"("restaurantId") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Employee" ADD CONSTRAINT "Employee_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("userId") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Employee" ADD CONSTRAINT "Employee_jobId_fkey" FOREIGN KEY ("jobId") REFERENCES "Job"("jobId") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Manager" ADD CONSTRAINT "Manager_employeeId_fkey" FOREIGN KEY ("employeeId") REFERENCES "Employee"("employeeId") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -139,10 +140,10 @@ ALTER TABLE "Manager" ADD CONSTRAINT "Manager_employeeId_fkey" FOREIGN KEY ("emp
 ALTER TABLE "Menu" ADD CONSTRAINT "Menu_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "Category"("categoryId") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Restaurant" ADD CONSTRAINT "Restaurant_addressId_fkey" FOREIGN KEY ("addressId") REFERENCES "Address"("addressId") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Restaurant" ADD CONSTRAINT "Restaurant_managerId_fkey" FOREIGN KEY ("managerId") REFERENCES "Manager"("managerId") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Restaurant" ADD CONSTRAINT "Restaurant_managerId_fkey" FOREIGN KEY ("managerId") REFERENCES "Manager"("managerId") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "Restaurant" ADD CONSTRAINT "Restaurant_addressId_fkey" FOREIGN KEY ("addressId") REFERENCES "Address"("addressId") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "OpeningHours" ADD CONSTRAINT "OpeningHours_restaurantId_fkey" FOREIGN KEY ("restaurantId") REFERENCES "Restaurant"("restaurantId") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -211,14 +212,14 @@ VALUES ('d951350b-be91-490c-98b6-1e8ab3a1bf42', 'Przemysław', 'Zarządzający',
 INSERT INTO "Manager" VALUES ('62ec2441-fc08-4f7d-8dc2-866d65260468', 'd951350b-be91-490c-98b6-1e8ab3a1bf42');
 UPDATE "Restaurant" SET "managerId" = '62ec2441-fc08-4f7d-8dc2-866d65260468' WHERE "restaurantId" = '35bfa561-c4fa-4e27-8789-c3387ee16e39';
 
-INSERT INTO "Category" ("categoryId", "categoryName") VALUES ('7f040fd7-a666-458e-8369-1ab201e589b6', 'Burgers');
-INSERT INTO "Category" ("categoryId", "categoryName") VALUES ('f035a7e3-5eb7-4d6c-8d42-10d7549a9ed2', 'Pizza');
-INSERT INTO "Category" ("categoryId", "categoryName") VALUES ('0d8eb1d2-610e-4716-90c9-6aea7e379b3d', 'Pasta');
-INSERT INTO "Category" ("categoryId", "categoryName") VALUES ('bc657cdc-115f-42b5-835e-b364bc4f010f', 'Burrito');
-INSERT INTO "Category" ("categoryId", "categoryName") VALUES ('9620178d-2154-4d38-becc-d47319a01f06', 'Salads');
-INSERT INTO "Category" ("categoryId", "categoryName") VALUES ('76103531-ab85-49be-a777-adfe696223c7', 'Starters');
-INSERT INTO "Category" ("categoryId", "categoryName") VALUES ('ade9714d-9b38-4557-a4dd-8495b5c4e29f', 'Drinks');
-INSERT INTO "Category" ("categoryId", "categoryName") VALUES ('a44adc1a-08ba-460a-9cfc-996e56201dd1', 'Desserts');
+INSERT INTO "Category" ("categoryId", "categoryName", "photoUrl") VALUES ('7f040fd7-a666-458e-8369-1ab201e589b6', 'Burgers', 'https://drive.google.com/uc?id=15aMrd2cZ3Fm3rKptdAfqf2mFd9M2ZT2U');
+INSERT INTO "Category" ("categoryId", "categoryName", "photoUrl") VALUES ('f035a7e3-5eb7-4d6c-8d42-10d7549a9ed2', 'Pizza', 'https://drive.google.com/uc?id=1c2Hg3V78lDRs-rJpgDoOLzvkto3z32go');
+INSERT INTO "Category" ("categoryId", "categoryName", "photoUrl") VALUES ('0d8eb1d2-610e-4716-90c9-6aea7e379b3d', 'Pasta', 'https://drive.google.com/uc?id=1DHL6iCPvL6_j9YUloUAqq-Mx2BuQ4KTl');
+INSERT INTO "Category" ("categoryId", "categoryName", "photoUrl") VALUES ('bc657cdc-115f-42b5-835e-b364bc4f010f', 'Burrito', 'https://drive.google.com/uc?id=1TK3nv2JICQ17GkAScz4VsO05fYv9z3Gk');
+INSERT INTO "Category" ("categoryId", "categoryName", "photoUrl") VALUES ('9620178d-2154-4d38-becc-d47319a01f06', 'Salads', 'https://drive.google.com/uc?id=1oEjtBa6LWXXTumlI5EW_OngVbzm4SRDo');
+INSERT INTO "Category" ("categoryId", "categoryName", "photoUrl") VALUES ('76103531-ab85-49be-a777-adfe696223c7', 'Starters', 'https://drive.google.com/uc?id=1yqJJUOdVNO075Qvvtfc9-zl03xS0tky_');
+INSERT INTO "Category" ("categoryId", "categoryName", "photoUrl") VALUES ('ade9714d-9b38-4557-a4dd-8495b5c4e29f', 'Drinks', 'https://drive.google.com/uc?id=1uG2pndhrYH3tiFDU8ay4x3m4a-zE38jg');
+INSERT INTO "Category" ("categoryId", "categoryName", "photoUrl") VALUES ('a44adc1a-08ba-460a-9cfc-996e56201dd1', 'Desserts', 'https://drive.google.com/uc?id=1usHgUbx25nfMRay4etDM9dXF3UlmGGcU');
 
 INSERT INTO "Menu" ("updatedAt", "name", "photoUrl", "description", "price", "rating", "numberOfRatings", "ingredients", "categoryId")
     VALUES (CURRENT_TIMESTAMP, 'Hamburger', 'https://drive.google.com/uc?id=1Lkshkjd8i1VVSj-gWYPod6Nh8lUo2Lbm',

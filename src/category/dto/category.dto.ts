@@ -19,4 +19,8 @@ export class CategoryDto {
     required: false,
   })
   categoryName: string;
+  @ApiProperty({
+    required: false,
+  })
+  photoUrl: string;
 }

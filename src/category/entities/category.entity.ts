@@ -21,6 +21,10 @@ export class Category {
   })
   categoryName: string;
   @ApiProperty({
+    required: false,
+  })
+  photoUrl: string;
+  @ApiProperty({
     isArray: true,
     required: false,
   })
