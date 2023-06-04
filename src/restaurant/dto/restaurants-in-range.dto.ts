@@ -1,19 +1,17 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
 import {
   IsLatitude,
   IsLongitude,
-  IsNumber,
   IsOptional,
   IsPositive,
-  Min,
 } from 'class-validator';
 
 export class RestaurantsInRangeDto {
-  @ApiProperty({ type: Number, minimum: 0, required: false })
+  @ApiProperty({ type: Number, minimum: 1, required: false })
   @IsOptional()
-  @IsNumber()
+  @Transform((n) => parseInt(n.value))
   @IsPositive()
-  @Min(0)
   rangeKm = 10;
 
   @ApiProperty()

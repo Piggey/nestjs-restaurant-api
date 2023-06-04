@@ -7,10 +7,12 @@ import {
 } from '@nestjs/common';
 import {
   FetchRestaurantResponse,
+  FetchRestaurantsInRangeResponse,
   FetchRestaurantsResponse,
   RestaurantCreatedResponse,
   RestaurantDeletedResponse,
   RestaurantUpdatedResponse,
+  RestaurantsInRange,
 } from './responses';
 import { PostgresService } from '../db/postgres/postgres.service';
 import { Restaurant } from './entities/restaurant.entity';
@@ -23,22 +25,28 @@ import { CreateOpeningHoursDto } from '../opening-hours/dto/create-opening-hours
 export class RestaurantService {
   constructor(private readonly db: PostgresService) {}
 
-  async fetchRestaurants(
-    inRangeDto?: RestaurantsInRangeDto,
-  ): Promise<FetchRestaurantsResponse> {
+  async fetchRestaurants(): Promise<FetchRestaurantsResponse> {
     const restaurants = await this.db.restaurant.findMany({
       include: { address: true, openingHours: true },
       where: { available: true },
     });
 
-    if (!inRangeDto) {
-      return {
-        restaurantsAvailable: restaurants.length,
-        restaurants,
-      };
-    }
+    return {
+      restaurantsAvailable: restaurants.length,
+      restaurants,
+    };
+  }
 
-    const restaurantsInRange = restaurants.filter((r) => {
+  async fetchRestaurantsInRange(
+    inRangeDto: RestaurantsInRangeDto,
+  ): Promise<FetchRestaurantsInRangeResponse> {
+    const restaurants = await this.db.restaurant.findMany({
+      include: { address: true, openingHours: true },
+      where: { available: true },
+    });
+
+    const inRange: RestaurantsInRange[] = [];
+    for (const r of restaurants) {
       const d = this.haversineDistance(
         inRangeDto.userLat,
         inRangeDto.userLon,
@@ -46,12 +54,14 @@ export class RestaurantService {
         r.geoLon,
       );
 
-      return d <= inRangeDto.rangeKm;
-    });
+      if (d <= inRangeDto.rangeKm) {
+        inRange.push({ distanceKm: d, restaurant: r });
+      }
+    }
 
     return {
-      restaurantsAvailable: restaurantsInRange.length,
-      restaurants: restaurantsInRange,
+      restaurantsAvailable: inRange.length,
+      restaurants: inRange.sort((a, b) => a.distanceKm - b.distanceKm),
     };
   }
 

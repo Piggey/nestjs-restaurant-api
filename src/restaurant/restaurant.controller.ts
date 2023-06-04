@@ -9,11 +9,13 @@ import {
   ParseUUIDPipe,
   Patch,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { RestaurantService } from './restaurant.service';
 import {
   FetchRestaurantResponse,
+  FetchRestaurantsInRangeResponse,
   FetchRestaurantsResponse,
   RestaurantCreatedResponse,
   RestaurantDeletedResponse,
@@ -151,11 +153,11 @@ export class RestaurantController {
     description: 'returns all restaurants, along with number of restaurants',
     type: FetchRestaurantsResponse,
   })
-  @Get('/range')
+  @Get('/filter/range')
   async fetchRestaurantsInRange(
-    @Param() dto: RestaurantsInRangeDto,
-  ): Promise<FetchRestaurantsResponse> {
-    this.logger.log(`GET /restaurant/range ${dto.rangeKm}km`);
-    return this.restaurantService.fetchRestaurants(dto);
+    @Query() inRangeDto: RestaurantsInRangeDto,
+  ): Promise<FetchRestaurantsInRangeResponse> {
+    this.logger.log(`GET /restaurant/filter/range ${inRangeDto.rangeKm}km`);
+    return this.restaurantService.fetchRestaurantsInRange(inRangeDto);
   }
 }
