@@ -383,3 +383,14 @@ INSERT INTO "Menu" ("updatedAt", "name", "photoUrl", "description", "price", "ra
     VALUES (CURRENT_TIMESTAMP, 'Chocolate cake', 'https://i.ibb.co/f188bmr/ciastko-czekoladowe.jpg',
     NULL, 12.99, NULL, NULL, NULL, 'a44adc1a-08ba-460a-9cfc-996e56201dd1');
 
+INSERT INTO "Menu" ("updatedAt", "name", "photoUrl", "description", "price", "rating", "numberOfRatings", "ingredients", "categoryId")
+    VALUES (CURRENT_TIMESTAMP, 'Any Burger + French Fries + Drink', 'https://i.ibb.co/n0P4jDZ/burger-set.jpg',
+    NULL, 36.99, NULL, NULL, NULL, '87768254-e8ed-412b-8f1b-89521c034fe7');
+
+INSERT INTO "Menu" ("updatedAt", "name", "photoUrl", "description", "price", "rating", "numberOfRatings", "ingredients", "categoryId")
+    VALUES (CURRENT_TIMESTAMP, 'Any Pizza + Drink', 'https://i.ibb.co/nz18fj7/pizza-set.jpg',
+    NULL, 34.99, NULL, NULL, NULL, '87768254-e8ed-412b-8f1b-89521c034fe7');
+
+INSERT INTO "Menu" ("updatedAt", "name", "photoUrl", "description", "price", "rating", "numberOfRatings", "ingredients", "categoryId")
+    VALUES (CURRENT_TIMESTAMP, 'Any Burrito + French Fries + Drink', 'https://i.ibb.co/bK92Nrz/burrito-set.png',
+    NULL, 32.99, NULL, NULL, NULL, '87768254-e8ed-412b-8f1b-89521c034fe7');
