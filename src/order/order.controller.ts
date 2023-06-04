@@ -229,7 +229,7 @@ export class OrderController {
     type: RequestErrorResponse,
   })
   @AllowMinRole(UserRoles.EMPLOYEE)
-  @Patch(':id/status')
+  @Patch(':id/:status')
   async updateOrderStatus(
     @Param() updateStatusDto: UpdateOrderStatusDto,
     @UserDecorator() user: User,
