@@ -171,6 +171,9 @@ model Restaurant {
   /// @DtoRelationCanCreateOnUpdate
   openingHours   OpeningHours[]
 
+  /// @DtoReadOnly
+  openingHoursPretty String?
+
   hiredEmployees Employee[]     @relation("workedAtRestaurant")
 }
 

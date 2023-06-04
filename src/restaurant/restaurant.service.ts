@@ -17,6 +17,7 @@ import { Restaurant } from './entities/restaurant.entity';
 import { CreateRestaurantDto } from './dto/create-restaurant.dto';
 import { UpdateRestaurantDto } from './dto/update-restaurant.dto';
 import { RestaurantsInRangeDto } from './dto/restaurants-in-range.dto';
+import { CreateOpeningHoursDto } from '../opening-hours/dto/create-opening-hours.dto';
 
 @Injectable()
 export class RestaurantService {
@@ -80,9 +81,13 @@ export class RestaurantService {
     newRestaurant: CreateRestaurantDto,
   ): Promise<RestaurantCreatedResponse> {
     try {
+      const openingHoursPretty = this.createOpeningHoursPrettyString(
+        newRestaurant.openingHours.create,
+      );
+
       const restaurant = await this.db.restaurant.create({
         include: { address: true, openingHours: true },
-        data: newRestaurant,
+        data: { openingHoursPretty, ...newRestaurant },
       });
       return { restaurant };
     } catch (error) {
@@ -101,11 +106,25 @@ export class RestaurantService {
     newRestaurant: UpdateRestaurantDto,
   ): Promise<RestaurantUpdatedResponse> {
     try {
-      const restaurant = await this.db.restaurant.update({
+      let restaurant = await this.db.restaurant.update({
         include: { address: true, openingHours: true },
         where: { restaurantId: id },
         data: newRestaurant,
       });
+
+      // update pretty string if opening hours changed
+      if (newRestaurant.openingHours) {
+        const openingHoursPretty = this.createOpeningHoursPrettyString(
+          restaurant.openingHours as CreateOpeningHoursDto[],
+        );
+
+        restaurant = await this.db.restaurant.update({
+          include: { address: true, openingHours: true },
+          where: { restaurantId: id },
+          data: { openingHoursPretty },
+        });
+      }
+
       return { restaurant };
     } catch (error) {
       let err;
@@ -144,6 +163,51 @@ export class RestaurantService {
       Logger.error(err);
       throw err;
     }
+  }
+
+  private createOpeningHoursPrettyString(
+    openingHours: CreateOpeningHoursDto[],
+  ): string | null {
+    if (openingHours.length === 0) {
+      return null;
+    }
+
+    const groupedHours: { [key: string]: CreateOpeningHoursDto[] } = {};
+    for (const hour of openingHours) {
+      const key = `${hour.startHourUtc}-${hour.endHourUtc}`;
+      if (groupedHours[key]) {
+        groupedHours[key].push(hour);
+      } else {
+        groupedHours[key] = [hour];
+      }
+    }
+
+    let result = '';
+    for (const key in groupedHours) {
+      const hours = groupedHours[key];
+      const startHourUtc = new Date(hours[0].startHourUtc);
+      const endHourUtc = new Date(hours[0].endHourUtc);
+      const start = `${startHourUtc.getHours()}:${startHourUtc
+        .getMinutes()
+        .toString()
+        .padStart(2, '0')}`;
+      const end = `${endHourUtc.getHours()}:${endHourUtc
+        .getMinutes()
+        .toString()
+        .padStart(2, '0')}`;
+
+      if (hours.length === 1) {
+        result += `${hours[0].weekday}: ${start} - ${end}`;
+      } else {
+        const firstDay = hours[0].weekday;
+        const lastDay = hours[hours.length - 1].weekday;
+        result += `${firstDay} - ${lastDay}: ${start} - ${end}`;
+      }
+
+      result += ',';
+    }
+
+    return result.substring(0, result.length - 1);
   }
 
   private haversineDistance(

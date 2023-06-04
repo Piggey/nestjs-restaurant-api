@@ -55,6 +55,11 @@ export class Restaurant {
   })
   openingHours?: OpeningHours[];
   @ApiProperty({
+    required: false,
+    nullable: true,
+  })
+  openingHoursPretty: string | null;
+  @ApiProperty({
     isArray: true,
     required: false,
   })
