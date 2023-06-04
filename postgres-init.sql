@@ -188,6 +188,8 @@ INSERT INTO "User" ("userId", "userEmail", "userRole") VALUES ('c36f3073-0f82-4f
 INSERT INTO "User" ("userId", "userEmail", "userRole") VALUES ('5e79edb4-b79e-490b-b1fd-10f79a1191bb', 'employee@sumatywny.pl', 'EMPLOYEE');
 INSERT INTO "User" ("userId", "userEmail", "userRole") VALUES ('e1790b81-3ec6-4308-b18c-020f9e09d7a6', 'client@sumatywny.pl', 'CLIENT');
 INSERT INTO "User" ("userId", "userEmail", "userRole") VALUES ('0b9c4e45-d9fd-49ad-b063-87cca6afa7f9', '236653@edu.p.lodz.pl', 'BOSS');
+INSERT INTO "User" ("userId", "userEmail", "userRole") VALUES ('6e8debf9-c462-435c-8265-faf85ccbdc4e', '236659@edu.p.lodz.pl', 'BOSS');
+INSERT INTO "User" ("userId", "userEmail", "userRole") VALUES ('9dcc1dd1-8322-4abb-ab34-f30032c264d8', 'm.stepniak@yahoo.com', 'EMPLOYEE');
 
 INSERT INTO "Job" ("jobId", "updatedAt", "jobTitle", "minSalary", "maxSalary", "role")
 VALUES ('32589e2f-82bf-4228-9ead-d655eef038e4', CURRENT_TIMESTAMP, 'Chef', 50, 100, 'EMPLOYEE');
@@ -209,6 +211,9 @@ VALUES ('Szymon', 'Rozwoźnik', '504594ec-8e4d-4391-82fa-02680ee6ad4d', 'c36f307
 
 INSERT INTO "Employee" ("employeeId", "firstName", "lastName", "addressId", "userId", "restaurantId", "jobId", "salary") 
 VALUES ('d951350b-be91-490c-98b6-1e8ab3a1bf42', 'Przemysław', 'Zarządzający', 'b96813fc-ca3a-4ba1-87ef-4ed7913a544a', '44e9a00e-a1a3-4db7-9f7f-a35108d114cf', '35bfa561-c4fa-4e27-8789-c3387ee16e39', 'bd97e820-b448-4886-832a-1f40e8552a3b', 100);
+
+INSERT INTO "Employee" ("employeeId", "firstName", "lastName", "addressId", "userId", "restaurantId", "jobId", "salary") 
+VALUES ('687421e6-e39a-43d3-a3e8-6053cd6fc2b5', 'Mikołaj', 'Stępniak', '504594ec-8e4d-4391-82fa-02680ee6ad4d', '9dcc1dd1-8322-4abb-ab34-f30032c264d8', '35bfa561-c4fa-4e27-8789-c3387ee16e39', '9e04c642-fa26-42d3-824b-5336f0dac5f2', 40);
 
 INSERT INTO "Manager" VALUES ('62ec2441-fc08-4f7d-8dc2-866d65260468', 'd951350b-be91-490c-98b6-1e8ab3a1bf42');
 UPDATE "Restaurant" SET "managerId" = '62ec2441-fc08-4f7d-8dc2-866d65260468' WHERE "restaurantId" = '35bfa561-c4fa-4e27-8789-c3387ee16e39';
