@@ -91,6 +91,7 @@ CREATE TABLE "Restaurant" (
     "geoLon" DOUBLE PRECISION NOT NULL,
     "managerId" UUID,
     "addressId" UUID NOT NULL,
+    "openingHoursPretty" TEXT,
 
     CONSTRAINT "Restaurant_pkey" PRIMARY KEY ("restaurantId")
 );
@@ -156,7 +157,7 @@ INSERT INTO "Address" VALUES ('7d2b0aa9-000c-423f-a3d5-c5d97ec8a940', 'Złota', 
 INSERT INTO "Address" VALUES ('b96813fc-ca3a-4ba1-87ef-4ed7913a544a', 'Senatorska', '24/26', 'Łódź', '93-192', 'Poland');
 INSERT INTO "Address" VALUES ('504594ec-8e4d-4391-82fa-02680ee6ad4d', 'Gen. Walerego Wróblewskiego', '16/18', 'Łódź', '93-578', 'Poland');
 
-INSERT INTO "Restaurant" ("restaurantId", "geoLat", "geoLon", "addressId") VALUES ('35bfa561-c4fa-4e27-8789-c3387ee16e39', 51.751579, 19.452930, '182f153d-f29d-4ebc-9826-a24c13c66251');
+INSERT INTO "Restaurant" ("restaurantId", "geoLat", "geoLon", "addressId", "openingHoursPretty") VALUES ('35bfa561-c4fa-4e27-8789-c3387ee16e39', 51.751579, 19.452930, '182f153d-f29d-4ebc-9826-a24c13c66251', 'Monday - Thursday: 10:00 - 23:00,Thursday - Saturday: 12:00 - 23:00,Sunday: 12:00 - 22:00');
 INSERT INTO "Restaurant" ("restaurantId", "geoLat", "geoLon", "addressId") VALUES ('54ff5ab8-24db-4c67-8929-9ad5ba75735e', 52.230652, 21.002310, '7d2b0aa9-000c-423f-a3d5-c5d97ec8a940');
 INSERT INTO "Restaurant" ("restaurantId", "geoLat", "geoLon", "addressId") VALUES ('00e21682-6ce6-45fd-8e5f-5306b70bb028', 54.350910, 18.650740, 'b60d396f-50df-4aac-84dd-86bb05375fb7');
 
