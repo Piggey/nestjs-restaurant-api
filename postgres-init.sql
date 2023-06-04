@@ -212,172 +212,174 @@ VALUES ('d951350b-be91-490c-98b6-1e8ab3a1bf42', 'Przemysław', 'Zarządzający',
 INSERT INTO "Manager" VALUES ('62ec2441-fc08-4f7d-8dc2-866d65260468', 'd951350b-be91-490c-98b6-1e8ab3a1bf42');
 UPDATE "Restaurant" SET "managerId" = '62ec2441-fc08-4f7d-8dc2-866d65260468' WHERE "restaurantId" = '35bfa561-c4fa-4e27-8789-c3387ee16e39';
 
-INSERT INTO "Category" ("categoryId", "categoryName", "photoUrl") VALUES ('7f040fd7-a666-458e-8369-1ab201e589b6', 'burgers', 'https://drive.google.com/uc?id=15aMrd2cZ3Fm3rKptdAfqf2mFd9M2ZT2U');
-INSERT INTO "Category" ("categoryId", "categoryName", "photoUrl") VALUES ('f035a7e3-5eb7-4d6c-8d42-10d7549a9ed2', 'pizza', 'https://drive.google.com/uc?id=1c2Hg3V78lDRs-rJpgDoOLzvkto3z32go');
-INSERT INTO "Category" ("categoryId", "categoryName", "photoUrl") VALUES ('0d8eb1d2-610e-4716-90c9-6aea7e379b3d', 'pasta', 'https://drive.google.com/uc?id=1DHL6iCPvL6_j9YUloUAqq-Mx2BuQ4KTl');
-INSERT INTO "Category" ("categoryId", "categoryName", "photoUrl") VALUES ('bc657cdc-115f-42b5-835e-b364bc4f010f', 'burrito', 'https://drive.google.com/uc?id=1TK3nv2JICQ17GkAScz4VsO05fYv9z3Gk');
-INSERT INTO "Category" ("categoryId", "categoryName", "photoUrl") VALUES ('9620178d-2154-4d38-becc-d47319a01f06', 'salads', 'https://drive.google.com/uc?id=1oEjtBa6LWXXTumlI5EW_OngVbzm4SRDo');
-INSERT INTO "Category" ("categoryId", "categoryName", "photoUrl") VALUES ('76103531-ab85-49be-a777-adfe696223c7', 'starters', 'https://drive.google.com/uc?id=1yqJJUOdVNO075Qvvtfc9-zl03xS0tky_');
-INSERT INTO "Category" ("categoryId", "categoryName", "photoUrl") VALUES ('ade9714d-9b38-4557-a4dd-8495b5c4e29f', 'drinks', 'https://drive.google.com/uc?id=1uG2pndhrYH3tiFDU8ay4x3m4a-zE38jg');
-INSERT INTO "Category" ("categoryId", "categoryName", "photoUrl") VALUES ('a44adc1a-08ba-460a-9cfc-996e56201dd1', 'desserts', 'https://drive.google.com/uc?id=1usHgUbx25nfMRay4etDM9dXF3UlmGGcU');
+INSERT INTO "Category" ("categoryId", "categoryName", "photoUrl") VALUES ('7f040fd7-a666-458e-8369-1ab201e589b6', 'burgers', 'https://i.ibb.co/bRwWJCW/burgers.png');
+INSERT INTO "Category" ("categoryId", "categoryName", "photoUrl") VALUES ('f035a7e3-5eb7-4d6c-8d42-10d7549a9ed2', 'pizza', 'https://i.ibb.co/7rVgzfg/pizzas.png');
+INSERT INTO "Category" ("categoryId", "categoryName", "photoUrl") VALUES ('0d8eb1d2-610e-4716-90c9-6aea7e379b3d', 'pasta', 'https://i.ibb.co/wp7W6YX/pastas.png');
+INSERT INTO "Category" ("categoryId", "categoryName", "photoUrl") VALUES ('bc657cdc-115f-42b5-835e-b364bc4f010f', 'burrito', 'https://i.ibb.co/LNZtK5P/burittos.png');
+INSERT INTO "Category" ("categoryId", "categoryName", "photoUrl") VALUES ('9620178d-2154-4d38-becc-d47319a01f06', 'salads', 'https://i.ibb.co/3s5cmGp/salads.png');
+INSERT INTO "Category" ("categoryId", "categoryName", "photoUrl") VALUES ('76103531-ab85-49be-a777-adfe696223c7', 'starters', 'https://i.ibb.co/nbnmp3r/starters.png');
+INSERT INTO "Category" ("categoryId", "categoryName", "photoUrl") VALUES ('ade9714d-9b38-4557-a4dd-8495b5c4e29f', 'drinks', 'https://i.ibb.co/RCpqf9h/drinks.png');
+INSERT INTO "Category" ("categoryId", "categoryName", "photoUrl") VALUES ('a44adc1a-08ba-460a-9cfc-996e56201dd1', 'desserts', 'https://i.ibb.co/RjkJ4rp/desserts.png');
+INSERT INTO "Category" ("categoryId", "categoryName", "photoUrl") VALUES ('87768254-e8ed-412b-8f1b-89521c034fe7', 'sets', 'https://i.ibb.co/dQX8hXW/food-sets.png');
 
 INSERT INTO "Menu" ("updatedAt", "name", "photoUrl", "description", "price", "rating", "numberOfRatings", "ingredients", "categoryId")
-    VALUES (CURRENT_TIMESTAMP, 'Hamburger', 'https://drive.google.com/uc?id=1Lkshkjd8i1VVSj-gWYPod6Nh8lUo2Lbm',
+    VALUES (CURRENT_TIMESTAMP, 'Hamburger', 'https://i.ibb.co/Q8Vx7Jx/hamburger-v2.jpg',
     'Juicy, grilled hamburger with succulent meat, crunchy bun, and flavorful toppings',
     25.99, 4.46, 128, 'bun,beef,cucumber,tomato,onion,lettuce,original sauce', '7f040fd7-a666-458e-8369-1ab201e589b6');
 
 INSERT INTO "Menu" ("updatedAt", "name", "photoUrl", "description", "price", "rating", "numberOfRatings", "ingredients", "categoryId")
-    VALUES (CURRENT_TIMESTAMP, 'Cheeseburger', 'https://drive.google.com/uc?id=1ffnvNbbUMtddRwzxhCA26MYvA8GAt-bH',
+    VALUES (CURRENT_TIMESTAMP, 'Cheeseburger', 'https://i.ibb.co/3fWZMR0/cheeseburger.jpg',
     'Tender, mouthwatering cheeseburger with juicy meat, perfectly melted cheese, and flavorful toppings',
     28.99, 4.24, 96, 'bun,beef,cucumber,tomato,onion,lettuce,cheese,original sauce', '7f040fd7-a666-458e-8369-1ab201e589b6');
 
 INSERT INTO "Menu" ("updatedAt", "name", "photoUrl", "description", "price", "rating", "numberOfRatings", "ingredients", "categoryId")
-    VALUES (CURRENT_TIMESTAMP, 'Spicy Hamburger', 'https://drive.google.com/uc?id=19hI2eLhqt9uIJXu-ou9zHcV_tdtb0JaH',
+    VALUES (CURRENT_TIMESTAMP, 'Spicy Hamburger', 'https://i.ibb.co/rtCYDvS/hamburger-v1.jpg',
     'Spicy and sizzling hamburger packed with fiery flavor, tender meat, and a kick of heat that will ignite your taste buds!',
     28.99, 4.87, 152, 'bun,beef,cucumber,tomato,onion,lettuce,chilli,spicy sauce', '7f040fd7-a666-458e-8369-1ab201e589b6');
 
 INSERT INTO "Menu" ("updatedAt", "name", "photoUrl", "description", "price", "rating", "numberOfRatings", "ingredients", "categoryId")
-    VALUES (CURRENT_TIMESTAMP, 'Spicy Cheeseburger', 'https://drive.google.com/uc?id=13h71tmXDF1Je0B2mj0jZnCBPrmE3dbpw',
+    VALUES (CURRENT_TIMESTAMP, 'Spicy Cheeseburger', 'https://i.ibb.co/9h6hSjs/spicy-cheeseburger.jpg',
     'Very yummy! Spicy! Cheeseburger! Yummies :DD',
     29.99, 2.62, 152231, 'bun,beef,cucumber,tomato,onion,lettuce,cheese,chilli,hot sauce', '7f040fd7-a666-458e-8369-1ab201e589b6');
 
 INSERT INTO "Menu" ("updatedAt", "name", "photoUrl", "description", "price", "rating", "numberOfRatings", "ingredients", "categoryId")
-    VALUES (CURRENT_TIMESTAMP, 'Chickburger', 'https://drive.google.com/uc?id=1a4EIYzc7MD0zgD_VX2PvIEe-Ujz1NWnK',
+    VALUES (CURRENT_TIMESTAMP, 'Chickburger', 'https://i.ibb.co/pJYhQV5/chickburger.jpg',
     'Crispy, succulent chickburger with a golden-brown coating and tender chicken',
     25.99, 3.52, 234, 'bun,breaded chicken,cucumber,tomato,onion,lettuce,homemade sauce', '7f040fd7-a666-458e-8369-1ab201e589b6');
 
 INSERT INTO "Menu" ("updatedAt", "name", "photoUrl", "description", "price", "rating", "numberOfRatings", "ingredients", "categoryId")
-    VALUES (CURRENT_TIMESTAMP, 'Veganburger', 'https://drive.google.com/uc?id=1udxaPNaQHXPOzkz51DRDKh5OdAESdImK',
+    VALUES (CURRENT_TIMESTAMP, 'Veganburger', 'https://i.ibb.co/8KL8YSM/vegan-burger-v2.jpg',
     'Indulge in a mouthwatering vegan burger with a juicy plant-based patty, fresh vegetables, and savory seasonings',
     29.99, 4.20, 69, 'bun,BeyondMeat,cucumber,tomato,onion,lettuce,vegan sauce', '7f040fd7-a666-458e-8369-1ab201e589b6');
 
 INSERT INTO "Menu" ("updatedAt", "name", "photoUrl", "description", "price", "rating", "numberOfRatings", "ingredients", "categoryId")
-    VALUES (CURRENT_TIMESTAMP, 'Margherita', 'https://drive.google.com/uc?id=10-eVF6x_M_xHvOWbxg11VIlNDpg6EFdu',
+    VALUES (CURRENT_TIMESTAMP, 'Margherita', 'https://i.ibb.co/qsZm0vL/margherita.jpg',
     'Deliciously simple Margherita pizza with a thin, crispy crust, tangy tomato sauce, melted mozzarella cheese, and fragrant basil leaves',
     21.99, 4.97, 215, 'tomato sauce,mozzarella cheese,basil', 'f035a7e3-5eb7-4d6c-8d42-10d7549a9ed2');
 
 INSERT INTO "Menu" ("updatedAt", "name", "photoUrl", "description", "price", "rating", "numberOfRatings", "ingredients", "categoryId")
-    VALUES (CURRENT_TIMESTAMP, 'Capriciosa', 'https://drive.google.com/uc?id=11PJu2IoU7cwJ-hHm9ZwkrVTJtm865sKT',
+    VALUES (CURRENT_TIMESTAMP, 'Capriciosa', 'https://i.ibb.co/4pfLW9F/capriciosa.jpg',
     'Exquisite Carpricosa pizza, with a medley of flavors of savory ham, fresh mushrooms, tangy olives, and gooey melted cheese',
     25.99, 4.65, 321, 'tomato sauce,mozzarella cheese,ham,mushrooms', 'f035a7e3-5eb7-4d6c-8d42-10d7549a9ed2');
 
 INSERT INTO "Menu" ("updatedAt", "name", "photoUrl", "description", "price", "rating", "numberOfRatings", "ingredients", "categoryId")
-    VALUES (CURRENT_TIMESTAMP, 'Diavola', 'https://drive.google.com/uc?id=1yR8PVv3GVszjhggu1g6a8TSsDcbOViJs',
+    VALUES (CURRENT_TIMESTAMP, 'Diavola', 'https://i.ibb.co/P6RBDTY/diavola.jpg',
     'Diavola pizza, topped with spicy pepperoni, zesty tomato sauce, melted mozzarella cheese, and a hint of chili flakes',
     27.99, 3.55, 192, 'tomato sauce,mozzarella cheese,chorizo,chilli', 'f035a7e3-5eb7-4d6c-8d42-10d7549a9ed2');
 
 INSERT INTO "Menu" ("updatedAt", "name", "photoUrl", "description", "price", "rating", "numberOfRatings", "ingredients", "categoryId")
-    VALUES (CURRENT_TIMESTAMP, 'Hawaiian', 'https://drive.google.com/uc?id=1e8WfEKEXiPPqmzBgIzTJx70D1Pkw3_U-',
+    VALUES (CURRENT_TIMESTAMP, 'Hawaiian', 'https://i.ibb.co/gRJkGnX/hawajska.jpg',
     'Transport your taste buds to a tropical paradise with the Hawaiian pizza',
     25.99, 1.00, 168, 'tomato sauce,mozzarella cheese,ham,pineapple', 'f035a7e3-5eb7-4d6c-8d42-10d7549a9ed2');
 
 INSERT INTO "Menu" ("updatedAt", "name", "photoUrl", "description", "price", "rating", "numberOfRatings", "ingredients", "categoryId")
-    VALUES (CURRENT_TIMESTAMP, 'Vegetarian', 'https://drive.google.com/uc?id=1E3iCM6UNQOo8SsId4UHfCZd9QGFF2Rks',
+    VALUES (CURRENT_TIMESTAMP, 'Vegetarian', 'https://i.ibb.co/hsjTC9W/wege.jpg',
     'Savor the flavors of a delightful vegetarian pizza, topped with a colorful array of fresh vegetables',
     29.99, 4.02, 10, 'tomato sauce,vegan cheese,paprika,Beyond Meat', 'f035a7e3-5eb7-4d6c-8d42-10d7549a9ed2');
 
 INSERT INTO "Menu" ("updatedAt", "name", "photoUrl", "description", "price", "rating", "numberOfRatings", "ingredients", "categoryId")
-    VALUES (CURRENT_TIMESTAMP, 'Pomodoro', 'https://drive.google.com/uc?id=1Y-fCkPET2SWtLUO6Zx2eAmolufjoDCIP',
+    VALUES (CURRENT_TIMESTAMP, 'Pomodoro', 'https://i.ibb.co/2hR7QfJ/pomodoro-v1.jpg',
     'Classic dish featuring al dente pasta tossed in a rich tomato sauce infused with aromatic herbs, garlic, and a hint of olive oil',
     25.99, 4.34, 102, 'pasta,tomato sauce,garlic,basil', '0d8eb1d2-610e-4716-90c9-6aea7e379b3d');
 
 INSERT INTO "Menu" ("updatedAt", "name", "photoUrl", "description", "price", "rating", "numberOfRatings", "ingredients", "categoryId")
-    VALUES (CURRENT_TIMESTAMP, 'Arrabiata', 'https://drive.google.com/uc?id=1lm4RAIXDjW_rK0hj9Rnx8eQt5lyKpg9y',
+    VALUES (CURRENT_TIMESTAMP, 'Arrabiata', 'https://i.ibb.co/0FD2Bbf/arrabiata.jpg',
     'Bold and spicy Arrabiata pasta, with perfectly cooked pasta smothered in a fiery tomato sauce, infused with garlic, chili flakes, and a hint of fresh herbs',
     25.99, 4.00, 152, 'pasta,tomato sauce,chilli,garlic,basil', '0d8eb1d2-610e-4716-90c9-6aea7e379b3d');
 
 INSERT INTO "Menu" ("updatedAt", "name", "photoUrl", "description", "price", "rating", "numberOfRatings", "ingredients", "categoryId")
-    VALUES (CURRENT_TIMESTAMP, 'Carbonara', 'https://drive.google.com/uc?id=1Nfutj6OyyDO6t9nH1bzVcH1nIzF6ty6N',
+    VALUES (CURRENT_TIMESTAMP, 'Carbonara', 'https://i.ibb.co/sFL34kb/carbonara.jpg',
     'Al dente spaghetti coated in a velvety sauce made with eggs, Parmesan cheese, crispy bacon',
     28.99, 4.76, 432, 'pasta,eggs,bacon,garlic,cheese', '0d8eb1d2-610e-4716-90c9-6aea7e379b3d');
 
 INSERT INTO "Menu" ("updatedAt", "name", "photoUrl", "description", "price", "rating", "numberOfRatings", "ingredients", "categoryId")
-    VALUES (CURRENT_TIMESTAMP, 'Primavera', 'https://drive.google.com/uc?id=1Bi2vxgtvmM2Z73pqujdzVALmP2vI6CNj',
+    VALUES (CURRENT_TIMESTAMP, 'Primavera', 'https://i.ibb.co/rQqnTC5/primavera.jpg',
     'A vibrant dish filled with al dente pasta tossed with bell peppers, broccoli, cherry tomatoes, and a light, herb-infused sauce',
     32.99, 4.23, 211, 'rice noodles,pepper,onion,garlic,cherry tomatoes,zucchini,mushrooms,soy sauce', '0d8eb1d2-610e-4716-90c9-6aea7e379b3d');
 
 INSERT INTO "Menu" ("updatedAt", "name", "photoUrl", "description", "price", "rating", "numberOfRatings", "ingredients", "categoryId")
-    VALUES (CURRENT_TIMESTAMP, 'Burrito de pollo', 'https://drive.google.com/uc?id=1bGB8MU9_6WuVA7OL-SXODYh4QsWVjPJI',
+    VALUES (CURRENT_TIMESTAMP, 'Burrito de pollo', 'https://i.ibb.co/WtyVM6D/burrito-kurczak.jpg',
     'Chicken burrito, filled with tender chicken, melted cheese, beans, lettuce, tomatoes, and a zesty salsa',
     32.99, 3.98, 125, 'tortilla,chicken,beans,cheese,rice,hot sauce', 'bc657cdc-115f-42b5-835e-b364bc4f010f');
 
 INSERT INTO "Menu" ("updatedAt", "name", "photoUrl", "description", "price", "rating", "numberOfRatings", "ingredients", "categoryId")
-    VALUES (CURRENT_TIMESTAMP, 'Vegan burrito', 'https://drive.google.com/uc?id=1z2pt9hktySZERO9fLYVYWu7_SIvhB_f5',
+    VALUES (CURRENT_TIMESTAMP, 'Vegan burrito', 'https://i.ibb.co/5kZXVgt/burrito-weganskie.jpg',
     'Packed with flavorful plant-based protein, black beans, fragrant herbs, and a zingy salsa',
     35.99, 4.12, 521, 'tortilla,jackfruit,beans,vegan cheese,rice,vegan sauce', 'bc657cdc-115f-42b5-835e-b364bc4f010f');
 
 INSERT INTO "Menu" ("updatedAt", "name", "photoUrl", "description", "price", "rating", "numberOfRatings", "ingredients", "categoryId")
-    VALUES (CURRENT_TIMESTAMP, 'Burrito con carne', 'https://drive.google.com/uc?id=1ykLijrtSeByFPzytgfHh7X4VYhYHmSDN',
+    VALUES (CURRENT_TIMESTAMP, 'Burrito con carne', 'https://i.ibb.co/yhPjtwG/burrito-z-wolowina.jpg',
     'Tender, seasoned beef, melted cheese, savory beans, crisp lettuce, juicy tomatoes, and a smoky salsa',
     35.99, 4.92, 467, 'tortilla,beef,beans,cheese,rice,hot sauce', 'bc657cdc-115f-42b5-835e-b364bc4f010f');
 
 INSERT INTO "Menu" ("updatedAt", "name", "photoUrl", "description", "price", "rating", "numberOfRatings", "ingredients", "categoryId")
-    VALUES (CURRENT_TIMESTAMP, 'Greek salad', 'https://drive.google.com/uc?id=1k-NhXX_kZd_b5KmVHUE2JeleUfnKmVmp',
+    VALUES (CURRENT_TIMESTAMP, 'Greek salad', 'https://i.ibb.co/xDxgZnq/grecka.jpg',
     'Crisp lettuce, juicy tomatoes, cucumbers, tangy Kalamata olives, crumbled feta cheese, and a zesty dressing',
     25.99, 4.21, 658, 'iceberg lettuce,tomato,olives,cucumber,feta cheese,sauce', '9620178d-2154-4d38-becc-d47319a01f06');
 
 INSERT INTO "Menu" ("updatedAt", "name", "photoUrl", "description", "price", "rating", "numberOfRatings", "ingredients", "categoryId")
-    VALUES (CURRENT_TIMESTAMP, 'Italian salad', 'https://drive.google.com/uc?id=1czZRiZFBTEO6BPeFcq_B0Keut38ytA_l',
+    VALUES (CURRENT_TIMESTAMP, 'Italian salad', 'https://i.ibb.co/SJV7rMv/wloska.jpg',
     'Combining crisp lettuce, ripe tomatoes, fresh mozzarella cheese, tangy olives, and a drizzle of balsamic vinaigrette',
     28.99, 4.61, 145, 'iceberg lettuce,arugula,dried tomatoes,olives,cucumber,feta cheese,vinaigrette sauce', '9620178d-2154-4d38-becc-d47319a01f06');
 
 INSERT INTO "Menu" ("updatedAt", "name", "photoUrl", "description", "price", "rating", "numberOfRatings", "ingredients", "categoryId")
-    VALUES (CURRENT_TIMESTAMP, 'Falafel', 'https://drive.google.com/uc?id=1Z2r_0kBIK12N4ck5oJ6Wonq7dh8isCSo',
+    VALUES (CURRENT_TIMESTAMP, 'Falafel', 'https://i.ibb.co/n1H7Dkc/falafel.jpg',
     'Blend of chickpeas, herbs, and spices, served in a warm pita bread with fresh vegetables and a creamy tahini sauce',
     28.99, 3.81, 423, 'iceberg lettuce,falafel,tomato,cucumber,sauce', '9620178d-2154-4d38-becc-d47319a01f06');
 
 INSERT INTO "Menu" ("updatedAt", "name", "photoUrl", "description", "price", "rating", "numberOfRatings", "ingredients", "categoryId")
-    VALUES (CURRENT_TIMESTAMP, 'French fries', 'https://drive.google.com/uc?id=1K8Z2FgtNevOjs9i-u0xa1yJKyubCuRQr',
+    VALUES (CURRENT_TIMESTAMP, 'French fries', 'https://i.ibb.co/dMkSCzH/frytki.jpg',
     NULL, 8.99, NULL, NULL, NULL, '76103531-ab85-49be-a777-adfe696223c7');
 
 INSERT INTO "Menu" ("updatedAt", "name", "photoUrl", "description", "price", "rating", "numberOfRatings", "ingredients", "categoryId")
-    VALUES (CURRENT_TIMESTAMP, 'Nachos', 'https://drive.google.com/uc?id=1TqHe8gxXfcO8P3Qfo9XB4CvS1ZLVAqTK',
+    VALUES (CURRENT_TIMESTAMP, 'Nachos', 'https://i.ibb.co/424R4jb/nachos.jpg',
     NULL, 12.99, NULL, NULL, NULL, '76103531-ab85-49be-a777-adfe696223c7');
 
 INSERT INTO "Menu" ("updatedAt", "name", "photoUrl", "description", "price", "rating", "numberOfRatings", "ingredients", "categoryId")
-    VALUES (CURRENT_TIMESTAMP, 'Sauce (tomato/spicy/vegan)', 'https://drive.google.com/uc?id=1mdBzJVArv5soKC7GUpbRbk_GKZnrjB-7',
+    VALUES (CURRENT_TIMESTAMP, 'Sauce (tomato/spicy/vegan)', 'https://i.ibb.co/VD8gq7V/sosy.jpg',
     NULL, 2.99, NULL, NULL, NULL, '76103531-ab85-49be-a777-adfe696223c7');
 
 INSERT INTO "Menu" ("updatedAt", "name", "photoUrl", "description", "price", "rating", "numberOfRatings", "ingredients", "categoryId")
-    VALUES (CURRENT_TIMESTAMP, 'Mozzarella sticks', 'https://drive.google.com/uc?id=1zX94bddG3QwVrcUkmXNGNI7Nzy8Yei-a',
+    VALUES (CURRENT_TIMESTAMP, 'Mozzarella sticks', 'https://i.ibb.co/XFv0d1v/ser-panierowany.jpg',
     NULL, 9.99, NULL, NULL, NULL, '76103531-ab85-49be-a777-adfe696223c7');
 
 INSERT INTO "Menu" ("updatedAt", "name", "photoUrl", "description", "price", "rating", "numberOfRatings", "ingredients", "categoryId")
-    VALUES (CURRENT_TIMESTAMP, 'Coca Cola (500ml)', 'https://drive.google.com/uc?id=1M6IDChF6vJ-nS5ewSUveTDx8-mjSB31x',
+    VALUES (CURRENT_TIMESTAMP, 'Coca Cola (500ml)', 'https://i.ibb.co/kgh81kb/cola.jpg',
     NULL, 9.99, NULL, NULL, NULL, 'ade9714d-9b38-4557-a4dd-8495b5c4e29f');
 
 INSERT INTO "Menu" ("updatedAt", "name", "photoUrl", "description", "price", "rating", "numberOfRatings", "ingredients", "categoryId")
-    VALUES (CURRENT_TIMESTAMP, 'Cappy (orange/apple) (250ml)', 'https://drive.google.com/uc?id=11rd2ZraiZ478lpx9dtq8EUrRTiuvONnD',
+    VALUES (CURRENT_TIMESTAMP, 'Cappy (orange/apple) (250ml)', 'https://i.ibb.co/yB8ynf8/cappy.jpg',
     NULL, 6.99, NULL, NULL, NULL, 'ade9714d-9b38-4557-a4dd-8495b5c4e29f');
 
 INSERT INTO "Menu" ("updatedAt", "name", "photoUrl", "description", "price", "rating", "numberOfRatings", "ingredients", "categoryId")
-    VALUES (CURRENT_TIMESTAMP, 'Mineral water (250ml)', 'https://drive.google.com/uc?id=1yZPJMwSVCEQo1lhqeqFrvjDyFq-WV8aD',
+    VALUES (CURRENT_TIMESTAMP, 'Mineral water (250ml)', 'https://i.ibb.co/h2YNY9W/water.jpg',
     NULL, 4.99, NULL, NULL, NULL, 'ade9714d-9b38-4557-a4dd-8495b5c4e29f');
 
 INSERT INTO "Menu" ("updatedAt", "name", "photoUrl", "description", "price", "rating", "numberOfRatings", "ingredients", "categoryId")
-    VALUES (CURRENT_TIMESTAMP, 'Tea', 'https://drive.google.com/uc?id=1b7bggJOHnuQg2D_dKW4-aMENNJWrqTPg',
+    VALUES (CURRENT_TIMESTAMP, 'Tea', 'https://i.ibb.co/YycYtgg/tea.jpg',
     NULL, 9.99, NULL, NULL, NULL, 'ade9714d-9b38-4557-a4dd-8495b5c4e29f');
 
 INSERT INTO "Menu" ("updatedAt", "name", "photoUrl", "description", "price", "rating", "numberOfRatings", "ingredients", "categoryId")
-    VALUES (CURRENT_TIMESTAMP, 'Latte', 'https://drive.google.com/uc?id=1lVsRxvVONjIYMcGvrKj8gAhgSEqfHS0B',
+    VALUES (CURRENT_TIMESTAMP, 'Latte', 'https://i.ibb.co/LCNvj70/latte.jpg',
     NULL, 12.99, NULL, NULL, NULL, 'ade9714d-9b38-4557-a4dd-8495b5c4e29f');
 
 INSERT INTO "Menu" ("updatedAt", "name", "photoUrl", "description", "price", "rating", "numberOfRatings", "ingredients", "categoryId")
-    VALUES (CURRENT_TIMESTAMP, 'Cappuccino', 'https://drive.google.com/uc?id=1p9VpJa8_1oqqkoWlJUMRcR-1KeP9zOtA',
+    VALUES (CURRENT_TIMESTAMP, 'Cappuccino', 'https://i.ibb.co/cN94w4F/capuccino.jpg',
     NULL, 14.99, NULL, NULL, NULL, 'ade9714d-9b38-4557-a4dd-8495b5c4e29f');
 
 INSERT INTO "Menu" ("updatedAt", "name", "photoUrl", "description", "price", "rating", "numberOfRatings", "ingredients", "categoryId")
-    VALUES (CURRENT_TIMESTAMP, 'Shake (250ml)', 'https://drive.google.com/uc?id=1yjr_TXe_UfkFHqk618Vi6sMeHHIEqtCm',
+    VALUES (CURRENT_TIMESTAMP, 'Shake (250ml)', 'https://i.ibb.co/j8BKNpK/shake.jpg',
     NULL, 16.99, NULL, NULL, NULL, 'ade9714d-9b38-4557-a4dd-8495b5c4e29f');
 
 INSERT INTO "Menu" ("updatedAt", "name", "photoUrl", "description", "price", "rating", "numberOfRatings", "ingredients", "categoryId")
-    VALUES (CURRENT_TIMESTAMP, 'Brownie', 'https://drive.google.com/uc?id=1zEeV8q6bA2GVCRJ8XghJS9cRRIlW64Md',
+    VALUES (CURRENT_TIMESTAMP, 'Brownie', 'https://i.ibb.co/93SGMDn/brownie.jpg',
     NULL, 14.99, NULL, NULL, NULL, 'a44adc1a-08ba-460a-9cfc-996e56201dd1');
 
 INSERT INTO "Menu" ("updatedAt", "name", "photoUrl", "description", "price", "rating", "numberOfRatings", "ingredients", "categoryId")
-    VALUES (CURRENT_TIMESTAMP, 'Apple pie', 'https://drive.google.com/uc?id=1kvxJ82PWOqLSZnK_CvqbF0Dc2zCjV7G7',
+    VALUES (CURRENT_TIMESTAMP, 'Apple pie', 'https://i.ibb.co/G51RhcC/szarlotka.jpg',
     NULL, 14.99, NULL, NULL, NULL, 'a44adc1a-08ba-460a-9cfc-996e56201dd1');
 
 INSERT INTO "Menu" ("updatedAt", "name", "photoUrl", "description", "price", "rating", "numberOfRatings", "ingredients", "categoryId")
-    VALUES (CURRENT_TIMESTAMP, 'Chocolate cake', 'https://drive.google.com/uc?id=1Hlj9if0QdWj6n3MMRbWqUJ6zsEOK0Yvd',
+    VALUES (CURRENT_TIMESTAMP, 'Chocolate cake', 'https://i.ibb.co/f188bmr/ciastko-czekoladowe.jpg',
     NULL, 12.99, NULL, NULL, NULL, 'a44adc1a-08ba-460a-9cfc-996e56201dd1');
+
