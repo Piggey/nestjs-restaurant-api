@@ -27,4 +27,9 @@ export class RestaurantDto {
     required: false,
   })
   geoLon: number;
+  @ApiProperty({
+    required: false,
+    nullable: true,
+  })
+  openingHoursPretty: string | null;
 }
