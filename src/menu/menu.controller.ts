@@ -14,6 +14,7 @@ import { MenuService } from './menu.service';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
+  ApiCreatedResponse,
   ApiForbiddenResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
@@ -90,7 +91,7 @@ export class MenuController {
 
   @ApiOperation({ summary: 'create a new menu item' })
   @ApiBearerAuth()
-  @ApiOkResponse({
+  @ApiCreatedResponse({
     description: 'new item created',
     type: MenuItemCreatedResponse,
   })

@@ -117,3 +117,20 @@ model FranchiseApplication {
   /// @IsLatitude
   latitude         Float
 }
+
+model Coupon {
+  /// @DtoReadOnly
+  /// @IsMongoId
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  /// @DtoReadOnly
+  createdAt DateTime @default(now())
+
+  name       String
+  code       String  @unique
+  /// @IsUUID
+  categoryId String?
+  /// @Min(0.01)
+  /// @Max(1.00)
+  discount   Float
+  available  Boolean @default(true)
+}

@@ -13,6 +13,7 @@ import { JobApplicationService } from './job-application.service';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
+  ApiCreatedResponse,
   ApiForbiddenResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
@@ -84,7 +85,7 @@ export class JobApplicationController {
   }
 
   @ApiOperation({ summary: 'create a new job application' })
-  @ApiOkResponse({
+  @ApiCreatedResponse({
     description: 'job application created',
     type: FetchJobApplicationResponse,
   })

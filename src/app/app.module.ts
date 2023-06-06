@@ -14,6 +14,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { JobModule } from '../job/job.module';
 import { JobApplicationModule } from '../job-application/job-application.module';
 import { FranchiseApplicationModule } from '../franchise-application/franchise-application.module';
+import { CouponModule } from '../coupon/coupon.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { FranchiseApplicationModule } from '../franchise-application/franchise-a
     JobModule,
     JobApplicationModule,
     FranchiseApplicationModule,
+    CouponModule,
   ],
 })
 export class AppModule {}

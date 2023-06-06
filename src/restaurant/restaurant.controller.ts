@@ -23,6 +23,7 @@ import {
 } from './responses';
 import {
   ApiBearerAuth,
+  ApiCreatedResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
@@ -77,7 +78,7 @@ export class RestaurantController {
   }
 
   @ApiOperation({ summary: 'creates a new restaurant' })
-  @ApiOkResponse({
+  @ApiCreatedResponse({
     description: 'created a new restaurant and returned its data',
     type: RestaurantCreatedResponse,
   })
