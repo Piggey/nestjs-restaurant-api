@@ -15,6 +15,7 @@ import { OrderService } from './order.service';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
+  ApiCreatedResponse,
   ApiForbiddenResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
@@ -100,7 +101,7 @@ export class OrderController {
   }
 
   @ApiOperation({ summary: 'create a new order' })
-  @ApiOkResponse({
+  @ApiCreatedResponse({
     description: 'new order created',
     type: FetchOrderResponse,
   })

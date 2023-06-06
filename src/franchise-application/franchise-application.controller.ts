@@ -13,6 +13,7 @@ import { FranchiseApplicationService } from './franchise-application.service';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
+  ApiCreatedResponse,
   ApiForbiddenResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
@@ -84,7 +85,7 @@ export class FranchiseApplicationController {
   }
 
   @ApiOperation({ summary: 'create a new franchise application' })
-  @ApiOkResponse({
+  @ApiCreatedResponse({
     description: 'franchise application created',
     type: FetchFranchiseApplicationResponse,
   })
