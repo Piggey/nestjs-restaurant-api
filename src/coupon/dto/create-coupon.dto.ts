@@ -14,6 +14,10 @@ export class CreateCouponDto {
   @IsNotEmpty()
   @IsString()
   name: string;
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsString()
+  code: string;
   @ApiProperty({
     required: false,
     nullable: true,

@@ -72,11 +72,11 @@ model Employee {
 
 model Job {
   /// @DtoReadOnly
-  jobId     String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  jobId     String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   /// @DtoReadOnly
-  createdAt DateTime   @default(now())
+  createdAt DateTime @default(now())
   /// @DtoReadOnly
-  updatedAt DateTime   @updatedAt
+  updatedAt DateTime @updatedAt
 
   jobTitle  String
   minSalary Float
@@ -87,25 +87,25 @@ model Job {
 
 model Manager {
   /// @DtoReadOnly
-  managerId          String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  managerId String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
 
   /// @DtoRelationRequired
   /// @DtoRelationCanConnectOnCreate
   /// @DtoRelationCanConnectOnUpdate
   /// @DtoRelationCanCreateOnUpdate
-  employee           Employee     @relation(fields: [employeeId], references: [employeeId])
-  employeeId         String       @db.Uuid
+  employee   Employee @relation(fields: [employeeId], references: [employeeId])
+  employeeId String   @db.Uuid
 
   managedRestaurants Restaurant[] @relation("managedRestaurants")
 }
 
 model Menu {
   /// @DtoReadOnly
-  itemId          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  itemId    String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   /// @DtoReadOnly
-  createdAt       DateTime @default(now())
+  createdAt DateTime @default(now())
   /// @DtoReadOnly
-  updatedAt       DateTime @updatedAt
+  updatedAt DateTime @updatedAt
 
   name            String
   photoUrl        String
@@ -118,24 +118,24 @@ model Menu {
   numberOfRatings Int?
   /// @description a list of ingredients separated by `,`
   ingredients     String?
-  available       Boolean  @default(true)
+  available       Boolean @default(true)
 
   /// @DtoRelationRequired
   /// @DtoRelationCanConnectOnCreate
   /// @DtoRelationCanCreateOnCreate
   /// @DtoRelationCanConnectOnUpdate
   /// @DtoRelationCanCreateOnUpdate
-  category        Category @relation(fields: [categoryId], references: [categoryId])
-  categoryId      String   @db.Uuid
+  category   Category @relation(fields: [categoryId], references: [categoryId])
+  categoryId String   @db.Uuid
 }
 
 model Category {
   /// @DtoReadOnly
-  categoryId   String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  categoryId String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   /// @DtoReadOnly
-  createdAt    DateTime @default(now())
+  createdAt  DateTime @default(now())
 
-  available    Boolean  @default(true)
+  available    Boolean @default(true)
   categoryName String
   photoUrl     String
   menuItems    Menu[]
@@ -143,38 +143,38 @@ model Category {
 
 model Restaurant {
   /// @DtoReadOnly
-  restaurantId   String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  restaurantId String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   /// @DtoReadOnly
-  createdAt      DateTime       @default(now())
-  available      Boolean        @default(true)
+  createdAt    DateTime @default(now())
+  available    Boolean  @default(true)
 
   /// @IsLatitude
-  geoLat         Float
+  geoLat Float
   /// @IsLongitude
-  geoLon         Float
+  geoLon Float
 
   /// @DtoRelationCanConnectOnCreate
   /// @DtoRelationCanConnectOnUpdate
-  manager        Manager?       @relation("managedRestaurants", fields: [managerId], references: [managerId])
-  managerId      String?        @db.Uuid
+  manager   Manager? @relation("managedRestaurants", fields: [managerId], references: [managerId])
+  managerId String?  @db.Uuid
 
   /// @DtoRelationRequired
   /// @DtoRelationCanCreateOnCreate
   /// @DtoRelationCanConnectOnCreate
   /// @DtoRelationCanCreateOnUpdate
   /// @DtoRelationCanConnectOnUpdate
-  address        Address        @relation(fields: [addressId], references: [addressId])
-  addressId      String         @db.Uuid
+  address   Address @relation(fields: [addressId], references: [addressId])
+  addressId String  @db.Uuid
 
   /// @DtoRelationRequired
   /// @DtoRelationCanCreateOnCreate
   /// @DtoRelationCanCreateOnUpdate
-  openingHours   OpeningHours[]
+  openingHours OpeningHours[]
 
   /// @DtoReadOnly
   openingHoursPretty String?
 
-  hiredEmployees Employee[]     @relation("workedAtRestaurant")
+  hiredEmployees Employee[] @relation("workedAtRestaurant")
 }
 
 model OpeningHours {

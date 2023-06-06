@@ -17,6 +17,10 @@ export class CouponDto {
   name: string;
   @ApiProperty({
     required: false,
+  })
+  code: string;
+  @ApiProperty({
+    required: false,
     nullable: true,
   })
   categoryId: string | null;

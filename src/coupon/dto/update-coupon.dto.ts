@@ -17,6 +17,12 @@ export class UpdateCouponDto {
   name?: string;
   @ApiProperty({
     required: false,
+  })
+  @IsOptional()
+  @IsString()
+  code?: string;
+  @ApiProperty({
+    required: false,
     nullable: true,
   })
   @IsOptional()
