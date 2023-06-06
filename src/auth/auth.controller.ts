@@ -16,6 +16,7 @@ import { RequestErrorResponse } from '../app/response';
 @Controller('auth')
 @ApiTags('auth')
 export class AuthController {
+  private readonly logger = new Logger(AuthController.name);
   constructor(private readonly authService: AuthService) {}
 
   @ApiOperation({ summary: 'sign a new user to our database' })
@@ -31,7 +32,7 @@ export class AuthController {
   })
   @Post('signin')
   async signIn(@Body() dto: SignInDto): Promise<UserSignInResponse> {
-    Logger.log(`/auth/signin, ${dto.email}`);
+    this.logger.log(`/auth/signin, ${dto.email}`);
     return this.authService.signIn(dto);
   }
 
@@ -39,7 +40,7 @@ export class AuthController {
   @UseGuards(RolesGuard)
   @AllowMinRole(UserRoles.MANAGER)
   async test() {
-    Logger.log('why would you even call that');
+    this.logger.log('why would you even call that');
     return true;
   }
 }
