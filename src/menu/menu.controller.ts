@@ -12,6 +12,7 @@ import {
 } from '@nestjs/common';
 import { MenuService } from './menu.service';
 import {
+  ApiBadRequestResponse,
   ApiBearerAuth,
   ApiForbiddenResponse,
   ApiNotFoundResponse,
@@ -34,6 +35,7 @@ import { RolesGuard } from '../auth/guard';
 import { AllowMinRole } from '../auth/decorator';
 import { UserRoles } from '../auth/model';
 import { UpdateMenuDto } from './dto/update-menu.dto';
+import { RateMenuItemDto } from './dto/rate-menu-item.dto';
 
 @ApiTags('menu')
 @Controller('menu')
@@ -135,6 +137,35 @@ export class MenuController {
   ): Promise<MenuItemUpdatedResponse> {
     this.logger.log(`PATCH /menu/${id}`);
     return this.menuService.updateMenuItem(id, updatedItem);
+  }
+
+  @ApiOperation({ summary: 'rate a menu item and update its rating' })
+  @ApiOkResponse({
+    description: 'rating updated',
+    type: FetchMenuItemResponse,
+  })
+  @ApiBadRequestResponse({
+    description: 'parameters in request body were incorrect',
+    type: RequestErrorResponse,
+  })
+  @ApiForbiddenResponse({
+    description: 'insufficient `UserRoles` privileges. minimum = `CLIENT`',
+    type: RequestErrorResponse,
+  })
+  @ApiNotFoundResponse({
+    description: 'could not find menu item with this id',
+    type: RequestErrorResponse,
+  })
+  @ApiBearerAuth()
+  @UseGuards(RolesGuard)
+  @AllowMinRole(UserRoles.CLIENT)
+  @Patch(':id/rate')
+  async rateMenuItem(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() dto: RateMenuItemDto,
+  ): Promise<FetchMenuItemResponse> {
+    this.logger.log(`PATCH /menu/${id}/rate`);
+    return this.menuService.rateMenuItem(id, dto);
   }
 
   @ApiOperation({

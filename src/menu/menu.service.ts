@@ -16,6 +16,7 @@ import {
 } from './responses';
 import { CreateMenuDto } from './dto/create-menu.dto';
 import { UpdateMenuDto } from './dto/update-menu.dto';
+import { RateMenuItemDto } from './dto/rate-menu-item.dto';
 
 @Injectable()
 export class MenuService {
@@ -137,6 +138,39 @@ export class MenuService {
       Logger.error(err);
       throw err;
     }
+
+    return { menuItem };
+  }
+
+  async rateMenuItem(
+    id: string,
+    dto: RateMenuItemDto,
+  ): Promise<FetchMenuItemResponse> {
+    const menuItem = await this.db.$transaction(async (prisma) => {
+      const menuItem = await prisma.menu.findUnique({ where: { itemId: id } });
+
+      if (!menuItem) {
+        const err = new NotFoundException(`could not find menu item ${id}`);
+        Logger.error(err);
+        throw err;
+      }
+
+      const numberOfRatings = menuItem.numberOfRatings + 1;
+      const rating =
+        (menuItem.rating * menuItem.numberOfRatings + dto.rating) /
+        (menuItem.numberOfRatings + 1);
+
+      const updatedItem = await prisma.menu.update({
+        include: { category: true },
+        where: { itemId: menuItem.itemId },
+        data: {
+          numberOfRatings,
+          rating,
+        },
+      });
+
+      return updatedItem;
+    });
 
     return { menuItem };
   }

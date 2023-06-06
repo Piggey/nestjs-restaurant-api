@@ -75,7 +75,7 @@ export class UpdateMenuDto {
   })
   @IsOptional()
   @IsNumber()
-  @Min(0)
+  @Min(1)
   @Max(5)
   rating?: number | null;
   @ApiProperty({
