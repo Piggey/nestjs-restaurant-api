@@ -32,4 +32,14 @@ export class RestaurantDto {
     nullable: true,
   })
   openingHoursPretty: string | null;
+  @ApiProperty({
+    required: false,
+    nullable: true,
+  })
+  photoUrl: string | null;
+  @ApiProperty({
+    required: false,
+    nullable: true,
+  })
+  phoneNumber: string | null;
 }

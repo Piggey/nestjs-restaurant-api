@@ -5,6 +5,9 @@ import {
   IsNotEmpty,
   IsNumber,
   IsOptional,
+  IsPhoneNumber,
+  IsString,
+  IsUrl,
   ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
@@ -104,4 +107,20 @@ export class CreateRestaurantDto {
   @ValidateNested()
   @Type(() => CreateRestaurantOpeningHoursRelationInputDto)
   openingHours?: CreateRestaurantOpeningHoursRelationInputDto;
+  @ApiProperty({
+    required: false,
+    nullable: true,
+  })
+  @IsOptional()
+  @IsString()
+  @IsUrl()
+  photoUrl?: string;
+  @ApiProperty({
+    required: false,
+    nullable: true,
+  })
+  @IsOptional()
+  @IsString()
+  @IsPhoneNumber()
+  phoneNumber?: string;
 }
