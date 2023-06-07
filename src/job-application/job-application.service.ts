@@ -49,8 +49,14 @@ export class JobApplicationService {
   async createJobApplication(
     newJobApplication: CreateJobApplicationDto,
   ): Promise<FetchJobApplicationResponse> {
+    const blob = Buffer.from(newJobApplication.resumee);
+    delete newJobApplication.resumee;
+
     const jobApplication = await this.mongo.jobApplication.create({
-      data: newJobApplication,
+      data: {
+        resumee: blob,
+        ...newJobApplication,
+      },
     });
 
     return { jobApplication };
