@@ -26,6 +26,7 @@ export class EmployeeService {
     if (user.userRole == UserRoles.BOSS) {
       const employees = await this.db.employee.findMany({
         include: {
+          job: true,
           restaurant: { include: { address: true, manager: true } },
           address: true,
         },
@@ -40,6 +41,7 @@ export class EmployeeService {
     if (user.userRole == UserRoles.MANAGER) {
       const employees = await this.db.employee.findMany({
         include: {
+          job: true,
           address: true,
           restaurant: {
             include: {
@@ -112,6 +114,7 @@ export class EmployeeService {
     let updated;
     try {
       updated = await this.db.employee.update({
+        include: { job: true },
         where: { employeeId: id },
         data: updatedEmployee,
       });
@@ -137,7 +140,7 @@ export class EmployeeService {
     let firedEmployee: Employee;
     try {
       firedEmployee = await this.db.employee.update({
-        include: { user: true },
+        include: { user: true, job: true },
         where: { employeeId: id },
         data: { firedAt: new Date() },
       });
