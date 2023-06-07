@@ -92,6 +92,8 @@ CREATE TABLE "Restaurant" (
     "managerId" UUID,
     "addressId" UUID NOT NULL,
     "openingHoursPretty" TEXT,
+    "photoUrl" TEXT,
+    "phoneNumber" TEXT,
 
     CONSTRAINT "Restaurant_pkey" PRIMARY KEY ("restaurantId")
 );
@@ -157,7 +159,34 @@ INSERT INTO "Address" VALUES ('7d2b0aa9-000c-423f-a3d5-c5d97ec8a940', 'Złota', 
 INSERT INTO "Address" VALUES ('b96813fc-ca3a-4ba1-87ef-4ed7913a544a', 'Senatorska', '24/26', 'Łódź', '93-192', 'Poland');
 INSERT INTO "Address" VALUES ('504594ec-8e4d-4391-82fa-02680ee6ad4d', 'Gen. Walerego Wróblewskiego', '16/18', 'Łódź', '93-578', 'Poland');
 
-INSERT INTO "Restaurant" ("restaurantId", "geoLat", "geoLon", "addressId", "openingHoursPretty") VALUES ('35bfa561-c4fa-4e27-8789-c3387ee16e39', 51.751579, 19.452930, '182f153d-f29d-4ebc-9826-a24c13c66251', 'Monday - Thursday: 10:00 - 23:00,Thursday - Saturday: 12:00 - 23:00,Sunday: 12:00 - 22:00');
+INSERT INTO "Address" VALUES ('e7bbe16b-f4e0-4595-9cfd-8b5a9e2721a0', 'Marszałkowska', '111', 'Warszawa', '00-190', 'Poland');
+INSERT INTO "Restaurant" ("restaurantId", "geoLat", "geoLon", "addressId", "openingHoursPretty", "photoUrl", "phoneNumber") 
+VALUES ('568abfc8-c710-4ed7-9659-64222ed9ca08', 52.22977, 21.01178, 'e7bbe16b-f4e0-4595-9cfd-8b5a9e2721a0', 'Monday - Friday: 8:00 - 20:00', 'https://media-cdn.tripadvisor.com/media/photo-s/06/5f/dd/4e/local-restaurant.jpg', '+48221234567');
+
+INSERT INTO "OpeningHours" ("weekday", "startHourUtc", "endHourUtc", "restaurantId")
+VALUES ('Monday', '08:00', '20:00', '568abfc8-c710-4ed7-9659-64222ed9ca08');
+INSERT INTO "OpeningHours" ("weekday", "startHourUtc", "endHourUtc", "restaurantId")
+VALUES ('Friday', '08:00', '20:00', '568abfc8-c710-4ed7-9659-64222ed9ca08');
+
+INSERT INTO "Address" VALUES ('c9c3dd18-5967-4692-943f-a7d57b791b1f', 'Piotrkowska', '123', 'Łódź', '90-001', 'Poland');
+INSERT INTO "Restaurant" ("restaurantId", "geoLat", "geoLon", "addressId", "openingHoursPretty", "photoUrl", "phoneNumber") 
+VALUES ('10ca2473-4189-4802-b2eb-faf44115e062', 51.32124, 19.94771, 'c9c3dd18-5967-4692-943f-a7d57b791b1f', 'Monday - Friday: 8:00 - 20:00', 'https://media-cdn.tripadvisor.com/media/photo-s/06/5f/dd/4e/local-restaurant.jpg', '+48421234567');
+
+INSERT INTO "OpeningHours" ("weekday", "startHourUtc", "endHourUtc", "restaurantId")
+VALUES ('Monday', '08:00', '20:00', '10ca2473-4189-4802-b2eb-faf44115e062');
+INSERT INTO "OpeningHours" ("weekday", "startHourUtc", "endHourUtc", "restaurantId")
+VALUES ('Friday', '08:00', '20:00', '10ca2473-4189-4802-b2eb-faf44115e062');
+
+INSERT INTO "Address" VALUES ('268fdced-5c88-4c14-a2f9-cd573dd528bd', 'Floriańska', '64', 'Kraków', '31-019', 'Poland');
+INSERT INTO "Restaurant" ("restaurantId", "geoLat", "geoLon", "addressId", "openingHoursPretty", "photoUrl", "phoneNumber") 
+VALUES ('22c2ca4d-ffa4-4dfd-9729-fb209faa3afa', 50.06143, 19.93658, '268fdced-5c88-4c14-a2f9-cd573dd528bd', 'Monday - Friday: 8:00 - 20:00', 'https://media-cdn.tripadvisor.com/media/photo-s/06/5f/dd/4e/local-restaurant.jpg', '+48123216745');
+
+INSERT INTO "OpeningHours" ("weekday", "startHourUtc", "endHourUtc", "restaurantId")
+VALUES ('Monday', '08:00', '20:00', '22c2ca4d-ffa4-4dfd-9729-fb209faa3afa');
+INSERT INTO "OpeningHours" ("weekday", "startHourUtc", "endHourUtc", "restaurantId")
+VALUES ('Friday', '08:00', '20:00', '22c2ca4d-ffa4-4dfd-9729-fb209faa3afa');
+
+INSERT INTO "Restaurant" ("restaurantId", "geoLat", "geoLon", "addressId", "openingHoursPretty", "photoUrl", "phoneNumber") VALUES ('35bfa561-c4fa-4e27-8789-c3387ee16e39', 51.751579, 19.452930, '182f153d-f29d-4ebc-9826-a24c13c66251', 'Monday - Thursday: 10:00 - 23:00,Thursday - Saturday: 12:00 - 23:00,Sunday: 12:00 - 22:00', 'https://www.restauracje-jedzenie-online.pl/img/logo_tcom/indeks-lodz-lodz.png', '+48426367341');
 INSERT INTO "Restaurant" ("restaurantId", "geoLat", "geoLon", "addressId") VALUES ('54ff5ab8-24db-4c67-8929-9ad5ba75735e', 52.230652, 21.002310, '7d2b0aa9-000c-423f-a3d5-c5d97ec8a940');
 INSERT INTO "Restaurant" ("restaurantId", "geoLat", "geoLon", "addressId") VALUES ('00e21682-6ce6-45fd-8e5f-5306b70bb028', 54.350910, 18.650740, 'b60d396f-50df-4aac-84dd-86bb05375fb7');
 
