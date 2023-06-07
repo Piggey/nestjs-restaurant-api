@@ -1,4 +1,5 @@
 import {
+  ArrayMaxSize,
   IsEmail,
   IsInt,
   IsNumber,
@@ -49,6 +50,8 @@ export class UpdateJobApplicationDto {
     nullable: true,
   })
   @IsOptional()
+  @IsPositive({ each: true })
+  @ArrayMaxSize(16 * 1024 * 1024)
   resumee?: Buffer | null;
   @ApiProperty({
     required: false,

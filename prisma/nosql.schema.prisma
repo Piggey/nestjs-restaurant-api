@@ -90,6 +90,8 @@ model JobApplication {
   /// @IsEmail
   email           String   @unique
   aboutMe         String?
+  /// @IsPositive({ each: true })
+  /// @ArrayMaxSize(16 * 1024 * 1024)
   resumee         Bytes?
   jobTitle        String
   /// @IsPositive

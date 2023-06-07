@@ -1,4 +1,5 @@
 import {
+  ArrayMaxSize,
   IsEmail,
   IsInt,
   IsNotEmpty,
@@ -43,6 +44,8 @@ export class CreateJobApplicationDto {
     nullable: true,
   })
   @IsOptional()
+  @IsPositive({ each: true })
+  @ArrayMaxSize(16 * 1024 * 1024)
   resumee?: Buffer;
   @ApiProperty()
   @IsNotEmpty()
