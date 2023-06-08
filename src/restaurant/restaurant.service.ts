@@ -69,7 +69,11 @@ export class RestaurantService {
     let restaurant: Restaurant;
     try {
       restaurant = await this.db.restaurant.findFirstOrThrow({
-        include: { address: true, openingHours: true },
+        include: {
+          address: true,
+          openingHours: true,
+          manager: { include: { employee: true } },
+        },
         where: { restaurantId: id, available: true },
       });
     } catch (error) {
@@ -152,7 +156,7 @@ export class RestaurantService {
   async deleteRestaurant(id: string): Promise<RestaurantDeletedResponse> {
     const firedEmployees = await this.db.employee.updateMany({
       where: { restaurantId: id },
-      data: { firedAt: Date() },
+      data: { firedAt: new Date() },
     });
 
     try {
