@@ -34,7 +34,7 @@ import {
 } from './responses';
 import { RequestErrorResponse } from '../app/response';
 import { CreateOrderDto } from './dto/create-order.dto';
-import { UpdateOrderStatusDto } from './dto/update-order-status.dto';
+import { OrderStatus } from '@prisma-mongo/prisma/client';
 
 @ApiTags('order')
 @ApiForbiddenResponse({
@@ -230,12 +230,13 @@ export class OrderController {
     type: RequestErrorResponse,
   })
   @AllowMinRole(UserRoles.EMPLOYEE)
-  @Patch(':id/:status')
+  @Patch('/:id/:status')
   async updateOrderStatus(
-    @Param() updateStatusDto: UpdateOrderStatusDto,
+    @Param('id') id: string,
+    @Param('status') status: OrderStatus,
     @UserDecorator() user: User,
   ): Promise<FetchOrderResponse> {
-    this.logger.log(`PATCH /order/${updateStatusDto.id}`);
-    return this.orderService.updateOrderStatus(updateStatusDto, user);
+    this.logger.log(`PATCH /order/${id}`);
+    return this.orderService.updateOrderStatus({ id, status }, user);
   }
 }

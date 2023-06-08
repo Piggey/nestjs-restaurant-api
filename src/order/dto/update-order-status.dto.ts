@@ -7,6 +7,6 @@ export class UpdateOrderStatusDto {
   @IsMongoId()
   id: string;
 
-  @ApiProperty({ enum: OrderStatus })
+  @ApiProperty({ type: OrderStatus })
   status: OrderStatus;
 }

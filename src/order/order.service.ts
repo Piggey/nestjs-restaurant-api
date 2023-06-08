@@ -224,7 +224,9 @@ export class OrderService {
 
     // make sure employee works in this restaurant
     if (!(await this.employeeWorksInRestaurant(user, restaurant))) {
-      throw new ForbiddenException();
+      throw new ForbiddenException(
+        `employee ${user.userId} does not work at restaurant ${restaurant.restaurantId}`,
+      );
     }
 
     // make sure we dont update status backwards
