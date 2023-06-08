@@ -5,6 +5,7 @@ import {
   HttpStatus,
   Injectable,
   Logger,
+  MethodNotAllowedException,
   NotFoundException,
 } from '@nestjs/common';
 import { User } from '../user/entities/user.entity';
@@ -119,6 +120,13 @@ export class OrderService {
     const hours = restaurant.openingHours.find(
       (day) => day.weekday === WEEKDAYS[currentDateTime.getDay()],
     );
+    if (!hours) {
+      throw new MethodNotAllowedException(
+        `restaurant does not have opening hours data on ${
+          WEEKDAYS[currentDateTime.getDay()]
+        }`,
+      );
+    }
 
     // offset restaurant's closing time
     hours.endHourUtc.setHours(
