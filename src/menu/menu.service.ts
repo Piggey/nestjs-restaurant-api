@@ -38,7 +38,7 @@ export class MenuService {
     let category;
     try {
       category = await this.db.category.findFirst({
-        where: { categoryId: id },
+        where: { categoryId: id, available: true },
       });
     } catch (error) {
       let err;
@@ -96,7 +96,10 @@ export class MenuService {
   ): Promise<MenuItemCreatedResponse> {
     let menuItem;
     try {
-      menuItem = await this.db.menu.create({ data: newItem });
+      menuItem = await this.db.menu.create({
+        include: { category: true },
+        data: newItem,
+      });
     } catch (error) {
       const err = new HttpException(
         error.meta.cause,
@@ -147,7 +150,10 @@ export class MenuService {
     dto: RateMenuItemDto,
   ): Promise<FetchMenuItemResponse> {
     const menuItem = await this.db.$transaction(async (prisma) => {
-      const menuItem = await prisma.menu.findUnique({ where: { itemId: id } });
+      const menuItem = await prisma.menu.findUnique({
+        include: { category: true },
+        where: { itemId: id },
+      });
 
       if (!menuItem) {
         const err = new NotFoundException(`could not find menu item ${id}`);
