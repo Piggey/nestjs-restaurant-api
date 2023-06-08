@@ -65,7 +65,11 @@ export class OrderService {
   }
 
   async fetchOrder(id: string, user: User): Promise<FetchOrderResponse> {
-    const order = await this.databaseFetchOrder(id);
+    const order = await this.mongo.order.findUnique({ where: { id } });
+    if (!order) {
+      throw new NotFoundException(`could not find order with id ${id}`);
+    }
+
     if (order.userEmail !== user.userEmail) {
       throw new ForbiddenException();
     }
@@ -74,7 +78,11 @@ export class OrderService {
   }
 
   async cancelOrder(id: string, user: User): Promise<FetchOrderResponse> {
-    const oldOrder = await this.databaseFetchOrder(id);
+    const oldOrder = await this.mongo.order.findUnique({ where: { id } });
+    if (!oldOrder) {
+      throw new NotFoundException(`could not find order with id ${id}`);
+    }
+
     if (oldOrder.userEmail !== user.userEmail) {
       throw new ForbiddenException();
     }
@@ -96,11 +104,17 @@ export class OrderService {
     }
 
     // make sure restaurant exists
-    const restaurant = await this.databaseFetchRestaurant(
-      newOrder.restaurantId,
-    );
+    const restaurant = await this.postgres.restaurant.findUnique({
+      include: { openingHours: true },
+      where: { restaurantId: newOrder.restaurantId },
+    });
+    if (!restaurant) {
+      throw new NotFoundException(
+        `could not find restaurant with id ${restaurant.restaurantId}`,
+      );
+    }
 
-    // make sure order is placed when restaurant is open
+    // make sure order is placed some time before closing time
     const currentDateTime = new Date();
     const hours = restaurant.openingHours.find(
       (day) => day.weekday === WEEKDAYS[currentDateTime.getDay()],
@@ -118,7 +132,9 @@ export class OrderService {
       currentDateTime.getHours() * 100 + currentDateTime.getMinutes();
 
     if (currentHour < startHour || currentHour > endHour) {
-      throw new BadRequestException('cannot order when restaurant is closed');
+      throw new BadRequestException(
+        `cannot order ${RESTAURANT_CLOSING_TIME_OFFSET_HOURS} hour(s) before closing time`,
+      );
     }
 
     // calculate loyalty points and update user's db entry
@@ -127,7 +143,17 @@ export class OrderService {
     );
 
     // place an order
-    const order = await this.mongo.order.create({ data: newOrder });
+    let order;
+    try {
+      order = await this.mongo.order.create({ data: newOrder });
+    } catch (error) {
+      const err = new HttpException(
+        'error creating new order',
+        HttpStatus.FAILED_DEPENDENCY,
+      );
+      Logger.error(err);
+      throw err;
+    }
 
     // update client's lotalty points
     const updatedUser = await this.postgres.user.update({
@@ -144,7 +170,12 @@ export class OrderService {
     pendingOnly?: boolean,
   ): Promise<FetchOrdersResponse> {
     // make sure theres a restaurant with given id
-    const restaurant = await this.databaseFetchRestaurant(id);
+    const restaurant = await this.postgres.restaurant.findUnique({
+      where: { restaurantId: id },
+    });
+    if (!restaurant) {
+      throw new NotFoundException(`could not find restaurant ${id}`);
+    }
 
     // make sure employee works in this restaurant
     if (!(await this.employeeWorksInRestaurant(user, restaurant))) {
@@ -168,8 +199,20 @@ export class OrderService {
     user: User,
   ): Promise<FetchOrderResponse> {
     // make sure restaurant exists
-    const order = await this.databaseFetchOrder(updateStatusDto.id);
-    const restaurant = await this.databaseFetchRestaurant(order.restaurantId);
+    const order = await this.mongo.order.findUnique({
+      where: { id: updateStatusDto.id },
+    });
+    if (!order) {
+      throw new NotFoundException(`could not find order ${updateStatusDto.id}`);
+    }
+    const restaurant = await this.postgres.restaurant.findUnique({
+      where: { restaurantId: order.restaurantId },
+    });
+    if (!restaurant) {
+      throw new NotFoundException(
+        `could not find restaurant ${order.restaurantId}`,
+      );
+    }
 
     // make sure employee works in this restaurant
     if (!(await this.employeeWorksInRestaurant(user, restaurant))) {
@@ -180,22 +223,35 @@ export class OrderService {
     if (
       OrderStatusLevel[updateStatusDto.status] < OrderStatusLevel[order.status]
     ) {
-      throw new BadRequestException('cannot reverse order status');
+      throw new BadRequestException(
+        `cannot change order status (${order.status} -> ${updateStatusDto.status})`,
+      );
     }
 
     // update status
-    const newOrder = await this.mongo.order.update({
-      where: { id: updateStatusDto.id },
-      data: { status: updateStatusDto.status },
-    });
-    return { order: newOrder };
+    try {
+      const newOrder = await this.mongo.order.update({
+        where: { id: updateStatusDto.id },
+        data: { status: updateStatusDto.status },
+      });
+      return { order: newOrder };
+    } catch (error) {
+      throw new HttpException(
+        'error updating order status',
+        HttpStatus.FAILED_DEPENDENCY,
+      );
+    }
   }
 
   private async employeeWorksInRestaurant(
     user: User,
     restaurant: Restaurant,
   ): Promise<boolean> {
-    const employee = await this.postgres.employee.findFirstOrThrow({
+    if (user.userRole === 'BOSS') {
+      return true;
+    }
+
+    const employee = await this.postgres.employee.findFirst({
       where: {
         user: { userEmail: user.userEmail },
         restaurantId: restaurant.restaurantId,
@@ -203,26 +259,6 @@ export class OrderService {
     });
 
     return !!employee;
-  }
-
-  private async databaseFetchRestaurant(id: string): Promise<Restaurant> {
-    try {
-      const restaurant = await this.postgres.restaurant.findUniqueOrThrow({
-        include: { address: true, openingHours: true },
-        where: { restaurantId: id },
-      });
-      return restaurant;
-    } catch (error) {
-      let err;
-      if (error.code === 'P2025') {
-        err = new NotFoundException(`order ${id} not found`);
-      } else {
-        err = new HttpException(error.meta.cause, HttpStatus.FAILED_DEPENDENCY);
-      }
-
-      Logger.error(err);
-      throw err;
-    }
   }
 
   private filterPendingOnly(orders: Order[]): Order[] {
@@ -234,22 +270,5 @@ export class OrderService {
         OrderStatus.DELIVERY as string,
       ].includes(order.status),
     );
-  }
-
-  private async databaseFetchOrder(id: string): Promise<Order> {
-    try {
-      const order = await this.mongo.order.findUniqueOrThrow({ where: { id } });
-      return order;
-    } catch (error) {
-      let err;
-      if (error.code === 'P2025') {
-        err = new NotFoundException(`order ${id} not found`);
-      } else {
-        err = new HttpException(error.meta.cause, HttpStatus.FAILED_DEPENDENCY);
-      }
-
-      Logger.error(err);
-      throw err;
-    }
   }
 }
