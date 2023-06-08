@@ -92,11 +92,11 @@ export class OrderController {
     type: FetchOrdersResponse,
   })
   @AllowMinRole(UserRoles.CLIENT)
-  @Get('pending')
+  @Get('/pending/user')
   async fetchPendingOrders(
     @UserDecorator() user: User,
   ): Promise<FetchOrdersResponse> {
-    this.logger.log(`GET /order/pending, userEmail = ${user.userEmail}`);
+    this.logger.log(`GET /order/pending/user, userEmail = ${user.userEmail}`);
     return this.orderService.fetchOrders(user, true);
   }
 
