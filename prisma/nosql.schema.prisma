@@ -67,6 +67,7 @@ model Order {
   /// @IsEmail
   userEmail    String
   address      AddressType?
+  /// @IsUUID
   restaurantId String
   orderedItems MenuItemType[]
   /// @IsPositive

@@ -6,6 +6,7 @@ import {
   IsOptional,
   IsPositive,
   IsString,
+  IsUUID,
   ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
@@ -30,6 +31,7 @@ export class CreateOrderDto {
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
+  @IsUUID()
   restaurantId: string;
   @ApiProperty({
     isArray: true,

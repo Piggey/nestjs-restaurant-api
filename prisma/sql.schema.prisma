@@ -18,6 +18,7 @@ datasource db {
 
 model User {
   /// @DtoReadOnly
+  /// @IsUUID
   userId        String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   /// @DtoReadOnly
   /// @DtoUpdateHidden
@@ -31,6 +32,7 @@ model User {
 
 model Employee {
   /// @DtoReadOnly
+  /// @IsUUID
   employeeId String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   /// @DtoReadOnly
   hiredAt    DateTime  @default(now())
@@ -44,11 +46,13 @@ model Employee {
   /// @DtoRelationCanConnectOnCreate
   /// @DtoRelationCanCreateOnCreate
   address   Address @relation(fields: [addressId], references: [addressId])
+  /// @IsUUID
   addressId String  @db.Uuid
 
   /// @DtoRelationRequired
   /// @DtoRelationCanConnectOnCreate
   user   User   @relation(fields: [userId], references: [userId])
+  /// @IsUUID
   userId String @db.Uuid
 
   /// @DtoRelationRequired
@@ -56,6 +60,7 @@ model Employee {
   /// @DtoRelationCanCreateOnUpdate
   /// @DtoRelationCanConnectOnUpdate
   restaurant   Restaurant @relation("workedAtRestaurant", fields: [restaurantId], references: [restaurantId])
+  /// @IsUUID
   restaurantId String     @db.Uuid
 
   /// @DtoRelationRequired
@@ -64,6 +69,7 @@ model Employee {
   /// @DtoRelationCanCreateOnUpdate
   /// @DtoRelationCanConnectOnUpdate
   job   Job    @relation(fields: [jobId], references: [jobId])
+  /// @IsUUID
   jobId String @db.Uuid
 
   salary      Float
@@ -72,6 +78,7 @@ model Employee {
 
 model Job {
   /// @DtoReadOnly
+  /// @IsUUID
   jobId     String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   /// @DtoReadOnly
   createdAt DateTime @default(now())
@@ -87,6 +94,7 @@ model Job {
 
 model Manager {
   /// @DtoReadOnly
+  /// @IsUUID
   managerId String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
 
   /// @DtoRelationRequired
@@ -94,6 +102,7 @@ model Manager {
   /// @DtoRelationCanConnectOnUpdate
   /// @DtoRelationCanCreateOnUpdate
   employee   Employee @relation(fields: [employeeId], references: [employeeId])
+  /// @IsUUID
   employeeId String   @db.Uuid
 
   managedRestaurants Restaurant[] @relation("managedRestaurants")
@@ -101,6 +110,7 @@ model Manager {
 
 model Menu {
   /// @DtoReadOnly
+  /// @IsUUID
   itemId    String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   /// @DtoReadOnly
   createdAt DateTime @default(now())
@@ -126,11 +136,13 @@ model Menu {
   /// @DtoRelationCanConnectOnUpdate
   /// @DtoRelationCanCreateOnUpdate
   category   Category @relation(fields: [categoryId], references: [categoryId])
+  /// @IsUUID
   categoryId String   @db.Uuid
 }
 
 model Category {
   /// @DtoReadOnly
+  /// @IsUUID
   categoryId String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   /// @DtoReadOnly
   createdAt  DateTime @default(now())
@@ -143,6 +155,7 @@ model Category {
 
 model Restaurant {
   /// @DtoReadOnly
+  /// @IsUUID
   restaurantId String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   /// @DtoReadOnly
   createdAt    DateTime @default(now())
@@ -156,6 +169,7 @@ model Restaurant {
   /// @DtoRelationCanConnectOnCreate
   /// @DtoRelationCanConnectOnUpdate
   manager   Manager? @relation("managedRestaurants", fields: [managerId], references: [managerId])
+  /// @IsUUID
   managerId String?  @db.Uuid
 
   /// @DtoRelationRequired
@@ -164,6 +178,7 @@ model Restaurant {
   /// @DtoRelationCanCreateOnUpdate
   /// @DtoRelationCanConnectOnUpdate
   address   Address @relation(fields: [addressId], references: [addressId])
+  /// @IsUUID
   addressId String  @db.Uuid
 
   /// @DtoRelationRequired
@@ -184,16 +199,19 @@ model Restaurant {
 
 model OpeningHours {
   /// @DtoReadOnly
+  /// @IsUUID
   openingHoursId String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   weekday        Weekday
   startHourUtc   DateTime   @db.Time(6)
   endHourUtc     DateTime   @db.Time(6)
+  /// @IsUUID
   restaurantId   String     @db.Uuid
   restaurant     Restaurant @relation(fields: [restaurantId], references: [restaurantId])
 }
 
 model Address {
   /// @DtoReadOnly
+  /// @IsUUID
   addressId   String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   street      String
   streetNo    String
