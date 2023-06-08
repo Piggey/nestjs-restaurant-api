@@ -5,7 +5,6 @@ import {
   Get,
   Logger,
   Param,
-  ParseIntPipe,
   ParseUUIDPipe,
   Patch,
   Post,
@@ -20,7 +19,6 @@ import {
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
-  ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
 import { AllowMinRole, UserDecorator } from '../auth/decorator';
@@ -82,7 +80,6 @@ export class EmployeeController {
   }
 
   @ApiOperation({ summary: 'update information about employee' })
-  @ApiParam({ name: 'id', type: Number })
   @ApiOkResponse({
     description: 'employee updated successfully',
     type: EmployeeUpdatedResponse,
@@ -102,7 +99,6 @@ export class EmployeeController {
   }
 
   @ApiOperation({ summary: 'delete (mark as fired) an employee' })
-  @ApiParam({ name: 'id', type: Number })
   @ApiOkResponse({
     description: 'marked employee as fired',
     type: EmployeeDeletedResponse,
@@ -114,7 +110,7 @@ export class EmployeeController {
   @AllowMinRole(UserRoles.MANAGER)
   @Delete(':id')
   async deleteEmployee(
-    @Param('id', ParseIntPipe) id,
+    @Param('id', ParseUUIDPipe) id: string,
   ): Promise<EmployeeDeletedResponse> {
     this.logger.log(`DELETE /employee/${id}`);
     return this.employeeService.deleteEmployee(id);
