@@ -13,10 +13,14 @@ import {
 import { MongoService } from '../db/mongo/mongo.service';
 import { CreateCouponDto } from './dto/create-coupon.dto';
 import { ValidateCouponDto } from './dto/validate-coupon.dto';
+import { PostgresService } from '../db/postgres/postgres.service';
 
 @Injectable()
 export class CouponService {
-  constructor(private readonly mongo: MongoService) {}
+  constructor(
+    private readonly mongo: MongoService,
+    private readonly postgres: PostgresService,
+  ) {}
 
   async fetchCoupons(): Promise<FetchCouponsResponse> {
     const coupons = await this.mongo.coupon.findMany({
@@ -41,8 +45,8 @@ export class CouponService {
   async validateCoupon(
     validateCouponDto: ValidateCouponDto,
   ): Promise<ValidateCouponResponse> {
-    const coupon = await this.mongo.coupon.findUnique({
-      where: { code: validateCouponDto.code },
+    const coupon = await this.mongo.coupon.findFirst({
+      where: { code: validateCouponDto.code, available: true },
     });
 
     if (!coupon) {
@@ -62,8 +66,16 @@ export class CouponService {
   async createCoupon(
     createCouponDto: CreateCouponDto,
   ): Promise<FetchCouponResponse> {
+    const category = await this.postgres.category.findFirst({
+      where: { categoryId: createCouponDto.categoryId, available: true },
+    });
     try {
-      const coupon = await this.mongo.coupon.create({ data: createCouponDto });
+      const coupon = await this.mongo.coupon.create({
+        data: {
+          categoryName: category.categoryName || null,
+          ...createCouponDto,
+        },
+      });
       return { coupon };
     } catch (error) {
       const err = new HttpException(

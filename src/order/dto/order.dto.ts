@@ -1,4 +1,7 @@
-import { OrderStatus } from '../../../node_modules/@prisma-mongo/prisma/client';
+import {
+  OrderStatus,
+  PaymentMethod,
+} from '../../../node_modules/@prisma-mongo/prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
 import { AddressTypeDto } from '../../address-type/dto/address-type.dto';
 import { MenuItemTypeDto } from '../../menu-item-type/dto/menu-item-type.dto';
@@ -25,6 +28,11 @@ export class OrderDto {
     required: false,
   })
   status: OrderStatus;
+  @ApiProperty({
+    enum: PaymentMethod,
+    required: false,
+  })
+  paymentMethod: PaymentMethod;
   @ApiProperty({
     required: false,
   })

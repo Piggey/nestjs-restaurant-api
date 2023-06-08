@@ -25,6 +25,11 @@ export class Coupon {
   })
   categoryId: string | null;
   @ApiProperty({
+    required: false,
+    nullable: true,
+  })
+  categoryName: string | null;
+  @ApiProperty({
     type: 'number',
     format: 'float',
     required: false,

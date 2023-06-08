@@ -1,3 +1,4 @@
+import { PaymentMethod } from '../../../node_modules/@prisma-mongo/prisma/client';
 import {
   IsArray,
   IsEmail,
@@ -15,6 +16,11 @@ import { CreateAddressTypeDto } from '../../address-type/dto/create-address-type
 import { CreateMenuItemTypeDto } from '../../menu-item-type/dto/create-menu-item-type.dto';
 
 export class CreateOrderDto {
+  @ApiProperty({
+    enum: PaymentMethod,
+  })
+  @IsNotEmpty()
+  paymentMethod: PaymentMethod;
   @ApiProperty()
   @IsNotEmpty()
   @IsString()

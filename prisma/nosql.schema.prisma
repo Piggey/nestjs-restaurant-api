@@ -38,6 +38,11 @@ enum OrderStatus {
   EMPLOYEE_CANCELLED
 }
 
+enum PaymentMethod {
+  CASH
+  CARD
+}
+
 type AddressType {
   street      String
   houseNumber Int
@@ -50,12 +55,19 @@ type MenuItemType {
   /// @IsUUID
   itemId      String
   name        String
+  /// @IsUrl
   photoUrl    String
   description String
   ingredients String
+  /// @IsPositive
   quantity    Int
+  /// @IsPositive
+  /// @Min(0.01)
   price       Float
 }
+
+// payment method enum
+
 
 model Order {
   /// @DtoReadOnly
@@ -65,6 +77,7 @@ model Order {
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt()
   status       OrderStatus    @default(NOT_APPROVED)
+  paymentMethod PaymentMethod
   /// @IsEmail
   userEmail    String
   address      AddressType?
@@ -133,6 +146,8 @@ model Coupon {
   code       String  @unique
   /// @IsUUID
   categoryId String?
+  /// @DtoReadOnly
+  categoryName String?
   /// @Min(0.01)
   /// @Max(1.00)
   discount   Float

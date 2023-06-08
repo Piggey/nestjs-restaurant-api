@@ -1,3 +1,4 @@
+import { PaymentMethod } from '../../../node_modules/@prisma-mongo/prisma/client';
 import {
   IsArray,
   IsEmail,
@@ -14,6 +15,12 @@ import { UpdateAddressTypeDto } from '../../address-type/dto/update-address-type
 import { UpdateMenuItemTypeDto } from '../../menu-item-type/dto/update-menu-item-type.dto';
 
 export class UpdateOrderDto {
+  @ApiProperty({
+    enum: PaymentMethod,
+    required: false,
+  })
+  @IsOptional()
+  paymentMethod?: PaymentMethod;
   @ApiProperty({
     required: false,
   })
