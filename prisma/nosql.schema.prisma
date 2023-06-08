@@ -62,8 +62,8 @@ type MenuItemType {
   name        String
   /// @IsUrl
   photoUrl    String
-  description String
-  ingredients String
+  description String?
+  ingredients String?
   /// @IsPositive
   quantity    Int
   /// @IsPositive

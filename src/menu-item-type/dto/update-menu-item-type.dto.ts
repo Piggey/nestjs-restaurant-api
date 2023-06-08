@@ -22,16 +22,18 @@ export class UpdateMenuItemTypeDto {
   photoUrl?: string;
   @ApiProperty({
     required: false,
+    nullable: true,
   })
   @IsOptional()
   @IsString()
-  description?: string;
+  description?: string | null;
   @ApiProperty({
     required: false,
+    nullable: true,
   })
   @IsOptional()
   @IsString()
-  ingredients?: string;
+  ingredients?: string | null;
   @ApiProperty({
     type: 'integer',
     format: 'int32',

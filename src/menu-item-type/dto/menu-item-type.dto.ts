@@ -15,12 +15,14 @@ export class MenuItemTypeDto {
   photoUrl: string;
   @ApiProperty({
     required: false,
+    nullable: true,
   })
-  description: string;
+  description: string | null;
   @ApiProperty({
     required: false,
+    nullable: true,
   })
-  ingredients: string;
+  ingredients: string | null;
   @ApiProperty({
     type: 'integer',
     format: 'int32',
