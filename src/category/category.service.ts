@@ -12,7 +12,9 @@ export class CategoryService {
   constructor(private readonly db: PostgresService) {}
 
   async fetchCategories(): Promise<FetchCategoriesResponse> {
-    const categories = await this.db.category.findMany();
+    const categories = await this.db.category.findMany({
+      where: { available: true },
+    });
 
     return {
       numCategories: categories.length,
