@@ -3,13 +3,11 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class UpdateMenuItemTypeDto {
   @ApiProperty({
-    type: 'integer',
-    format: 'int32',
     required: false,
   })
   @IsOptional()
-  @IsInt()
-  itemId?: number;
+  @IsString()
+  itemId?: string;
   @ApiProperty({
     required: false,
   })

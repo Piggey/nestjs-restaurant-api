@@ -47,7 +47,8 @@ type AddressType {
 }
 
 type MenuItemType {
-  itemId      Int
+  /// @IsUUID
+  itemId      String
   name        String
   photoUrl    String
   description String

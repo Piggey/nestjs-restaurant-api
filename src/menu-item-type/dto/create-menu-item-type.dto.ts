@@ -2,13 +2,10 @@ import { IsInt, IsNotEmpty, IsNumber, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateMenuItemTypeDto {
-  @ApiProperty({
-    type: 'integer',
-    format: 'int32',
-  })
+  @ApiProperty()
   @IsNotEmpty()
-  @IsInt()
-  itemId: number;
+  @IsString()
+  itemId: string;
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
