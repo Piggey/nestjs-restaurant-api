@@ -71,9 +71,6 @@ type MenuItemType {
   price       Float
 }
 
-// payment method enum
-
-
 model Order {
   /// @DtoReadOnly
   /// @IsMongoId
