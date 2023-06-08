@@ -73,7 +73,7 @@ model Order {
   /// @IsPositive
   totalPrice   Float
   /// @IsCurrency
-  currency     String         @default("PLN")
+  currency     String         @default("USD")
 }
 
 model JobApplication {
