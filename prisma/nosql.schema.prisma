@@ -43,6 +43,11 @@ enum PaymentMethod {
   CARD
 }
 
+enum DeliveryMethod {
+  SELF_PICKUP
+  COURIER
+}
+
 type AddressType {
   street      String
   houseNumber Int
@@ -77,6 +82,7 @@ model Order {
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt()
   status       OrderStatus    @default(NOT_APPROVED)
+  deliveryMethod DeliveryMethod
   paymentMethod PaymentMethod
   /// @IsEmail
   userEmail    String
