@@ -140,7 +140,7 @@ export class OrderService {
       currentDateTime.getHours() * 100 + currentDateTime.getMinutes();
 
     if (currentHour < startHour || currentHour > endHour) {
-      throw new BadRequestException(
+      throw new MethodNotAllowedException(
         `cannot order ${RESTAURANT_CLOSING_TIME_OFFSET_HOURS} hour(s) before closing time`,
       );
     }
