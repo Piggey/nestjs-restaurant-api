@@ -111,13 +111,37 @@ export class EmployeeService {
     id: string,
     updatedEmployee: UpdateEmployeeDto,
   ): Promise<EmployeeUpdatedResponse> {
-    let updated;
+    const employee = await this.db.employee.findFirst({
+      include: { job: true },
+      where: {
+        employeeId: id,
+        firedAt: null,
+      },
+    });
+    if (!employee) {
+      const error = new NotFoundException(`could not find employee ${id}`);
+      Logger.error(error);
+      throw error;
+    }
+
+    const job = employee.job;
+    if (
+      updatedEmployee.salary < job.minSalary ||
+      updatedEmployee.salary > job.maxSalary
+    ) {
+      throw new BadRequestException(
+        `new salary out of range [${job.minSalary}, ${job.maxSalary}]`,
+      );
+    }
+
     try {
-      updated = await this.db.employee.update({
+      const updated = await this.db.employee.update({
         include: { job: true },
         where: { employeeId: id },
         data: updatedEmployee,
       });
+
+      return { employeeUpdated: true, employeeData: updated };
     } catch (error) {
       let err;
       if (error.code === 'P2025') {
@@ -129,11 +153,6 @@ export class EmployeeService {
       Logger.error(err);
       throw err;
     }
-
-    return {
-      employeeUpdated: true,
-      employeeData: updated,
-    };
   }
 
   async deleteEmployee(id: string): Promise<EmployeeDeletedResponse> {
