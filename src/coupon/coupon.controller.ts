@@ -7,7 +7,6 @@ import {
   Logger,
   Param,
   Post,
-  Query,
   UseGuards,
 } from '@nestjs/common';
 import { CouponService } from './coupon.service';
@@ -78,9 +77,9 @@ export class CouponController {
     description: 'could not find coupon with given id',
     type: RequestErrorResponse,
   })
-  @Get('/validate')
+  @Get('/validate/:code')
   async validateCoupon(
-    @Query() validateCouponDto: ValidateCouponDto,
+    @Param() validateCouponDto: ValidateCouponDto,
   ): Promise<ValidateCouponResponse> {
     this.logger.log(`GET /coupon/validate ${validateCouponDto.code}`);
     return this.couponService.validateCoupon(validateCouponDto);
@@ -107,8 +106,6 @@ export class CouponController {
   async createCoupon(
     @Body() createCouponDto: CreateCouponDto,
   ): Promise<FetchCouponResponse> {
-    console.log(createCouponDto);
-
     this.logger.log('POST /coupon');
     return this.couponService.createCoupon(createCouponDto);
   }

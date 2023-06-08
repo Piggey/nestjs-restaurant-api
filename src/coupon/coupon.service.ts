@@ -46,19 +46,11 @@ export class CouponService {
     validateCouponDto: ValidateCouponDto,
   ): Promise<ValidateCouponResponse> {
     const coupon = await this.mongo.coupon.findFirst({
-      where: { code: validateCouponDto.code, available: true },
+      where: { code: validateCouponDto.code },
     });
 
-    if (!coupon) {
-      const err = new NotFoundException(
-        `could not find coupon with code ${validateCouponDto.code}`,
-      );
-      Logger.error(err);
-      throw err;
-    }
-
     return {
-      couponValid: coupon.available ?? false,
+      couponValid: coupon?.available ?? false,
       coupon,
     };
   }
@@ -66,13 +58,18 @@ export class CouponService {
   async createCoupon(
     createCouponDto: CreateCouponDto,
   ): Promise<FetchCouponResponse> {
-    const category = await this.postgres.category.findFirst({
-      where: { categoryId: createCouponDto.categoryId, available: true },
-    });
+    let categoryName = null;
+    if (createCouponDto.categoryId) {
+      const category = await this.postgres.category.findFirst({
+        where: { categoryId: createCouponDto.categoryId, available: true },
+      });
+      categoryName = category.categoryName;
+    }
+
     try {
       const coupon = await this.mongo.coupon.create({
         data: {
-          categoryName: category.categoryName || null,
+          categoryName,
           ...createCouponDto,
         },
       });
