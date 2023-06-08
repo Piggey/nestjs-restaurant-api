@@ -110,7 +110,7 @@ export class OrderService {
     });
     if (!restaurant) {
       throw new NotFoundException(
-        `could not find restaurant with id ${restaurant.restaurantId}`,
+        `could not find restaurant with id ${newOrder.restaurantId}`,
       );
     }
 
