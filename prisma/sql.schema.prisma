@@ -99,6 +99,7 @@ model Manager {
 
   /// @DtoRelationRequired
   /// @DtoRelationCanConnectOnCreate
+  /// @DtoRelationCanCreateOnCreate
   /// @DtoRelationCanConnectOnUpdate
   /// @DtoRelationCanCreateOnUpdate
   employee   Employee @relation(fields: [employeeId], references: [employeeId])
