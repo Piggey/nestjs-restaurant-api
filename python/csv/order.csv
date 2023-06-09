@@ -1,0 +1,2 @@
+orderId,timeId,userId,restaurantId,paymentMethodId,deliveryMethodId,menuItemOrderId,statusId,totalPrice
+648315584aeef57143183338,cbeecd23-84e3-484e-93ca-16520f854067,e1790b81-3ec6-4308-b18c-020f9e09d7a6,35bfa561-c4fa-4e27-8789-c3387ee16e39,ea4ec2e5-8c16-4373-a22b-1b610a8645e3,b5775d53-4189-4b2f-afa4-bc88baa5a579,cc9a77a2-53eb-4504-a747-53736bb16a62,1de85b83-71f5-4adb-8385-67a583dcf1c4,25.99
