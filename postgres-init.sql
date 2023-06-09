@@ -416,11 +416,11 @@ INSERT INTO "Menu" ("updatedAt", "name", "photoUrl", "description", "price", "ra
     NULL, 9.99, NULL, NULL, NULL, '76103531-ab85-49be-a777-adfe696223c7');
 
 INSERT INTO "Menu" ("updatedAt", "name", "photoUrl", "description", "price", "rating", "numberOfRatings", "ingredients", "categoryId")
-    VALUES (CURRENT_TIMESTAMP, 'Coca Cola (500ml)', 'https://i.ibb.co/kgh81kb/cola.jpg',
+    VALUES (CURRENT_TIMESTAMP, 'Cola (250ml)', 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Glass_of_Cola.jpg/800px-Glass_of_Cola.jpg',
     NULL, 9.99, NULL, NULL, NULL, 'ade9714d-9b38-4557-a4dd-8495b5c4e29f');
 
 INSERT INTO "Menu" ("updatedAt", "name", "photoUrl", "description", "price", "rating", "numberOfRatings", "ingredients", "categoryId")
-    VALUES (CURRENT_TIMESTAMP, 'Cappy (orange/apple) (250ml)', 'https://i.ibb.co/yB8ynf8/cappy.jpg',
+    VALUES (CURRENT_TIMESTAMP, 'Orange juice (250ml)', 'https://i.ibb.co/LkC6WSC/oj.jpg',
     NULL, 6.99, NULL, NULL, NULL, 'ade9714d-9b38-4557-a4dd-8495b5c4e29f');
 
 INSERT INTO "Menu" ("updatedAt", "name", "photoUrl", "description", "price", "rating", "numberOfRatings", "ingredients", "categoryId")
