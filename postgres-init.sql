@@ -283,6 +283,9 @@ VALUES ('687421e6-e39a-43d3-a3e8-6053cd6fc2b5', 'Mikołaj', 'Stępniak', '504594
 
 INSERT INTO "Manager" VALUES ('62ec2441-fc08-4f7d-8dc2-866d65260468', 'd951350b-be91-490c-98b6-1e8ab3a1bf42');
 UPDATE "Restaurant" SET "managerId" = '62ec2441-fc08-4f7d-8dc2-866d65260468' WHERE "restaurantId" = '35bfa561-c4fa-4e27-8789-c3387ee16e39';
+UPDATE "Restaurant" SET "managerId" = '62ec2441-fc08-4f7d-8dc2-866d65260468' WHERE "restaurantId" = '568abfc8-c710-4ed7-9659-64222ed9ca08';
+UPDATE "Restaurant" SET "managerId" = '62ec2441-fc08-4f7d-8dc2-866d65260468' WHERE "restaurantId" = '10ca2473-4189-4802-b2eb-faf44115e062';
+UPDATE "Restaurant" SET "managerId" = '62ec2441-fc08-4f7d-8dc2-866d65260468' WHERE "restaurantId" = '22c2ca4d-ffa4-4dfd-9729-fb209faa3afa';
 
 INSERT INTO "Category" ("categoryId", "categoryName", "photoUrl") VALUES ('7f040fd7-a666-458e-8369-1ab201e589b6', 'burgers', 'https://i.ibb.co/bRwWJCW/burgers.png');
 INSERT INTO "Category" ("categoryId", "categoryName", "photoUrl") VALUES ('f035a7e3-5eb7-4d6c-8d42-10d7549a9ed2', 'pizza', 'https://i.ibb.co/7rVgzfg/pizzas.png');
