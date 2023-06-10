@@ -71,6 +71,8 @@ export class CreateMenuDto {
   })
   @IsOptional()
   @IsNumber()
+  @Min(0)
+  @Max(5)
   rating?: number;
   @ApiProperty({
     type: 'integer',
