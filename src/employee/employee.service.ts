@@ -136,7 +136,11 @@ export class EmployeeService {
 
     try {
       const updated = await this.db.employee.update({
-        include: { job: true },
+        include: {
+          job: true,
+          restaurant: { include: { address: true, manager: true } },
+          address: true,
+        },
         where: { employeeId: id },
         data: updatedEmployee,
       });
