@@ -137,13 +137,11 @@ model Menu {
   /// @DtoRelationCanConnectOnUpdate
   /// @DtoRelationCanCreateOnUpdate
   category   Category @relation(fields: [categoryId], references: [categoryId])
-  /// @IsUUID
   categoryId String   @db.Uuid
 }
 
 model Category {
   /// @DtoReadOnly
-  /// @IsUUID
   categoryId String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   /// @DtoReadOnly
   createdAt  DateTime @default(now())
