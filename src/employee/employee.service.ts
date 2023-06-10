@@ -17,6 +17,7 @@ import { EmployeeDeletedResponse } from './responses/employee-deleted.response';
 import { User } from '../user/entities/user.entity';
 import { Employee } from './entities/employee.entity';
 import { CreateJobDto } from '../job/dto/create-job.dto';
+import { Job } from '../job/entities/job.entity';
 
 @Injectable()
 export class EmployeeService {
@@ -124,11 +125,18 @@ export class EmployeeService {
       throw error;
     }
 
-    const job = employee.job;
-    if (
-      updatedEmployee.salary < job.minSalary ||
-      updatedEmployee.salary > job.maxSalary
-    ) {
+    let job: Job;
+    if (updatedEmployee.job.create) {
+      job = updatedEmployee.job.create as Job;
+    } else if (updatedEmployee.job.connect) {
+      job = await this.db.job.findFirst({
+        where: { jobId: updatedEmployee.job.connect.jobId },
+      });
+    } else {
+      job = employee.job;
+    }
+
+    if (!this.salaryInJobsRange(updatedEmployee.salary, job)) {
       throw new BadRequestException(
         `new salary out of range [${job.minSalary}, ${job.maxSalary}]`,
       );
@@ -157,6 +165,10 @@ export class EmployeeService {
       Logger.error(err);
       throw err;
     }
+  }
+
+  private salaryInJobsRange(salary: number, job: Job): boolean {
+    return salary >= job.minSalary && salary <= job.maxSalary;
   }
 
   async deleteEmployee(id: string): Promise<EmployeeDeletedResponse> {
