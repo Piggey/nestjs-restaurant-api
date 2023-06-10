@@ -120,6 +120,7 @@ export class MenuService {
     let menuItem;
     try {
       menuItem = await this.db.menu.update({
+        include: { category: true },
         where: { itemId: id },
         data: updatedItem,
       });
