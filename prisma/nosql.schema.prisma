@@ -60,7 +60,6 @@ type MenuItemType {
   /// @IsUUID
   itemId      String
   name        String
-  /// @IsUrl
   photoUrl    String
   description String?
   ingredients String?

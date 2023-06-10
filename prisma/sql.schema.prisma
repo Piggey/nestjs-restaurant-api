@@ -150,7 +150,6 @@ model Category {
 
   available    Boolean @default(true)
   categoryName String
-  /// @IsUrl
   photoUrl     String
   menuItems    Menu[]
 }
@@ -191,7 +190,6 @@ model Restaurant {
   /// @DtoReadOnly
   openingHoursPretty String?
 
-  /// @IsUrl
   photoUrl String?
   /// @IsPhoneNumber
   phoneNumber String?
