@@ -123,7 +123,7 @@ model Menu {
   description     String?
   /// @Min(0.01)
   price           Float
-  /// @Min(1)
+  /// @Min(0)
   /// @Max(5)
   rating          Float?
   numberOfRatings Int?

@@ -4,7 +4,7 @@ import { IsNumber, Max, Min } from 'class-validator';
 export class RateMenuItemDto {
   @ApiProperty()
   @IsNumber()
-  @Min(1)
+  @Min(0)
   @Max(5)
   rating: number;
 }
