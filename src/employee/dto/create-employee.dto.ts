@@ -9,6 +9,7 @@ import { Type } from 'class-transformer';
 import { ApiExtraModels, ApiProperty } from '@nestjs/swagger';
 import { CreateAddressDto } from '../../address/dto/create-address.dto';
 import { ConnectAddressDto } from '../../address/dto/connect-address.dto';
+import { CreateUserDto } from '../../user/dto/create-user.dto';
 import { ConnectUserDto } from '../../user/dto/connect-user.dto';
 import { ConnectRestaurantDto } from '../../restaurant/dto/connect-restaurant.dto';
 import { CreateJobDto } from '../../job/dto/create-job.dto';
@@ -36,12 +37,23 @@ export class CreateEmployeeAddressRelationInputDto {
 }
 export class CreateEmployeeUserRelationInputDto {
   @ApiProperty({
+    required: false,
+    nullable: true,
+    type: CreateUserDto,
+  })
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => CreateUserDto)
+  create?: CreateUserDto;
+  @ApiProperty({
+    required: false,
+    nullable: true,
     type: ConnectUserDto,
   })
-  @IsNotEmpty()
+  @IsOptional()
   @ValidateNested()
   @Type(() => ConnectUserDto)
-  connect: ConnectUserDto;
+  connect?: ConnectUserDto;
 }
 export class CreateEmployeeRestaurantRelationInputDto {
   @ApiProperty({
@@ -77,6 +89,7 @@ export class CreateEmployeeJobRelationInputDto {
   CreateAddressDto,
   ConnectAddressDto,
   CreateEmployeeAddressRelationInputDto,
+  CreateUserDto,
   ConnectUserDto,
   CreateEmployeeUserRelationInputDto,
   ConnectRestaurantDto,

@@ -51,6 +51,7 @@ model Employee {
 
   /// @DtoRelationRequired
   /// @DtoRelationCanConnectOnCreate
+  /// @DtoRelationCanCreateOnCreate
   user   User   @relation(fields: [userId], references: [userId])
   /// @IsUUID
   userId String @db.Uuid
