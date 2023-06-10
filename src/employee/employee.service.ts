@@ -92,7 +92,7 @@ export class EmployeeService {
           'unique constraint violation when trying to create a new employee',
         );
       } else if (error.code === 'P2025') {
-        err = new NotFoundException(error.meta.cause);
+        err = new NotFoundException(error.message);
       } else {
         err = new BadRequestException('could not create a new employee');
       }
@@ -147,7 +147,7 @@ export class EmployeeService {
       if (error.code === 'P2025') {
         err = new NotFoundException(`could not find employee with id ${id}`);
       } else {
-        err = new HttpException(error.meta.cause, HttpStatus.FAILED_DEPENDENCY);
+        err = new HttpException(error.message, HttpStatus.FAILED_DEPENDENCY);
       }
 
       Logger.error(err);
@@ -174,7 +174,7 @@ export class EmployeeService {
       if (error.code === 'P2025') {
         err = new NotFoundException(`employee with id ${id} not found`);
       } else {
-        err = new HttpException(error.meta.cause, HttpStatus.FAILED_DEPENDENCY);
+        err = new HttpException(error.message, HttpStatus.FAILED_DEPENDENCY);
       }
 
       Logger.error(err);

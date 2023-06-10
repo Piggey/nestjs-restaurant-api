@@ -43,7 +43,7 @@ export class FranchiseApplicationService {
           `could not find franchise application ${id}`,
         );
       } else {
-        err = new HttpException(error.meta.cause, HttpStatus.FAILED_DEPENDENCY);
+        err = new HttpException(error.message, HttpStatus.FAILED_DEPENDENCY);
       }
 
       Logger.error(err);

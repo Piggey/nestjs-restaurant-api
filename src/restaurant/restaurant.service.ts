@@ -81,7 +81,7 @@ export class RestaurantService {
       if (error.code === 'P2025') {
         err = new NotFoundException(`could not find restaurant with id ${id}`);
       } else {
-        err = new HttpException(error.meta.cause, HttpStatus.FAILED_DEPENDENCY);
+        err = new HttpException(error.message, HttpStatus.FAILED_DEPENDENCY);
       }
 
       Logger.error(err);
@@ -106,7 +106,7 @@ export class RestaurantService {
       return { restaurant };
     } catch (error) {
       const err = new HttpException(
-        error.meta.cause,
+        error.message,
         HttpStatus.FAILED_DEPENDENCY,
       );
 
@@ -145,7 +145,7 @@ export class RestaurantService {
       if (error.code === 'P2025') {
         err = new NotFoundException(`could not find restaurant with id ${id}`);
       } else {
-        err = new HttpException(error.meta.cause, HttpStatus.FAILED_DEPENDENCY);
+        err = new HttpException(error.message, HttpStatus.FAILED_DEPENDENCY);
       }
 
       Logger.error(err);
@@ -171,7 +171,7 @@ export class RestaurantService {
       if (error.code === 'P2025') {
         err = new NotFoundException(`could not find restaurant with id ${id}`);
       } else {
-        err = new HttpException(error.meta.cause, HttpStatus.FAILED_DEPENDENCY);
+        err = new HttpException(error.message, HttpStatus.FAILED_DEPENDENCY);
       }
 
       Logger.error(err);

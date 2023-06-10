@@ -76,7 +76,7 @@ export class CouponService {
       return { coupon };
     } catch (error) {
       const err = new HttpException(
-        error.meta.cause,
+        error.message,
         HttpStatus.FAILED_DEPENDENCY,
       );
       Logger.error(err);
@@ -96,7 +96,7 @@ export class CouponService {
       if (error.code === 'P2025') {
         err = new NotFoundException(`could not find coupon ${id}`);
       } else {
-        err = new HttpException(error.meta.cause, HttpStatus.FAILED_DEPENDENCY);
+        err = new HttpException(error.message, HttpStatus.FAILED_DEPENDENCY);
       }
 
       Logger.error(err);

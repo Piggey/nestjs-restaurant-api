@@ -89,7 +89,7 @@ export class ManagerService {
       if (error.code === 'P2025') {
         err = new NotFoundException(`manager with id ${id} not found`);
       } else {
-        err = new HttpException(error.meta.cause, HttpStatus.FAILED_DEPENDENCY);
+        err = new HttpException(error.message, HttpStatus.FAILED_DEPENDENCY);
       }
 
       Logger.error(err);

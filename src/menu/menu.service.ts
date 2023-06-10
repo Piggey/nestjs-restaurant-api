@@ -45,7 +45,7 @@ export class MenuService {
       if (error.code === 'P2025') {
         err = new NotFoundException(`category with id ${id} not found`);
       } else {
-        err = new HttpException(error.meta.cause, HttpStatus.FAILED_DEPENDENCY);
+        err = new HttpException(error.message, HttpStatus.FAILED_DEPENDENCY);
       }
 
       Logger.error(err);
@@ -81,7 +81,7 @@ export class MenuService {
       if (error.code === 'P2025') {
         err = new NotFoundException(`menu item with id ${id} not found`);
       } else {
-        err = new HttpException(error.meta.cause, HttpStatus.FAILED_DEPENDENCY);
+        err = new HttpException(error.message, HttpStatus.FAILED_DEPENDENCY);
       }
 
       Logger.error(err);
@@ -102,7 +102,7 @@ export class MenuService {
       });
     } catch (error) {
       const err = new HttpException(
-        error.meta.cause,
+        error.message,
         HttpStatus.FAILED_DEPENDENCY,
       );
 
@@ -196,7 +196,7 @@ export class MenuService {
       if (error.code === 'P2025') {
         err = new NotFoundException(`menu item with id ${id} not found`);
       } else {
-        err = new HttpException(error.meta.cause, HttpStatus.FAILED_DEPENDENCY);
+        err = new HttpException(error.message, HttpStatus.FAILED_DEPENDENCY);
       }
 
       Logger.error(err);
