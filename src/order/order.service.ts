@@ -129,15 +129,16 @@ export class OrderService {
     }
 
     // offset restaurant's closing time
-    hours.endHourUtc.setHours(
-      hours.endHourUtc.getHours() - RESTAURANT_CLOSING_TIME_OFFSET_HOURS,
+    hours.endHourUtc.setUTCHours(
+      hours.endHourUtc.getUTCHours() - RESTAURANT_CLOSING_TIME_OFFSET_HOURS,
     );
     const startHour =
-      hours.startHourUtc.getHours() * 100 + hours.startHourUtc.getMinutes();
+      hours.startHourUtc.getUTCHours() * 100 +
+      hours.startHourUtc.getUTCMinutes();
     const endHour =
-      hours.endHourUtc.getHours() * 100 + hours.endHourUtc.getMinutes();
+      hours.endHourUtc.getUTCHours() * 100 + hours.endHourUtc.getUTCMinutes();
     const currentHour =
-      currentDateTime.getHours() * 100 + currentDateTime.getMinutes();
+      currentDateTime.getUTCHours() * 100 + currentDateTime.getUTCMinutes();
 
     if (currentHour < startHour || currentHour > endHour) {
       throw new MethodNotAllowedException(
