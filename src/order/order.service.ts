@@ -118,12 +118,12 @@ export class OrderService {
     // make sure order is placed some time before closing time
     const currentDateTime = new Date();
     const hours = restaurant.openingHours.find(
-      (day) => day.weekday === WEEKDAYS[currentDateTime.getDay()],
+      (day) => day.weekday === WEEKDAYS[currentDateTime.getUTCDay()],
     );
     if (!hours) {
       throw new MethodNotAllowedException(
         `restaurant does not have opening hours data on ${
-          WEEKDAYS[currentDateTime.getDay()]
+          WEEKDAYS[currentDateTime.getUTCDay()]
         }`,
       );
     }
@@ -143,7 +143,7 @@ export class OrderService {
     if (currentHour < startHour || currentHour > endHour) {
       throw new MethodNotAllowedException(
         `cannot order ${RESTAURANT_CLOSING_TIME_OFFSET_HOURS} hour(s) before closing time.` +
-          `tried to order: ${currentDateTime.getTime()}, restaurant opening hours: ${hours.startHourUtc.getTime()} - ${hours.endHourUtc.getTime()}`,
+          `tried to order: ${currentHour}, restaurant opening hours: ${startHour} - ${endHour}`,
       );
     }
 
