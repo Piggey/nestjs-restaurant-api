@@ -158,6 +158,7 @@ export class EmployeeService {
         await this.db.manager.create({
           data: { employeeId: employee.employeeId },
         });
+        Logger.log('new manager added while creating an employee');
       }
 
       return { employeeUpdated: true, employeeData: updated };
