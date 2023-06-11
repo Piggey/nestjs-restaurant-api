@@ -158,6 +158,11 @@ export class EmployeeService {
         await this.db.manager.create({
           data: { employeeId: employee.employeeId },
         });
+
+        await this.db.user.update({
+          where: { userId: employee.userId },
+          data: { userRole: 'MANAGER' },
+        });
         Logger.log('new manager added while creating an employee');
       }
 
