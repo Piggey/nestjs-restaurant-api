@@ -205,28 +205,28 @@ VALUES ('Friday', '08:00', '20:00', '10ca2473-4189-4802-b2eb-faf44115e062');
 
 INSERT INTO "Address" VALUES ('268fdced-5c88-4c14-a2f9-cd573dd528bd', 'Floriańska', '64', 'Kraków', '31-019', 'Poland');
 INSERT INTO "Restaurant" ("restaurantId", "geoLat", "geoLon", "addressId", "openingHoursPretty", "photoUrl", "phoneNumber") 
-VALUES ('22c2ca4d-ffa4-4dfd-9729-fb209faa3afa', 50.06143, 19.93658, '268fdced-5c88-4c14-a2f9-cd573dd528bd', 'Monday - Friday: 8:00 - 20:00', 'https://media-cdn.tripadvisor.com/media/photo-s/06/5f/dd/4e/local-restaurant.jpg', '+48123216745');
+VALUES ('22c2ca4d-ffa4-4dfd-9729-fb209faa3afa', 50.06143, 19.93658, '268fdced-5c88-4c14-a2f9-cd573dd528bd', 'Monday - Friday: 11:00 - 20:00', 'https://media-cdn.tripadvisor.com/media/photo-s/06/5f/dd/4e/local-restaurant.jpg', '+48123216745');
 
 INSERT INTO "OpeningHours" ("weekday", "startHourUtc", "endHourUtc", "restaurantId")
-VALUES ('Monday', '08:00', '20:00', '22c2ca4d-ffa4-4dfd-9729-fb209faa3afa');
+VALUES ('Monday', '11:00', '20:00', '22c2ca4d-ffa4-4dfd-9729-fb209faa3afa');
 
 INSERT INTO "OpeningHours" ("weekday", "startHourUtc", "endHourUtc", "restaurantId")
-VALUES ('Tuesday', '08:00', '20:00', '22c2ca4d-ffa4-4dfd-9729-fb209faa3afa');
+VALUES ('Tuesday', '11:00', '20:00', '22c2ca4d-ffa4-4dfd-9729-fb209faa3afa');
 
 INSERT INTO "OpeningHours" ("weekday", "startHourUtc", "endHourUtc", "restaurantId")
-VALUES ('Tuesday', '08:00', '20:00', '22c2ca4d-ffa4-4dfd-9729-fb209faa3afa');
+VALUES ('Tuesday', '11:00', '20:00', '22c2ca4d-ffa4-4dfd-9729-fb209faa3afa');
 
 INSERT INTO "OpeningHours" ("weekday", "startHourUtc", "endHourUtc", "restaurantId")
-VALUES ('Wednesday', '08:00', '20:00', '22c2ca4d-ffa4-4dfd-9729-fb209faa3afa');
+VALUES ('Wednesday', '11:00', '20:00', '22c2ca4d-ffa4-4dfd-9729-fb209faa3afa');
 
 INSERT INTO "OpeningHours" ("weekday", "startHourUtc", "endHourUtc", "restaurantId")
-VALUES ('Thursday', '08:00', '20:00', '22c2ca4d-ffa4-4dfd-9729-fb209faa3afa');
+VALUES ('Thursday', '11:00', '20:00', '22c2ca4d-ffa4-4dfd-9729-fb209faa3afa');
 
 INSERT INTO "OpeningHours" ("weekday", "startHourUtc", "endHourUtc", "restaurantId")
-VALUES ('Friday', '08:00', '20:00', '22c2ca4d-ffa4-4dfd-9729-fb209faa3afa');
+VALUES ('Friday', '11:00', '20:00', '22c2ca4d-ffa4-4dfd-9729-fb209faa3afa');
 
 INSERT INTO "Restaurant" ("restaurantId", "geoLat", "geoLon", "addressId", "openingHoursPretty", "photoUrl", "phoneNumber") 
-VALUES ('35bfa561-c4fa-4e27-8789-c3387ee16e39', 51.751579, 19.452930, '182f153d-f29d-4ebc-9826-a24c13c66251', 'Monday - Thursday: 07:00 - 23:00,Thursday - Saturday: 12:00 - 23:00,Sunday: 12:00 - 22:00', 'https://www.restauracje-jedzenie-online.pl/img/logo_tcom/indeks-lodz-lodz.png', '+48426367341');
+VALUES ('35bfa561-c4fa-4e27-8789-c3387ee16e39', 51.751579, 19.452930, '182f153d-f29d-4ebc-9826-a24c13c66251', 'Monday - Thursday: 07:00 - 23:00,Thursday - Saturday: 12:00 - 23:00,Sunday: 12:00 - 22:00', 'https://i.ibb.co/smWtdgZ/zdecydowanie-nie-indeks.png', '+48426367341');
 
 INSERT INTO "OpeningHours" ("weekday", "startHourUtc", "endHourUtc", "restaurantId")
 VALUES ('Monday', '07:00', '23:00', '35bfa561-c4fa-4e27-8789-c3387ee16e39');
