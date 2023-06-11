@@ -226,7 +226,7 @@ INSERT INTO "OpeningHours" ("weekday", "startHourUtc", "endHourUtc", "restaurant
 VALUES ('Friday', '11:00', '20:00', '22c2ca4d-ffa4-4dfd-9729-fb209faa3afa');
 
 INSERT INTO "Restaurant" ("restaurantId", "geoLat", "geoLon", "addressId", "openingHoursPretty", "photoUrl", "phoneNumber") 
-VALUES ('35bfa561-c4fa-4e27-8789-c3387ee16e39', 51.751579, 19.452930, '182f153d-f29d-4ebc-9826-a24c13c66251', 'Monday - Thursday: 07:00 - 23:00,Thursday - Saturday: 12:00 - 23:00,Sunday: 12:00 - 22:00', 'https://i.ibb.co/smWtdgZ/zdecydowanie-nie-indeks.png', '+48426367341');
+VALUES ('35bfa561-c4fa-4e27-8789-c3387ee16e39', 51.751579, 19.452930, '182f153d-f29d-4ebc-9826-a24c13c66251', 'Monday - Thursday: 07:00 - 23:00,Thursday - Saturday: 12:00 - 23:00,Sunday: 12:00 - 23:59', 'https://i.ibb.co/smWtdgZ/zdecydowanie-nie-indeks.png', '+48426367341');
 
 INSERT INTO "OpeningHours" ("weekday", "startHourUtc", "endHourUtc", "restaurantId")
 VALUES ('Monday', '07:00', '23:00', '35bfa561-c4fa-4e27-8789-c3387ee16e39');
@@ -247,7 +247,7 @@ INSERT INTO "OpeningHours" ("weekday", "startHourUtc", "endHourUtc", "restaurant
 VALUES ('Saturday', '12:00', '23:00', '35bfa561-c4fa-4e27-8789-c3387ee16e39');
 
 INSERT INTO "OpeningHours" ("weekday", "startHourUtc", "endHourUtc", "restaurantId")
-VALUES ('Sunday', '12:00', '22:00', '35bfa561-c4fa-4e27-8789-c3387ee16e39');
+VALUES ('Sunday', '12:00', '23:59', '35bfa561-c4fa-4e27-8789-c3387ee16e39');
 
 INSERT INTO "User" ("userId", "userEmail", "userRole") VALUES ('73e02b7b-59b8-48ca-bda6-a0b715a268fb', 'boss@sumatywny.pl', 'BOSS');
 INSERT INTO "User" ("userId", "userEmail", "userRole") VALUES ('44e9a00e-a1a3-4db7-9f7f-a35108d114cf', 'manager@sumatywny.pl', 'MANAGER');
