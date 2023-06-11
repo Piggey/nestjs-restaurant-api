@@ -27,7 +27,6 @@ export class ManagerService {
       },
       where: {
         employee: { firedAt: null },
-        managedRestaurants: { some: {} },
       },
     });
 
