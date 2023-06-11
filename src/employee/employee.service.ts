@@ -153,6 +153,13 @@ export class EmployeeService {
         data: updatedEmployee,
       });
 
+      // add manager if doesnt exist
+      if (job.role !== employee.job.role && job.role === 'MANAGER') {
+        await this.db.manager.create({
+          data: { employeeId: employee.employeeId },
+        });
+      }
+
       return { employeeUpdated: true, employeeData: updated };
     } catch (error) {
       let err;
