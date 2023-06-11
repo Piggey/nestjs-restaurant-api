@@ -141,7 +141,8 @@ export class OrderService {
 
     if (currentHour < startHour || currentHour > endHour) {
       throw new MethodNotAllowedException(
-        `cannot order ${RESTAURANT_CLOSING_TIME_OFFSET_HOURS} hour(s) before closing time`,
+        `cannot order ${RESTAURANT_CLOSING_TIME_OFFSET_HOURS} hour(s) before closing time.` +
+          `tried to order: ${currentDateTime.getTime()}, restaurant opening hours: ${hours.startHourUtc.getTime()} - ${hours.endHourUtc.getTime()}`,
       );
     }
 
