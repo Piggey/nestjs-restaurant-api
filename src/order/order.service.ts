@@ -37,7 +37,7 @@ const OrderStatusLevel: Record<OrderStatus, number> = {
   NOT_APPROVED: 1,
   APPROVED: 2,
   IN_PROGRESS: 3,
-  PREPARED: 4,
+  READY_FOR_DELIVERY: 4,
   DELIVERY: 5,
   COMPLETED: 6,
   CLIENT_CANCELLED: 7,
