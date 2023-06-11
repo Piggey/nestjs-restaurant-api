@@ -6,18 +6,14 @@ export class AddressTypeDto {
   })
   street: string;
   @ApiProperty({
-    type: 'integer',
-    format: 'int32',
     required: false,
   })
-  houseNumber: number;
+  houseNumber: string;
   @ApiProperty({
-    type: 'integer',
-    format: 'int32',
     required: false,
     nullable: true,
   })
-  apartment: number | null;
+  apartment: string | null;
   @ApiProperty({
     required: false,
   })

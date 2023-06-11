@@ -1,4 +1,4 @@
-import { IsInt, IsOptional, IsString } from 'class-validator';
+import { IsOptional, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class UpdateAddressTypeDto {
@@ -9,22 +9,18 @@ export class UpdateAddressTypeDto {
   @IsString()
   street?: string;
   @ApiProperty({
-    type: 'integer',
-    format: 'int32',
     required: false,
   })
   @IsOptional()
-  @IsInt()
-  houseNumber?: number;
+  @IsString()
+  houseNumber?: string;
   @ApiProperty({
-    type: 'integer',
-    format: 'int32',
     required: false,
     nullable: true,
   })
   @IsOptional()
-  @IsInt()
-  apartment?: number | null;
+  @IsString()
+  apartment?: string | null;
   @ApiProperty({
     required: false,
   })

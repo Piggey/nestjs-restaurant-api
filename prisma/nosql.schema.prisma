@@ -50,8 +50,8 @@ enum DeliveryMethod {
 
 type AddressType {
   street      String
-  houseNumber Int
-  apartment   Int?
+  houseNumber String
+  apartment   String?
   city        String
   country     String
 }

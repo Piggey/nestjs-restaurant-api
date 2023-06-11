@@ -1,4 +1,4 @@
-import { IsInt, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateAddressTypeDto {
@@ -6,22 +6,17 @@ export class CreateAddressTypeDto {
   @IsNotEmpty()
   @IsString()
   street: string;
-  @ApiProperty({
-    type: 'integer',
-    format: 'int32',
-  })
+  @ApiProperty()
   @IsNotEmpty()
-  @IsInt()
-  houseNumber: number;
+  @IsString()
+  houseNumber: string;
   @ApiProperty({
-    type: 'integer',
-    format: 'int32',
     required: false,
     nullable: true,
   })
   @IsOptional()
-  @IsInt()
-  apartment?: number;
+  @IsString()
+  apartment?: string;
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
