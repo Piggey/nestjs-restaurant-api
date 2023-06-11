@@ -37,10 +37,11 @@ const OrderStatusLevel: Record<OrderStatus, number> = {
   NOT_APPROVED: 1,
   APPROVED: 2,
   IN_PROGRESS: 3,
-  DELIVERY: 4,
-  COMPLETED: 5,
-  CLIENT_CANCELLED: 6,
-  EMPLOYEE_CANCELLED: 7,
+  PREPARED: 4,
+  DELIVERY: 5,
+  COMPLETED: 6,
+  CLIENT_CANCELLED: 7,
+  EMPLOYEE_CANCELLED: 8,
 };
 
 @Injectable()
