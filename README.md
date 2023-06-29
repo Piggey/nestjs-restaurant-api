@@ -1,3 +1,12 @@
+# NestJS Restaurant RESTful API
+## Features
+- Docker integration
+- Prisma ORM with auto generated types
+- PostgreSQL and MongoDB databases integration with Prisma
+- Swagger documentation
+- JWT Authorization
+- Protected endpoints
+
 ## Installation
 
 ```bash
